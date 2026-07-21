@@ -1,82 +1,1168 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>GFM Dashboard</title>
-    <link rel="stylesheet" href="../css/dashboard.css" />
-  </head>
-  <body>
-    <div class="dashboard-shell">
-      <aside class="sidebar">
-        <div class="brand">
-          <h2>GFM Panel</h2>
-          <p>Attendance System</p>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GFM Attendance Defaulter Students List Management System</title>
+  <!-- Google Fonts Poppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="../css/dashboard.css">
+</head>
+<body data-theme="light">
+  
+  <!-- Outer Wrapper -->
+  <div class="dashboard-wrapper">
+    
+    <!-- LEFT SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="logo-box">
+          <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="3" y="3" width="18" height="18" rx="4" fill="var(--primary)" fill-opacity="0.15"/>
+            <path d="M12 8V16M8 12H16" stroke="var(--primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="portal-brand">GFM Portal</span>
         </div>
-        <nav>
-          <a class="active" href="#">Dashboard</a>
-          <a href="#">Student List</a>
-          <a href="#">Attendance Entry</a>
-          <a href="#">Attendance Defaulters</a>
-          <a href="#">Reports</a>
-          <a href="#">Notifications</a>
-          <a href="#">Profile</a>
-          <a href="../index.html">Logout</a>
-        </nav>
-      </aside>
+        <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close Sidebar">
+          <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
 
-      <main class="main-panel">
-        <header class="topbar">
-          <button class="menu-toggle">☰</button>
-          <div class="topbar-search">
-            <input type="text" placeholder="Search" />
-          </div>
-          <div class="topbar-actions">
-            <button class="icon-btn">🔔</button>
-            <div class="profile-chip">GF</div>
-          </div>
-        </header>
+      <nav class="sidebar-menu">
+        <a href="#dashboard" class="menu-item active" data-page="dashboard" id="menuDashboard">
+          <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+          <span>Dashboard</span>
+        </a>
+        <a href="#student-list" class="menu-item" data-page="student-list" id="menuStudentList">
+          <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <span>Student List</span>
+        </a>
+        <a href="#attendance-entry" class="menu-item" data-page="attendance-entry" onclick="openAttendanceEntryModal()">
+          <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          <span>Attendance Entry</span>
+        </a>
+        <a href="#attendance-import" class="menu-item" data-page="attendance-import" onclick="openImportModal()">
+          <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <span>Attendance Import</span>
+        </a>
+        <a href="#defaulters" class="menu-item" data-page="defaulters" id="menuDefaulters">
+          <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <span>Defaulters List</span>
+        </a>
+        <a href="#reports" class="menu-item" data-page="reports" onclick="openReportsModal()">
+          <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          <span>Reports</span>
+        </a>
+        <a href="#notifications" class="menu-item" data-page="notifications" onclick="toggleNotificationsPanel()">
+          <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span>Notifications</span>
+        </a>
+        <hr class="sidebar-divider">
+        <a href="#profile" class="menu-item" data-page="profile" onclick="openProfileModal()">
+          <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          <span>Profile</span>
+        </a>
+        <a href="#settings" class="menu-item" data-page="settings" onclick="openSettingsModal()">
+          <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          <span>Settings</span>
+        </a>
+        <a href="#" class="menu-item logout" id="btnLogout">
+          <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          <span>Logout</span>
+        </a>
+      </nav>
+      
+      <div class="sidebar-user-quick">
+        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=256&auto=format&fit=crop" class="quick-user-avatar" alt="Rajesh Kulkarni">
+        <div class="quick-user-details">
+          <span class="user-name">Prof. R. Kulkarni</span>
+          <span class="user-role">GFM (TE-COMP-A)</span>
+        </div>
+      </div>
+    </aside>
 
-        <section class="dashboard-grid">
-          <article class="dash-card">
-            <h3>Assigned Classes</h3>
-            <p class="metric">6</p>
-          </article>
-          <article class="dash-card">
-            <h3>Today's Attendance</h3>
-            <p class="metric">88%</p>
-          </article>
-          <article class="dash-card">
-            <h3>Students</h3>
-            <p class="metric">180</p>
-          </article>
-          <article class="dash-card">
-            <h3>Defaulters</h3>
-            <p class="metric">12</p>
-          </article>
+    <!-- RIGHT CONTENT AREA -->
+    <div class="main-content-layout">
+      
+      <!-- FIXED TOP NAVBAR -->
+      <header class="top-navbar">
+        <div class="navbar-left">
+          <button class="hamburger-menu" id="hamburgerBtn" aria-label="Toggle Sidebar">
+            <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+          
+          <div class="college-logo-container">
+            <svg class="college-svg-logo" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="25" cy="25" r="23" stroke="var(--primary)" stroke-width="3" fill="var(--surface)"/>
+              <path d="M25 10L12 18L25 26L38 18L25 10Z" fill="var(--primary)"/>
+              <path d="M16 22.5V31C16 35 25 38 25 38C25 38 34 35 34 31V22.5" stroke="var(--primary)" stroke-width="2" stroke-linecap="round"/>
+              <path d="M30 18V28" stroke="var(--warning)" stroke-width="2"/>
+              <circle cx="30" cy="29" r="1.5" fill="var(--warning)"/>
+            </svg>
+            <div class="college-meta">
+              <span class="college-title">Apex Institute of Technology</span>
+              <span class="portal-badge">GFM Portal</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="navbar-center">
+          <div class="search-bar-wrapper">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="globalSearchInput" placeholder="Search students, PRN, status..." aria-label="Global Student Search">
+          </div>
+        </div>
+
+        <div class="navbar-right">
+          <!-- Dark Mode Toggle Button -->
+          <button class="navbar-action-btn theme-toggle" id="themeToggleBtn" title="Toggle Dark/Light Mode" aria-label="Toggle Dark Mode">
+            <!-- Sun Icon (Light Mode active) -->
+            <svg class="theme-icon sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+            </svg>
+            <!-- Moon Icon (Dark Mode active) -->
+            <svg class="theme-icon moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+          </button>
+
+          <!-- Messages -->
+          <button class="navbar-action-btn messages-btn" title="Messages" aria-label="Messages list" onclick="showToast('No new direct messages. You are all caught up!', 'success')">
+            <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            <span class="badge-dot"></span>
+          </button>
+
+          <!-- Notifications Bell -->
+          <div class="notification-bell-container">
+            <button class="navbar-action-btn notification-btn" id="navbarBellBtn" title="Notifications" aria-label="Notifications system">
+              <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+              </svg>
+              <span class="notification-badge" id="notificationBadgeCount">3</span>
+            </button>
+            
+            <!-- Quick Notification Dropdown -->
+            <div class="notification-dropdown-panel" id="notificationDropdown">
+              <div class="dropdown-header">
+                <h4>Recent Notifications</h4>
+                <button class="mark-all-read-btn" onclick="markAllNotificationsAsRead()">Mark all as read</button>
+              </div>
+              <ul class="dropdown-notification-list" id="dropdownNotificationList">
+                <!-- Javascript populated -->
+              </ul>
+              <div class="dropdown-footer">
+                <a href="#notifications" onclick="toggleNotificationsPanel(); return false;">View All Notifications</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- User Profile Dropdown Menu -->
+          <div class="profile-dropdown-wrapper">
+            <button class="navbar-profile-trigger" id="profileDropdownBtn" aria-expanded="false" aria-haspopup="true">
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=256&auto=format&fit=crop" class="nav-user-avatar" alt="Rajesh Kulkarni">
+              <div class="nav-user-info">
+                <span class="user-fullname">Prof. Rajesh K.</span>
+                <span class="user-role-label">GFM Coordinator</span>
+              </div>
+              <svg class="dropdown-chevron" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+
+            <!-- Dropdown Options -->
+            <div class="profile-dropdown-menu" id="profileDropdownMenu">
+              <div class="menu-header">
+                <strong>Prof. Rajesh Kulkarni</strong>
+                <span>r.kulkarni@apextech.edu</span>
+              </div>
+              <a href="#profile" class="dropdown-item" onclick="openProfileModal()">
+                <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                My Profile
+              </a>
+              <a href="#change-password" class="dropdown-item" onclick="openPasswordChangeModal()">
+                <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                Change Password
+              </a>
+              <a href="#settings" class="dropdown-item" onclick="openSettingsModal()">
+                <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                Settings
+              </a>
+              <hr class="dropdown-divider">
+              <a href="#" class="dropdown-item logout" id="btnLogoutDropdown">
+                <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                Logout
+              </a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- DASHBOARD BODY CONTAINER -->
+      <main class="dashboard-body" id="dashboard-view">
+        
+        <!-- ROW 1: DASHBOARD HERO BANNER -->
+        <div class="dashboard-hero">
+          <div class="hero-text">
+            <h1>Welcome Back, Prof. Rajesh Kulkarni</h1>
+            <p>You have <strong class="warning-text" id="heroWarningAlert">18 critical defaulter students</strong> in your assigned batch. Notices have been auto-generated.</p>
+            
+            <div class="hero-academic-meta">
+              <div class="meta-tag">
+                <span class="meta-label">Role:</span>
+                <span class="meta-val">Guardian Faculty Member (GFM)</span>
+              </div>
+              <div class="meta-tag">
+                <span class="meta-label">Semester:</span>
+                <span class="meta-val">V (Academic Year 2026-27)</span>
+              </div>
+              <div class="meta-tag">
+                <span class="meta-label">Class:</span>
+                <span class="meta-val">TE-COMP-A</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="hero-clock-widget">
+            <div class="clock-icon">
+              <svg viewBox="0 0 24 24" width="28" height="28" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <div class="clock-display">
+              <div class="clock-time" id="liveClockTime">10:03:38 AM</div>
+              <div class="clock-date" id="liveClockDate">Tuesday, July 21, 2026</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ROW 2: CORE METRICS (6 Cards) -->
+        <section class="metrics-grid" aria-label="Quick Statistics Metrics">
+          <!-- Card 1 -->
+          <div class="metric-card bg-gradient-blue" onclick="showToast('Assigned Classes: 04 (TE-COMP-A, TE-COMP-B, BE-COMP-A, SE-COMP-C)', 'info')">
+            <div class="metric-info">
+              <span class="metric-title">Assigned Classes</span>
+              <span class="metric-value">04</span>
+              <span class="metric-helper">2 core theory, 2 labs</span>
+            </div>
+            <div class="metric-icon-box class-blue">
+              <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+            </div>
+            <div class="card-glow-bg"></div>
+          </div>
+          
+          <!-- Card 2 -->
+          <div class="metric-card bg-gradient-green" id="cardTotalStudents" onclick="scrollToElement('studentTableSection')">
+            <div class="metric-info">
+              <span class="metric-title">Total Students</span>
+              <span class="metric-value" id="statsTotalStudentsCount">120</span>
+              <span class="metric-helper">TE-COMP-A Strength</span>
+            </div>
+            <div class="metric-icon-box class-green">
+              <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <div class="card-glow-bg"></div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="metric-card bg-gradient-orange" onclick="openAttendanceEntryModal()">
+            <div class="metric-info">
+              <span class="metric-title">Today's Attendance</span>
+              <span class="metric-value">92%</span>
+              <span class="metric-helper">Taken at 09:30 AM (COMP-301)</span>
+            </div>
+            <div class="metric-icon-box class-orange">
+              <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            <div class="card-glow-bg"></div>
+          </div>
+
+          <!-- Card 4 -->
+          <div class="metric-card bg-gradient-red" id="cardDefaulters" onclick="filterTableByDefaulterMode()">
+            <div class="metric-info">
+              <span class="metric-title">Attendance Defaulters</span>
+              <span class="metric-value" id="statsDefaulterCount">18</span>
+              <span class="metric-helper">Attendance &lt; 60%</span>
+            </div>
+            <div class="metric-icon-box class-red">
+              <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/></svg>
+            </div>
+            <div class="card-glow-bg"></div>
+          </div>
+
+          <!-- Card 5 -->
+          <div class="metric-card bg-gradient-purple" onclick="showToast('06 system warnings generated today and ready for delivery.', 'warning')">
+            <div class="metric-info">
+              <span class="metric-title">Pending Notices</span>
+              <span class="metric-value" id="statsPendingNoticesCount">06</span>
+              <span class="metric-helper">Ready for GFM Dispatch</span>
+            </div>
+            <div class="metric-icon-box class-purple">
+              <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </div>
+            <div class="card-glow-bg"></div>
+          </div>
+
+          <!-- Card 6 -->
+          <div class="metric-card bg-gradient-skyblue" onclick="showToast('Average Class Attendance: 81.42%. Above baseline threshold.', 'success')">
+            <div class="metric-info">
+              <span class="metric-title">Average Attendance</span>
+              <span class="metric-value" id="statsAverageAttendanceVal">81%</span>
+              <span class="metric-helper">Monthly Class Aggregate</span>
+            </div>
+            <div class="metric-icon-box class-skyblue">
+              <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            </div>
+            <div class="card-glow-bg"></div>
+          </div>
         </section>
 
-        <section class="content-grid">
-          <article class="panel-card">
-            <h3>Pending Notices</h3>
-            <ul class="list-stack">
-              <li>Attendance summary for dept A pending.</li>
-              <li>Student follow-up needed for two classes.</li>
-              <li>Faculty meeting reminder scheduled.</li>
-            </ul>
-          </article>
-          <article class="panel-card">
-            <h3>Recent Activities</h3>
-            <ul class="list-stack">
-              <li>Updated attendance for 3rd semester.</li>
-              <li>Flagged 6 low-attendance students.</li>
-              <li>Shared reports with department office.</li>
-            </ul>
-          </article>
-        </section>
+        <!-- ROW 3: DETAILED GRID (CHARTS, EVENTS, QUICK ACTIONS, AND MAIN LIST) -->
+        <div class="dashboard-grid-layout">
+          
+          <!-- LEFT / MAIN COLUMN -->
+          <div class="grid-column-left">
+            
+            <!-- CHARTS SECTION -->
+            <section class="charts-card-panel" aria-label="Visual Analytics Charts">
+              <div class="chart-box">
+                <div class="chart-header">
+                  <h3>Attendance Trend</h3>
+                  <div class="chart-filters">
+                    <span class="chart-filter-tag active" id="btnTrendWeekly" onclick="toggleTrendDuration('weekly')">Weekly</span>
+                    <span class="chart-filter-tag" id="btnTrendMonthly" onclick="toggleTrendDuration('monthly')">Monthly</span>
+                  </div>
+                </div>
+                <!-- SVG Line Chart Placeholder -->
+                <div class="svg-chart-container">
+                  <svg viewBox="0 0 400 200" class="premium-svg-chart">
+                    <!-- Grid Lines -->
+                    <line x1="40" y1="20" x2="380" y2="20" stroke="var(--border)" stroke-dasharray="3"/>
+                    <line x1="40" y1="60" x2="380" y2="60" stroke="var(--border)" stroke-dasharray="3"/>
+                    <line x1="40" y1="100" x2="380" y2="100" stroke="var(--border)" stroke-dasharray="3"/>
+                    <line x1="40" y1="140" x2="380" y2="140" stroke="var(--border)" stroke-dasharray="3"/>
+                    <line x1="40" y1="180" x2="380" y2="180" stroke="var(--border)"/>
+                    
+                    <!-- Left Y-Axis labels -->
+                    <text x="15" y="25" class="chart-text-lbl">100%</text>
+                    <text x="15" y="65" class="chart-text-lbl">80%</text>
+                    <text x="15" y="105" class="chart-text-lbl">60%</text>
+                    <text x="15" y="145" class="chart-text-lbl">40%</text>
+                    <text x="15" y="185" class="chart-text-lbl">20%</text>
+
+                    <!-- X-Axis Labels -->
+                    <g id="trendXAxisLabels">
+                      <text x="50" y="198" class="chart-text-lbl">Mon</text>
+                      <text x="110" y="198" class="chart-text-lbl">Tue</text>
+                      <text x="170" y="198" class="chart-text-lbl">Wed</text>
+                      <text x="230" y="198" class="chart-text-lbl">Thu</text>
+                      <text x="290" y="198" class="chart-text-lbl">Fri</text>
+                      <text x="350" y="198" class="chart-text-lbl">Sat</text>
+                    </g>
+
+                    <!-- Shadow Area below line -->
+                    <path id="trendAreaPath" d="M 50 180 L 50 80 Q 110 50 110 60 T 170 45 T 230 70 T 290 50 T 350 40 L 350 180 Z" fill="url(#chartGrad)" opacity="0.15" />
+                    
+                    <!-- Actual Trend Line -->
+                    <path id="trendLinePath" d="M 50 80 C 80 70, 90 55, 110 60 C 130 65, 150 40, 170 45 C 190 50, 210 80, 230 70 C 250 60, 270 55, 290 50 C 310 45, 330 35, 350 40" 
+                          fill="none" stroke="var(--primary)" stroke-width="4.5" stroke-linecap="round"/>
+
+                    <!-- Data dots -->
+                    <g id="trendDotsContainer">
+                      <circle cx="50" cy="80" r="5" fill="var(--primary)" stroke="var(--surface)" stroke-width="2" class="chart-dot" data-val="78%"/>
+                      <circle cx="110" cy="60" r="5" fill="var(--primary)" stroke="var(--surface)" stroke-width="2" class="chart-dot" data-val="84%"/>
+                      <circle cx="170" cy="45" r="5" fill="var(--primary)" stroke="var(--surface)" stroke-width="2" class="chart-dot" data-val="88%"/>
+                      <circle cx="230" cy="70" r="5" fill="var(--primary)" stroke="var(--surface)" stroke-width="2" class="chart-dot" data-val="80%"/>
+                      <circle cx="290" cy="50" r="5" fill="var(--primary)" stroke="var(--surface)" stroke-width="2" class="chart-dot" data-val="87%"/>
+                      <circle cx="350" cy="40" r="5" fill="var(--primary)" stroke="var(--surface)" stroke-width="2" class="chart-dot" data-val="92%"/>
+                    </g>
+
+                    <!-- Gradients -->
+                    <defs>
+                      <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="var(--primary)" />
+                        <stop offset="100%" stop-color="var(--primary)" stop-opacity="0" />
+                      </linearGradient>
+                    </defs>
+                  </svg>
+                </div>
+              </div>
+
+              <div class="chart-box">
+                <div class="chart-header">
+                  <h3>Attendance Distribution</h3>
+                </div>
+                <!-- SVG Donut Chart -->
+                <div class="svg-chart-container donut-layout">
+                  <div class="donut-chart-svg">
+                    <svg viewBox="0 0 200 200">
+                      <!-- Base track -->
+                      <circle cx="100" cy="100" r="70" fill="transparent" stroke="var(--border)" stroke-width="20" />
+                      <!-- Success > 75% segment (circumference 2*pi*70 = 439.8, value 70% = 307.8) -->
+                      <circle cx="100" cy="100" r="70" fill="transparent" stroke="var(--success)" stroke-width="20" 
+                              stroke-dasharray="307.8 439.8" stroke-dashoffset="0" transform="rotate(-90 100 100)" />
+                      <!-- Warning 60-74% segment (value 15% = 66) -->
+                      <circle cx="100" cy="100" r="70" fill="transparent" stroke="var(--warning)" stroke-width="20" 
+                              stroke-dasharray="66 439.8" stroke-dashoffset="-307.8" transform="rotate(-90 100 100)" />
+                      <!-- Defaulters < 60% segment (value 15% = 66) -->
+                      <circle cx="100" cy="100" r="70" fill="transparent" stroke="var(--danger)" stroke-width="20" 
+                              stroke-dasharray="66 439.8" stroke-dashoffset="-373.8" transform="rotate(-90 100 100)" />
+                    </svg>
+                    <div class="donut-center-info">
+                      <span class="donut-big-val" id="donutTotalCount">120</span>
+                      <span class="donut-lbl">Students</span>
+                    </div>
+                  </div>
+                  
+                  <div class="donut-legend">
+                    <div class="legend-item" onclick="filterTableByStatus('regular')">
+                      <span class="legend-color-indicator bg-success"></span>
+                      <div class="legend-details">
+                        <span class="legend-name">Regular (&ge;75%)</span>
+                        <span class="legend-value" id="legendRegularLabel">84 Students (70%)</span>
+                      </div>
+                    </div>
+                    <div class="legend-item" onclick="filterTableByStatus('warning')">
+                      <span class="legend-color-indicator bg-warning"></span>
+                      <div class="legend-details">
+                        <span class="legend-name">Warning (60-74%)</span>
+                        <span class="legend-value" id="legendWarningLabel">18 Students (15%)</span>
+                      </div>
+                    </div>
+                    <div class="legend-item" onclick="filterTableByStatus('defaulter')">
+                      <span class="legend-color-indicator bg-danger"></span>
+                      <div class="legend-details">
+                        <span class="legend-name">Critical (&lt;60%)</span>
+                        <span class="legend-value" id="legendDefaulterLabel">18 Students (15%)</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- STUDENT ATTENDANCE TABLE SECTION -->
+            <section class="data-table-card" id="studentTableSection">
+              <div class="table-card-header">
+                <div class="title-meta">
+                  <h2>Recent Attendance Register</h2>
+                  <span class="record-count" id="activeFilterBadge">TE-COMP-A • 120 Students</span>
+                </div>
+                
+                <div class="table-controls">
+                  <!-- Category Dropdown Filter -->
+                  <select class="custom-select-box" id="tableAttendanceFilter" aria-label="Filter students by status">
+                    <option value="all">All Students</option>
+                    <option value="regular">Regular (&ge;75%)</option>
+                    <option value="warning">Warning (60-74%)</option>
+                    <option value="defaulter">Critical (&lt;60%)</option>
+                  </select>
+
+                  <div class="search-box-pill">
+                    <input type="text" id="tableSearchInput" placeholder="Search by name, roll, PRN..." aria-label="Search within table">
+                  </div>
+
+                  <button class="table-action-btn primary-solid" onclick="openAttendanceEntryModal()">
+                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    New Attendance
+                  </button>
+                </div>
+              </div>
+
+              <!-- Main Table Wrapper -->
+              <div class="responsive-table-container">
+                <table class="dashboard-table" id="studentAttendanceTable">
+                  <thead>
+                    <tr>
+                      <th class="sortable-header" data-sort="prn" onclick="handleTableSort('prn')">
+                        PRN 
+                        <svg class="sort-icon" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none"><polyline points="6 9 12 15 18 9"/></svg>
+                      </th>
+                      <th class="sortable-header" data-sort="roll" onclick="handleTableSort('roll')">
+                        Roll No
+                        <svg class="sort-icon" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none"><polyline points="6 9 12 15 18 9"/></svg>
+                      </th>
+                      <th class="sortable-header" data-sort="name" onclick="handleTableSort('name')">
+                        Student Name
+                        <svg class="sort-icon" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none"><polyline points="6 9 12 15 18 9"/></svg>
+                      </th>
+                      <th>Branch</th>
+                      <th>Sem</th>
+                      <th class="sortable-header" data-sort="attendance" onclick="handleTableSort('attendance')">
+                        Attendance %
+                        <svg class="sort-icon" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none"><polyline points="6 9 12 15 18 9"/></svg>
+                      </th>
+                      <th>Status</th>
+                      <th class="center-align">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="studentTableBody">
+                    <!-- Javascript will dynamically build and insert rows here -->
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Pagination Footer -->
+              <div class="table-pagination-footer">
+                <div class="pagination-info">
+                  Showing <strong id="paginationStartRow">1</strong> to <strong id="paginationEndRow">10</strong> of <strong id="paginationTotalRows">120</strong> students
+                </div>
+                <div class="pagination-pages" id="tablePaginationPages">
+                  <!-- JS generated page buttons -->
+                </div>
+              </div>
+            </section>
+
+            <!-- CRITICAL DEFAULTERS PANEL -->
+            <section class="defaulters-panel-card" id="criticalDefaultersSection">
+              <div class="panel-section-header">
+                <div class="title-block">
+                  <h2>Critical Attendance Defaulters</h2>
+                  <p>Students with attendance strictly below 60%. Action required under administrative directive.</p>
+                </div>
+                <button class="table-action-btn danger-outline" onclick="dispatchAllBulkWarnings()">
+                  <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                  Email Notices to All Parents
+                </button>
+              </div>
+
+              <div class="defaulter-grid" id="criticalDefaulterGrid">
+                <!-- Javascript populated: 18 critical defaulters will display here with customized cards -->
+              </div>
+            </section>
+
+          </div>
+
+          <!-- RIGHT COLUMN / SIDEBAR -->
+          <div class="grid-column-right">
+
+            <!-- TODAY'S SUMMARY WIDGET -->
+            <section class="right-widget-card today-summary" aria-label="Today's Attendance Snapshot">
+              <h3>Today's Attendance Summary</h3>
+              <div class="circular-progress-wrapper">
+                <svg class="radial-progress-svg" viewBox="0 0 100 100">
+                  <circle cx="50" cy="50" r="40" fill="transparent" stroke="var(--border)" stroke-width="8"/>
+                  <circle cx="50" cy="50" r="40" fill="transparent" stroke="var(--success)" stroke-width="8"
+                          stroke-dasharray="251.2" stroke-dashoffset="20" stroke-linecap="round" id="radialProgressCircle"/>
+                </svg>
+                <div class="radial-progress-text">
+                  <span class="radial-pct">92%</span>
+                  <span class="radial-desc">Present Today</span>
+                </div>
+              </div>
+              <div class="summary-details-list">
+                <div class="summary-row">
+                  <span class="dot bg-success"></span>
+                  <span class="lbl">Present Students</span>
+                  <span class="val" id="widgetPresentCount">110 / 120</span>
+                </div>
+                <div class="summary-row">
+                  <span class="dot bg-danger"></span>
+                  <span class="lbl">Absent Students</span>
+                  <span class="val" id="widgetAbsentCount">8 / 120</span>
+                </div>
+                <div class="summary-row">
+                  <span class="dot bg-warning"></span>
+                  <span class="lbl">On Authorized Leave</span>
+                  <span class="val" id="widgetLeaveCount">2 / 120</span>
+                </div>
+              </div>
+            </section>
+
+            <!-- CALENDAR WIDGET -->
+            <section class="right-widget-card calendar-widget">
+              <div class="calendar-header">
+                <h3 id="calendarMonthYear">July 2026</h3>
+                <div class="calendar-nav">
+                  <button class="cal-nav-btn" onclick="adjustCalendarMonth(-1)" aria-label="Previous Month">
+                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><polyline points="15 18 9 12 15 6"/></svg>
+                  </button>
+                  <button class="cal-nav-btn" onclick="adjustCalendarMonth(1)" aria-label="Next Month">
+                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><polyline points="9 18 15 12 9 6"/></svg>
+                  </button>
+                </div>
+              </div>
+              <div class="calendar-grid">
+                <div class="day-header">Su</div>
+                <div class="day-header">Mo</div>
+                <div class="day-header">Tu</div>
+                <div class="day-header">We</div>
+                <div class="day-header">Th</div>
+                <div class="day-header">Fr</div>
+                <div class="day-header">Sa</div>
+              </div>
+              <div class="calendar-days-container" id="calendarDaysBody">
+                <!-- Javascript populated dates -->
+              </div>
+            </section>
+
+            <!-- QUICK ACTIONS GRID -->
+            <section class="right-widget-card quick-actions-widget">
+              <h3>Quick Administration Actions</h3>
+              <div class="quick-actions-grid">
+                <button class="quick-btn" onclick="openAttendanceEntryModal()">
+                  <div class="icon-circle bg-blue-tint">
+                    <svg viewBox="0 0 24 24" stroke="var(--primary)" stroke-width="2" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+                  </div>
+                  <span>Upload Attendance</span>
+                </button>
+                <button class="quick-btn" onclick="openImportModal()">
+                  <div class="icon-circle bg-green-tint">
+                    <svg viewBox="0 0 24 24" stroke="var(--success)" stroke-width="2" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                  </div>
+                  <span>Import Excel</span>
+                </button>
+                <button class="quick-btn" onclick="openReportsModal()">
+                  <div class="icon-circle bg-purple-tint">
+                    <svg viewBox="0 0 24 24" stroke="var(--purple)" stroke-width="2" fill="none"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg>
+                  </div>
+                  <span>Generate Report</span>
+                </button>
+                <button class="quick-btn" onclick="openSendNoticeModal()">
+                  <div class="icon-circle bg-orange-tint">
+                    <svg viewBox="0 0 24 24" stroke="var(--warning)" stroke-width="2" fill="none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                  </div>
+                  <span>Send Notice</span>
+                </button>
+                <button class="quick-btn" onclick="scrollToElement('studentTableSection')">
+                  <div class="icon-circle bg-skyblue-tint">
+                    <svg viewBox="0 0 24 24" stroke="var(--skyblue)" stroke-width="2" fill="none"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg>
+                  </div>
+                  <span>View Students</span>
+                </button>
+                <button class="quick-btn" onclick="triggerPDFExport()">
+                  <div class="icon-circle bg-red-tint">
+                    <svg viewBox="0 0 24 24" stroke="var(--danger)" stroke-width="2" fill="none"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  </div>
+                  <span>Download PDF</span>
+                </button>
+              </div>
+            </section>
+
+            <!-- UPCOMING EVENTS WIDGET -->
+            <section class="right-widget-card events-widget">
+              <h3>Upcoming Deadlines &amp; Events</h3>
+              <div class="event-item">
+                <div class="event-indicator bg-warning"></div>
+                <div class="event-details">
+                  <h4>Parent-GFM Defaulter Meeting</h4>
+                  <p>Saturday, July 25, 2026 • 10:00 AM</p>
+                  <span class="event-meta">Parent attendance mandatory for sub-60% students</span>
+                </div>
+              </div>
+              <div class="event-item">
+                <div class="event-indicator bg-primary"></div>
+                <div class="event-details">
+                  <h4>Mid-Sem Attendance Review</h4>
+                  <p>Tuesday, July 28, 2026 • All Day</p>
+                  <span class="event-meta">Final list signoff by Principal &amp; HOD</span>
+                </div>
+              </div>
+              <div class="event-item">
+                <div class="event-indicator bg-purple"></div>
+                <div class="event-details">
+                  <h4>Report Submission (Phase-I)</h4>
+                  <p>Friday, July 31, 2026 • Before 5 PM</p>
+                  <span class="event-meta">Compilation of corrective feedback logs</span>
+                </div>
+              </div>
+              <div class="event-item">
+                <div class="event-indicator bg-success"></div>
+                <div class="event-details">
+                  <h4>Semester End Examination Sign-off</h4>
+                  <p>Tuesday, Nov 10, 2026 • Academic Block</p>
+                  <span class="event-meta">Minimum 75% attendance check boundary</span>
+                </div>
+              </div>
+            </section>
+
+            <!-- SCRATCH QUICK NOTES WIDGET -->
+            <section class="right-widget-card notes-widget">
+              <div class="notes-header">
+                <h3>Quick Notes (Local Scratchpad)</h3>
+                <span class="notes-autosave">Auto-saved</span>
+              </div>
+              <textarea id="quickNotesTextarea" class="quick-notes-input" placeholder="Jot down notes, student follow-ups or agenda items here..."></textarea>
+            </section>
+            
+          </div>
+
+        </div>
+
       </main>
-    </div>
 
-    <script src="../js/dashboard.js"></script>
-  </body>
+      <!-- SEPARATE PAGE VIEW: NOTIFICATIONS PANEL -->
+      <main class="dashboard-body hidden-view" id="notifications-view">
+        <div class="section-title-wrapper">
+          <div class="back-link" onclick="showView('dashboard')">
+            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><polyline points="15 18 9 12 15 6"/></svg>
+            <span>Back to Dashboard</span>
+          </div>
+          <h1>System Logs &amp; Notifications</h1>
+          <p>Complete historical log of attendance alerts, parent feedback alerts, and administrator actions.</p>
+        </div>
+
+        <div class="notification-view-layout">
+          <div class="notification-filter-card">
+            <h3>Filter Logs</h3>
+            <button class="log-filter-btn active" id="btnLogFilterAll" onclick="filterLogs('all')">All Logs</button>
+            <button class="log-filter-btn" id="btnLogFilterUnread" onclick="filterLogs('unread')">Unread Alerts</button>
+            <button class="log-filter-btn" id="btnLogFilterCritical" onclick="filterLogs('critical')">Critical Alerts</button>
+            <button class="log-filter-btn" id="btnLogFilterSystem" onclick="filterLogs('system')">System Logs</button>
+          </div>
+
+          <div class="notification-list-card">
+            <div class="card-header">
+              <span id="unreadCountBanner">3 Unread Notifications</span>
+              <button class="mark-all-read-btn" onclick="markAllNotificationsAsRead()">Mark all as read</button>
+            </div>
+            <div class="notification-full-list" id="notificationFullListContainer">
+              <!-- Dynamically populated in JavaScript -->
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- FOOTER -->
+      <footer class="app-footer">
+        <div class="footer-left">
+          <strong>Department of Computer Engineering</strong>
+          <span>Apex Institute of Technology, Academic Block II</span>
+        </div>
+        <div class="footer-center">
+          <a href="#" onclick="showToast('Support Center: Ext 402, Admin Office', 'info')">Support: support.gfm@apextech.edu</a>
+          <span class="bullet-sep">•</span>
+          <a href="#" onclick="showToast('System Version 2.4.1 (Stable)', 'info')">Version 2.4.1</a>
+        </div>
+        <div class="footer-right">
+          <span>Last Updated: Today, 09:30 AM</span>
+          <span class="copyright-text">&copy; 2026 Apex Academic Systems. All Rights Reserved.</span>
+        </div>
+      </footer>
+
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION CONTAINER (FOR FEEDBACK POPUPS) -->
+  <div class="toast-wrapper-container" id="toastContainer"></div>
+
+  <!-- MODAL 1: ATTENDANCE ENTRY MODAL -->
+  <div class="modal-overlay" id="attendanceEntryModal">
+    <div class="modal-card modal-large">
+      <div class="modal-header">
+        <div class="header-icon-title">
+          <div class="icon-circle bg-blue-tint">
+            <svg viewBox="0 0 24 24" width="20" height="20" stroke="var(--primary)" stroke-width="2" fill="none"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </div>
+          <div>
+            <h3>Manual Attendance Entry</h3>
+            <p>Select class details to mark student session status.</p>
+          </div>
+        </div>
+        <button class="modal-close-x" onclick="closeModal('attendanceEntryModal')" aria-label="Close modal">
+          <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <form id="attendanceEntryForm" onsubmit="handleAttendanceSubmit(event)">
+          <div class="modal-filters-row">
+            <div class="form-group">
+              <label for="entryClassSelect">Class</label>
+              <select id="entryClassSelect" class="form-control">
+                <option value="TE-COMP-A">TE-COMP-A</option>
+                <option value="TE-COMP-B">TE-COMP-B</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="entrySubjectSelect">Subject / Lab</label>
+              <select id="entrySubjectSelect" class="form-control">
+                <option value="COMP-301">COMP-301 (Theory - Database Systems)</option>
+                <option value="COMP-302">COMP-302 (Theory - Computer Networks)</option>
+                <option value="COMP-301-L">COMP-301-L (Lab - Database Systems)</option>
+                <option value="COMP-303">COMP-303 (Theory - Operating Systems)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="entryDateSelect">Date</label>
+              <input type="date" id="entryDateSelect" class="form-control" value="2026-07-21">
+            </div>
+          </div>
+
+          <div class="modal-table-header-bar">
+            <span>Mark Status for 15 Sample Students (TE-COMP-A)</span>
+            <div class="quick-set-status">
+              <span>Set All:</span>
+              <button type="button" class="tag-status-btn bg-success-light" onclick="bulkSetEntryStatus('present')">Present</button>
+              <button type="button" class="tag-status-btn bg-danger-light" onclick="bulkSetEntryStatus('absent')">Absent</button>
+            </div>
+          </div>
+
+          <div class="modal-table-container">
+            <table class="modal-entry-table">
+              <thead>
+                <tr>
+                  <th>Roll No</th>
+                  <th>Student Name</th>
+                  <th>PRN</th>
+                  <th>Current %</th>
+                  <th class="center-align">Attendance Status</th>
+                </tr>
+              </thead>
+              <tbody id="attendanceEntryTableBody">
+                <!-- Javascript dynamic population -->
+              </tbody>
+            </table>
+          </div>
+
+          <div class="modal-footer-actions">
+            <button type="button" class="table-action-btn secondary-solid" onclick="closeModal('attendanceEntryModal')">Cancel</button>
+            <button type="submit" class="table-action-btn primary-solid">Save Session Attendance</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 2: ATTENDANCE IMPORT MODAL -->
+  <div class="modal-overlay" id="attendanceImportModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="header-icon-title">
+          <div class="icon-circle bg-green-tint">
+            <svg viewBox="0 0 24 24" width="20" height="20" stroke="var(--success)" stroke-width="2" fill="none"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          </div>
+          <div>
+            <h3>Import Attendance Spreadsheet</h3>
+            <p>Upload Excel/CSV logs downloaded from biometric scanners or ERP portals.</p>
+          </div>
+        </div>
+        <button class="modal-close-x" onclick="closeModal('attendanceImportModal')" aria-label="Close modal">
+          <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="excel-upload-zone" id="excelDropZone">
+          <svg class="cloud-upload-icon" viewBox="0 0 24 24" stroke="var(--primary)" stroke-width="1.5" fill="none"><path d="M21.2 15c.9-1.2 1.4-2.7 1.4-4.2a6.9 6.9 0 0 0-12.8-3.4A6 6 0 0 0 2 12c0 2.2 1.1 4.1 2.8 5.2"/><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/></svg>
+          <h4>Drag &amp; Drop Excel Attendance Sheet here</h4>
+          <p>Supports formats: .xlsx, .xls, .csv (Must contain PRN and Session attendance values)</p>
+          <span class="file-size-lbl">Maximum size: 10MB</span>
+          
+          <button type="button" class="table-action-btn primary-outline file-select-trigger" onclick="document.getElementById('excelFileInput').click()">
+            Or Select File from System
+          </button>
+          <input type="file" id="excelFileInput" class="hidden-file-input" accept=".xlsx,.xls,.csv" onchange="handleExcelFileSelect(event)">
+        </div>
+
+        <div class="file-upload-preview" id="excelUploadPreview" style="display: none;">
+          <div class="file-preview-card">
+            <svg viewBox="0 0 24 24" width="36" height="36" stroke="var(--success)" stroke-width="1.5" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            <div class="file-meta-info">
+              <strong id="previewFileName">July_Attendance_Batch_A.xlsx</strong>
+              <span id="previewFileSize">1.2 MB</span>
+            </div>
+            <button type="button" class="remove-file-btn" onclick="resetExcelUpload()" aria-label="Remove File">
+              <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="12"/></svg>
+            </button>
+          </div>
+
+          <div class="progress-bar-container">
+            <div class="progress-fill" id="excelUploadProgressBar" style="width: 0%;"></div>
+          </div>
+          <div class="progress-status-text" id="excelProgressStatus">Uploading files...</div>
+
+          <div class="validation-summary-box" id="excelValidationBox" style="display: none;">
+            <div class="box-title success-text">
+              <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              <span>File Validated Successfully</span>
+            </div>
+            <ul class="validation-bullets">
+              <li>120 student attendance rows matched correctly.</li>
+              <li>Calculated updated cumulative attendance averages.</li>
+              <li>Identified <span class="danger-text font-weight-bold">18 critical defaulter students</span> needing alerts.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer-actions">
+        <button class="table-action-btn secondary-solid" onclick="closeModal('attendanceImportModal')">Cancel</button>
+        <button class="table-action-btn primary-solid" id="btnConfirmExcelImport" disabled onclick="executeExcelImport()">Complete Import</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 3: SEND NOTICE MODAL -->
+  <div class="modal-overlay" id="sendNoticeModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="header-icon-title">
+          <div class="icon-circle bg-orange-tint">
+            <svg viewBox="0 0 24 24" width="20" height="20" stroke="var(--warning)" stroke-width="2" fill="none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <div>
+            <h3>Send Corrective Attendance Notice</h3>
+            <p>Dispatches warning letters to students and their registered parent guardians.</p>
+          </div>
+        </div>
+        <button class="modal-close-x" onclick="closeModal('sendNoticeModal')" aria-label="Close modal">
+          <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <form id="sendNoticeForm" onsubmit="handleSendNoticeSubmit(event)">
+          <div class="form-group">
+            <label for="noticeRecipientName">Student Recipient</label>
+            <input type="text" id="noticeRecipientName" class="form-control" placeholder="All Critical Defaulters (18 Students)" readonly>
+            <input type="hidden" id="noticeRecipientPrn" value="all">
+          </div>
+
+          <div class="form-group">
+            <label for="noticeCategory">Warning Classification</label>
+            <select id="noticeCategory" class="form-control" onchange="updateNoticeTemplate()">
+              <option value="critical-warning">Level 1 - Critical Attendance Warning (&lt;60%)</option>
+              <option value="warning-alert">Level 2 - Mild Attendance Warning (60-74%)</option>
+              <option value="parent-meeting">Parent-Faculty Meeting Summon Notice</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Delivery Channels</label>
+            <div class="checkbox-group">
+              <label class="custom-checkbox">
+                <input type="checkbox" id="channelPortal" checked>
+                <span>Student Portal System Alert</span>
+              </label>
+              <label class="custom-checkbox">
+                <input type="checkbox" id="channelEmail" checked>
+                <span>Parent Registered Email</span>
+              </label>
+              <label class="custom-checkbox">
+                <input type="checkbox" id="channelSMS">
+                <span>SMS Alert (Optional Gateway)</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="noticeContent">Notice Message Template</label>
+            <textarea id="noticeContent" class="form-control textarea-large" required></textarea>
+          </div>
+
+          <div class="modal-footer-actions">
+            <button type="button" class="table-action-btn secondary-solid" onclick="closeModal('sendNoticeModal')">Cancel</button>
+            <button type="submit" class="table-action-btn primary-solid">Dispatch Notice(s)</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 4: REPORTS GENERATOR MODAL -->
+  <div class="modal-overlay" id="reportsModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="header-icon-title">
+          <div class="icon-circle bg-purple-tint">
+            <svg viewBox="0 0 24 24" width="20" height="20" stroke="var(--purple)" stroke-width="2" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <div>
+            <h3>Generate Custom Reports</h3>
+            <p>Select filter sets to export clean Excel or printable PDF layouts.</p>
+          </div>
+        </div>
+        <button class="modal-close-x" onclick="closeModal('reportsModal')" aria-label="Close modal">
+          <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="reportTypeSelect">Report Scope</label>
+          <select id="reportTypeSelect" class="form-control">
+            <option value="all-defaulters">Entire Defaulter List (Attendance &lt; 75%)</option>
+            <option value="critical-defaulters">Critical Defaulters Only (Attendance &lt; 60%)</option>
+            <option value="class-summary">General Class Performance Audit Summary</option>
+            <option value="student-report">Student-wise Attendance Progression Log</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="reportFormatSelect">Export File Format</label>
+          <select id="reportFormatSelect" class="form-control">
+            <option value="pdf">Adobe PDF Format (.pdf)</option>
+            <option value="excel">Microsoft Excel Spreadsheet (.xlsx)</option>
+            <option value="csv">Standard Comma-Separated Values (.csv)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="custom-checkbox">
+            <input type="checkbox" id="reportIncludeParents" checked>
+            <span>Include registered parent/guardian contact numbers and emails</span>
+          </label>
+          <label class="custom-checkbox">
+            <input type="checkbox" id="reportSignatures" checked>
+            <span>Include standard Principal, GFM, &amp; HOD signature lines</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="modal-footer-actions">
+        <button class="table-action-btn secondary-solid" onclick="closeModal('reportsModal')">Close</button>
+        <button class="table-action-btn primary-solid" onclick="executeReportGeneration()">Generate &amp; Download</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 5: USER PROFILE MODAL -->
+  <div class="modal-overlay" id="profileModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="header-icon-title">
+          <div class="icon-circle bg-blue-tint">
+            <svg viewBox="0 0 24 24" width="20" height="20" stroke="var(--primary)" stroke-width="2" fill="none"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <div>
+            <h3>Guardian Faculty Profile</h3>
+            <p>Manage your professional credentials and assigned portfolios.</p>
+          </div>
+        </div>
+        <button class="modal-close-x" onclick="closeModal('profileModal')" aria-label="Close modal">
+          <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <div class="modal-body profile-editor-layout">
+        <div class="profile-avatar-uploader">
+          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=256&auto=format&fit=crop" class="profile-form-avatar" alt="Rajesh Kulkarni">
+          <button type="button" class="tag-status-btn bg-blue-light" onclick="showToast('Avatar updates are deactivated in mock portal.', 'warning')">Change Photo</button>
+        </div>
+        <div class="profile-fields-grid">
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" class="form-control" value="Prof. Rajesh Kulkarni" readonly>
+          </div>
+          <div class="form-group">
+            <label>Designation</label>
+            <input type="text" class="form-control" value="Associate Professor, Computer Engineering" readonly>
+          </div>
+          <div class="form-group">
+            <label>Registered Email</label>
+            <input type="text" class="form-control" value="r.kulkarni@apextech.edu" readonly>
+          </div>
+          <div class="form-group">
+            <label>Mobile Number</label>
+            <input type="text" class="form-control" value="+91 98765 43210" readonly>
+          </div>
+          <div class="form-group">
+            <label>Assigned Batch (GFM Role)</label>
+            <input type="text" class="form-control" value="TE-COMP-A (Third Year, Batch A)" readonly>
+          </div>
+          <div class="form-group">
+            <label>Office Desk</label>
+            <input type="text" class="form-control" value="Room 304, Academic Block II" readonly>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer-actions">
+        <button class="table-action-btn primary-solid" onclick="closeModal('profileModal')">Ok</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 6: CHANGE PASSWORD MODAL -->
+  <div class="modal-overlay" id="passwordChangeModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="header-icon-title">
+          <div class="icon-circle bg-red-tint">
+            <svg viewBox="0 0 24 24" width="20" height="20" stroke="var(--danger)" stroke-width="2" fill="none"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <div>
+            <h3>Change Portal Password</h3>
+            <p>Enter your old password and configure a strong new password.</p>
+          </div>
+        </div>
+        <button class="modal-close-x" onclick="closeModal('passwordChangeModal')" aria-label="Close modal">
+          <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <form id="passwordChangeForm" onsubmit="handlePasswordSubmit(event)">
+          <div class="form-group">
+            <label for="oldPass">Current Password</label>
+            <input type="password" id="oldPass" class="form-control" required placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;">
+          </div>
+          <div class="form-group">
+            <label for="newPass">New Password</label>
+            <input type="password" id="newPass" class="form-control" required placeholder="Min 8 characters, 1 number">
+          </div>
+          <div class="form-group">
+            <label for="confirmNewPass">Confirm New Password</label>
+            <input type="password" id="confirmNewPass" class="form-control" required placeholder="Confirm match">
+          </div>
+
+          <div class="modal-footer-actions">
+            <button type="button" class="table-action-btn secondary-solid" onclick="closeModal('passwordChangeModal')">Cancel</button>
+            <button type="submit" class="table-action-btn primary-solid">Update Password</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 7: PORTAL SETTINGS MODAL -->
+  <div class="modal-overlay" id="settingsModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="header-icon-title">
+          <div class="icon-circle bg-blue-tint">
+            <svg viewBox="0 0 24 24" width="20" height="20" stroke="var(--primary)" stroke-width="2" fill="none"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </div>
+          <div>
+            <h3>Portal Settings</h3>
+            <p>Configure dashboard refresh criteria and custom attendance thresholds.</p>
+          </div>
+        </div>
+        <button class="modal-close-x" onclick="closeModal('settingsModal')" aria-label="Close modal">
+          <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <form id="portalSettingsForm" onsubmit="handleSettingsSave(event)">
+          <div class="form-group">
+            <label for="setBaseline">Regular Attendance Baseline Threshold (%)</label>
+            <input type="number" id="setBaseline" class="form-control" value="75" min="50" max="95">
+          </div>
+          <div class="form-group">
+            <label for="setDefaulter">Critical Attendance Defaulter Threshold (%)</label>
+            <input type="number" id="setDefaulter" class="form-control" value="60" min="40" max="74">
+          </div>
+          <div class="form-group">
+            <label class="custom-checkbox">
+              <input type="checkbox" id="setAutoNotices" checked>
+              <span>Auto-generate email alerts immediately upon importing defaulters</span>
+            </label>
+            <label class="custom-checkbox">
+              <input type="checkbox" id="setLiveRefresh" checked>
+              <span>Refresh dashboard stats in real-time on manual entries</span>
+            </label>
+          </div>
+
+          <div class="modal-footer-actions">
+            <button type="button" class="table-action-btn secondary-solid" onclick="closeModal('settingsModal')">Cancel</button>
+            <button type="submit" class="table-action-btn primary-solid">Save Configuration</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPT -->
+  <script src="../js/dashboard.js"></script>
+</body>
 </html>
