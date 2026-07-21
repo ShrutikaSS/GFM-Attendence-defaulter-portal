@@ -1,81 +1,718 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Student Dashboard</title>
-    <link rel="stylesheet" href="../css/dashboard.css" />
-  </head>
-  <body>
-    <div class="dashboard-shell">
-      <aside class="sidebar">
-        <div class="brand">
-          <h2>Student Portal</h2>
-          <p>Attendance System</p>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="GFM Attendance Management System - Modern ERP Student Dashboard">
+    <title>GFM Attendance Management System | Student Dashboard</title>
+
+    <!-- Google Fonts: Inter & Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Chart.js CDN for interactive attendance graphs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/student-dashboard.css">
+</head>
+<body>
+
+    <!-- Loading Spinner Overlay -->
+    <div id="loadingOverlay" class="loading-overlay hidden">
+        <div class="spinner-container">
+            <div class="spinner"></div>
+            <p>Loading Dashboard...</p>
         </div>
-        <nav>
-          <a class="active" href="#">Dashboard</a>
-          <a href="#">Attendance Summary</a>
-          <a href="#">Attendance History</a>
-          <a href="#">Notifications</a>
-          <a href="#">Profile</a>
-          <a href="../index.html">Logout</a>
-        </nav>
-      </aside>
-
-      <main class="main-panel">
-        <header class="topbar">
-          <button class="menu-toggle">☰</button>
-          <div class="topbar-search">
-            <input type="text" placeholder="Search" />
-          </div>
-          <div class="topbar-actions">
-            <button class="icon-btn">🔔</button>
-            <div class="profile-chip">RS</div>
-          </div>
-        </header>
-
-        <section class="welcome-card" style="background: rgba(31, 111, 235, 0.08); border-radius: 16px; padding: 18px 24px; margin-bottom: 24px;">
-          <h1 style="margin: 0 0 6px 0; font-size: 1.5rem;">Welcome, <span class="user-name">Rahul Sharma</span></h1>
-          <p style="margin: 0; color: #66748a;">Track your daily attendance percentage, course progress, and academic notices.</p>
-        </section>
-
-        <section class="dashboard-grid">
-          <article class="dash-card">
-            <h3>Attendance Percentage</h3>
-            <p class="metric">92%</p>
-          </article>
-          <article class="dash-card">
-            <h3>Classes Attended</h3>
-            <p class="metric">84</p>
-          </article>
-          <article class="dash-card">
-            <h3>Classes Missed</h3>
-            <p class="metric">7</p>
-          </article>
-          <article class="dash-card">
-            <h3>Warning Status</h3>
-            <p class="metric status">Safe</p>
-          </article>
-        </section>
-
-        <section class="content-grid">
-          <article class="panel-card">
-            <h3>Attendance Graph</h3>
-            <div class="graph-placeholder">Graph Placeholder</div>
-          </article>
-          <article class="panel-card">
-            <h3>Recent Notices</h3>
-            <ul class="list-stack">
-              <li>Attendance review scheduled for Friday.</li>
-              <li>Department seminar postponed.</li>
-              <li>Weekly report shared to all students.</li>
-            </ul>
-          </article>
-        </section>
-      </main>
     </div>
 
-    <script src="../js/dashboard.js"></script>
-  </body>
+    <!-- Toast Notification Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- MAIN APP CONTAINER -->
+    <div class="app-layout">
+
+        <!-- ==========================================
+             STICKY TOP NAVBAR
+             ========================================== -->
+        <header class="navbar">
+            <div class="nav-left">
+                <button id="sidebarToggle" class="icon-btn sidebar-toggle-btn" aria-label="Toggle Navigation Menu">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                
+                <div class="brand-logo">
+                    <div class="logo-icon">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                    </div>
+                    <div class="brand-text">
+                        <span class="brand-title">GFM Attendance</span>
+                        <span class="brand-sub">Management System</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nav-right">
+                <!-- Dark Mode Toggle -->
+                <button id="themeToggle" class="icon-btn theme-btn" title="Toggle Light/Dark Theme">
+                    <i class="fa-solid fa-moon moon-icon"></i>
+                    <i class="fa-solid fa-sun sun-icon"></i>
+                </button>
+
+                <!-- Notification Bell -->
+                <div class="notif-dropdown-wrapper">
+                    <button id="notifBell" class="icon-btn notif-btn" title="Notifications">
+                        <i class="fa-regular fa-bell"></i>
+                        <span id="notifBadgeCount" class="notif-badge">3</span>
+                    </button>
+                    <!-- Quick Notification Dropdown -->
+                    <div id="notifDropdown" class="notif-dropdown hidden">
+                        <div class="notif-dropdown-header">
+                            <h3>Notifications</h3>
+                            <button id="markAllReadBtn" class="text-btn">Mark all read</button>
+                        </div>
+                        <div id="quickNotifList" class="notif-dropdown-body">
+                            <!-- Populated dynamically -->
+                        </div>
+                        <div class="notif-dropdown-footer">
+                            <a href="#notifications" class="view-all-link" data-tab="notifications">View All Notifications</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- User Profile Snippet -->
+                <div class="nav-profile">
+                    <img id="navUserAvatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150" alt="Student Profile Photo" class="nav-avatar">
+                    <div class="nav-user-info">
+                        <span id="studentNameNav" class="user-name">Rahul Patil</span>
+                        <span id="studentRollNav" class="user-roll">2024CS108</span>
+                    </div>
+                </div>
+
+                <!-- Logout Button -->
+                <button id="logoutBtnNav" class="btn btn-outline-danger btn-sm logout-btn" title="Logout">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- ==========================================
+             LAYOUT BODY: SIDEBAR + MAIN CONTENT
+             ========================================== -->
+        <div class="layout-body">
+
+            <!-- Mobile Sidebar Backdrop Blur -->
+            <div id="sidebarBackdrop" class="sidebar-backdrop hidden"></div>
+
+            <!-- LEFT SIDEBAR NAVIGATION -->
+            <aside id="sidebar" class="sidebar">
+                <nav class="sidebar-nav">
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="#dashboard" class="nav-link active" data-tab="dashboard">
+                                <i class="fa-solid fa-house-chimney"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#attendance" class="nav-link" data-tab="attendance">
+                                <i class="fa-solid fa-chart-pie"></i>
+                                <span>My Attendance</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#history" class="nav-link" data-tab="history">
+                                <i class="fa-solid fa-clock-rotate-left"></i>
+                                <span>Attendance History</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#notifications" class="nav-link" data-tab="notifications">
+                                <i class="fa-solid fa-bell"></i>
+                                <span>Notifications</span>
+                                <span id="sidebarNotifBadge" class="sidebar-badge">3</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#profile" class="nav-link" data-tab="profile">
+                                <i class="fa-solid fa-user-gear"></i>
+                                <span>Profile</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#settings" class="nav-link" data-tab="settings">
+                                <i class="fa-solid fa-sliders"></i>
+                                <span>Settings</span>
+                            </a>
+                        </li>
+                    </ul>
+
+                    <div class="sidebar-footer">
+                        <button id="sidebarLogoutBtn" class="sidebar-logout-btn">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                            <span>Logout</span>
+                        </button>
+                    </div>
+                </nav>
+            </aside>
+
+            <!-- MAIN CONTENT AREA -->
+            <main class="main-content">
+
+                <!-- ==========================================
+                     TAB 1: DASHBOARD HOME
+                     ========================================== -->
+                <section id="sectionDashboard" class="tab-section active">
+                    
+                    <!-- WELCOME BANNER -->
+                    <div class="welcome-banner glass-card">
+                        <div class="welcome-text">
+                            <span class="greeting-subtitle">Welcome Back 👋</span>
+                            <h1 id="studentName" class="greeting-title">Rahul Patil</h1>
+                            
+                            <div class="student-meta-pills">
+                                <span class="meta-pill"><i class="fa-solid fa-id-card"></i> Roll: <strong id="studentRoll">2024CS108</strong></span>
+                                <span class="meta-pill"><i class="fa-solid fa-building-columns"></i> Dept: <strong id="studentDept">Computer Engineering</strong></span>
+                                <span class="meta-pill"><i class="fa-solid fa-layer-group"></i> Sem: <strong id="studentSem">Semester VI</strong></span>
+                                <span class="meta-pill"><i class="fa-solid fa-users"></i> Div: <strong id="studentDiv">Div A</strong></span>
+                            </div>
+                        </div>
+
+                        <div class="welcome-date-card">
+                            <div class="date-icon"><i class="fa-regular fa-calendar-days"></i></div>
+                            <div class="date-info">
+                                <span class="date-label">Today's Date</span>
+                                <span id="currentDate" class="date-value">Tuesday, Jul 21, 2026</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 4 MODERN SUMMARY CARDS -->
+                    <div class="summary-cards-grid">
+                        
+                        <!-- Card 1: Overall Attendance -->
+                        <div id="overallAttendanceCard" class="stat-card glass-card">
+                            <div class="stat-icon-wrapper icon-bg-blue">
+                                <i class="fa-solid fa-calendar-check"></i>
+                            </div>
+                            <div class="stat-details">
+                                <span class="stat-label">Overall Attendance</span>
+                                <div class="stat-value-group">
+                                    <h2 id="overallAttendance" class="stat-value counter" data-target="92">0%</h2>
+                                    <span id="overallAttendanceBadge" class="status-badge badge-success">Above 75%</span>
+                                </div>
+                            </div>
+                            <div class="stat-progress-line">
+                                <div id="overallProgressBar" class="progress-bar-fill bg-emerald" style="width: 92%;"></div>
+                            </div>
+                        </div>
+
+                        <!-- Card 2: Classes Attended -->
+                        <div id="attendedCard" class="stat-card glass-card">
+                            <div class="stat-icon-wrapper icon-bg-emerald">
+                                <i class="fa-solid fa-user-check"></i>
+                            </div>
+                            <div class="stat-details">
+                                <span class="stat-label">Classes Attended</span>
+                                <h2 id="classesAttended" class="stat-value counter" data-target="138">0</h2>
+                            </div>
+                            <span class="stat-subtext text-muted">Out of 150 total sessions</span>
+                        </div>
+
+                        <!-- Card 3: Classes Missed -->
+                        <div id="missedCard" class="stat-card glass-card">
+                            <div class="stat-icon-wrapper icon-bg-amber">
+                                <i class="fa-solid fa-user-xmark"></i>
+                            </div>
+                            <div class="stat-details">
+                                <span class="stat-label">Classes Missed</span>
+                                <h2 id="classesMissed" class="stat-value counter" data-target="12">0</h2>
+                            </div>
+                            <span class="stat-subtext text-amber">Authorized & Leaves included</span>
+                        </div>
+
+                        <!-- Card 4: Warning Status -->
+                        <div id="warningStatusCard" class="stat-card glass-card">
+                            <div class="stat-icon-wrapper icon-bg-green" id="warningStatusIconWrapper">
+                                <i class="fa-solid fa-shield-halved"></i>
+                            </div>
+                            <div class="stat-details">
+                                <span class="stat-label">Warning Status</span>
+                                <div class="stat-value-group">
+                                    <h2 id="warningStatus" class="stat-status-text text-success">Safe</h2>
+                                </div>
+                            </div>
+                            <span id="warningStatusDesc" class="stat-subtext text-success">Good attendance standing</span>
+                        </div>
+
+                    </div>
+
+                    <!-- DASHBOARD MAIN GRID (LEFT CONTENT + RIGHT PANEL) -->
+                    <div class="dashboard-grid">
+                        
+                        <!-- MAIN CONTENT COLUMN -->
+                        <div class="grid-column main-column">
+
+                            <!-- CIRCULAR PROGRESS & OVERALL GAUGE SECTION -->
+                            <div class="card glass-card circular-gauge-card">
+                                <div class="card-header">
+                                    <div class="header-title">
+                                        <i class="fa-solid fa-chart-donut text-primary"></i>
+                                        <h3>Attendance Standing & Minimum Target</h3>
+                                    </div>
+                                    <span class="badge badge-outline">Mandatory ERP Criteria</span>
+                                </div>
+                                <div class="card-body gauge-body">
+                                    
+                                    <div class="gauge-visual">
+                                        <div class="circular-progress-wrapper">
+                                            <svg class="circular-chart" viewBox="0 0 36 36">
+                                                <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                                <path id="circularGaugePath" class="circle stroke-emerald" stroke-dasharray="92, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                            </svg>
+                                            <div class="circle-center-content">
+                                                <span id="gaugePercentage" class="gauge-number">92%</span>
+                                                <span class="gauge-sub">Overall</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="gauge-details">
+                                        <div class="gauge-info-box">
+                                            <span class="info-label">Minimum Required</span>
+                                            <span class="info-value text-dark font-700">75%</span>
+                                        </div>
+
+                                        <div class="gauge-info-box">
+                                            <span class="info-label">Current Status</span>
+                                            <span id="eligibilityBadge" class="badge badge-lg badge-success"><i class="fa-solid fa-circle-check"></i> Eligible for Exams</span>
+                                        </div>
+
+                                        <p class="gauge-description">
+                                            Your overall attendance is comfortably above the <strong>75% criterion</strong> set by the University Board. Keep up the consistent attendance!
+                                        </p>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <!-- ATTENDANCE GRAPH SECTION -->
+                            <div id="attendanceGraph" class="card glass-card chart-card">
+                                <div class="card-header">
+                                    <div class="header-title">
+                                        <i class="fa-solid fa-chart-line text-primary"></i>
+                                        <h3>Monthly Attendance Trend</h3>
+                                    </div>
+                                    <div class="header-actions">
+                                        <span class="badge badge-soft-primary">Semester VI (Jan - Jun)</span>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="chart-container">
+                                        <canvas id="attendanceGraphChart"></canvas>
+                                    </div>
+
+                                    <div class="chart-stats-row">
+                                        <div class="chart-stat-item">
+                                            <span class="stat-label">Highest Month</span>
+                                            <span id="highestMonth" class="stat-val text-success">April (96%)</span>
+                                        </div>
+                                        <div class="chart-stat-item">
+                                            <span class="stat-label">Lowest Month</span>
+                                            <span id="lowestMonth" class="stat-val text-amber">February (88%)</span>
+                                        </div>
+                                        <div class="chart-stat-item">
+                                            <span class="stat-label">Average Attendance</span>
+                                            <span id="avgAttendance" class="stat-val text-primary">92%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- PERSONAL SUBJECT-WISE ATTENDANCE CARDS -->
+                            <div class="section-block">
+                                <div class="block-header">
+                                    <h3><i class="fa-solid fa-book-open text-primary"></i> Subject-Wise Attendance</h3>
+                                    <span class="text-muted">Spring 2026 Academic Breakdown</span>
+                                </div>
+                                
+                                <div id="personalAttendanceGrid" class="subject-cards-grid">
+                                    <!-- Rendered dynamically by script.js -->
+                                </div>
+                            </div>
+
+                            <!-- WARNING STATUS & BUNK CALCULATOR CARD -->
+                            <div id="warningStatus" class="card glass-card warning-calculator-card">
+                                <div class="card-header">
+                                    <div class="header-title">
+                                        <i class="fa-solid fa-calculator text-primary"></i>
+                                        <h3>Attendance Standing & Bunk Simulator</h3>
+                                    </div>
+                                    <span class="badge badge-outline-warning"><i class="fa-solid fa-triangle-exclamation"></i> GFM Alert Engine</span>
+                                </div>
+                                <div class="card-body">
+                                    <div class="rules-pills-row">
+                                        <span class="rule-pill rule-safe"><i class="fa-solid fa-circle-check"></i> Above 75%: Safe</span>
+                                        <span class="rule-pill rule-warning"><i class="fa-solid fa-circle-exclamation"></i> 60% - 75%: Warning</span>
+                                        <span class="rule-pill rule-critical"><i class="fa-solid fa-triangle-exclamation"></i> Below 60%: Critical</span>
+                                    </div>
+
+                                    <div class="calculator-box">
+                                        <div class="calc-metrics">
+                                            <div class="metric-item">
+                                                <span class="metric-title">Current Attendance</span>
+                                                <span id="calcCurrentAtt" class="metric-value text-primary">92%</span>
+                                            </div>
+                                            <div class="metric-item">
+                                                <span class="metric-title">Required Criteria</span>
+                                                <span class="metric-value">75%</span>
+                                            </div>
+                                            <div class="metric-item highlight-box">
+                                                <span class="metric-title">Classes Can Bunk / Must Attend</span>
+                                                <span id="calcClassesAdvice" class="metric-value text-emerald">Can miss 34 classes</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="bunk-simulator-form">
+                                            <label for="simulateMissClasses">Simulate Future Absenteeism:</label>
+                                            <div class="sim-input-group">
+                                                <input type="number" id="simulateMissClasses" value="0" min="0" max="50">
+                                                <span>classes missed</span>
+                                                <button id="simCalcBtn" class="btn btn-primary btn-sm">Calculate Projection</button>
+                                            </div>
+                                            <p id="simResultMsg" class="sim-result-text text-muted">Projected Attendance: <strong>92.0%</strong> (Safe)</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- RIGHT SIDE PANEL COLUMN -->
+                        <div class="grid-column side-column">
+
+                            <!-- UPCOMING CLASSES -->
+                            <div class="card glass-card widget-card">
+                                <div class="card-header">
+                                    <h3><i class="fa-regular fa-clock text-primary"></i> Today's Schedule</h3>
+                                    <span class="badge badge-sm badge-primary">3 Lectures</span>
+                                </div>
+                                <div class="card-body">
+                                    <ul id="upcomingClassesList" class="schedule-list">
+                                        <!-- Populated dynamically -->
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- ATTENDANCE GOAL WIDGET -->
+                            <div class="card glass-card widget-card goal-widget">
+                                <div class="card-header">
+                                    <h3><i class="fa-solid fa-bullseye text-primary"></i> Attendance Target</h3>
+                                    <span class="badge badge-sm badge-success">Target: 95%</span>
+                                </div>
+                                <div class="card-body">
+                                    <div class="goal-info">
+                                        <span>Current: 92%</span>
+                                        <span>Goal: 95%</span>
+                                    </div>
+                                    <div class="progress-bar-container">
+                                        <div class="progress-bar-fill bg-primary" style="width: 96.8%;"></div>
+                                    </div>
+                                    <p class="goal-tip"><i class="fa-solid fa-lightbulb text-amber"></i> Attend next 5 lectures to hit 95% threshold!</p>
+                                </div>
+                            </div>
+
+                            <!-- QUICK STATISTICS WIDGET -->
+                            <div class="card glass-card widget-card">
+                                <div class="card-header">
+                                    <h3><i class="fa-solid fa-chart-simple text-primary"></i> Quick Metrics</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="quick-stats-list">
+                                        <div class="quick-stat-row">
+                                            <span>Conducted Lectures</span>
+                                            <strong>150</strong>
+                                        </div>
+                                        <div class="quick-stat-row">
+                                            <span>Lab Sessions Attended</span>
+                                            <strong class="text-success">48 / 50</strong>
+                                        </div>
+                                        <div class="quick-stat-row">
+                                            <span>Medical Leaves Granted</span>
+                                            <strong class="text-primary">2 Days</strong>
+                                        </div>
+                                        <div class="quick-stat-row">
+                                            <span>GFM Verification</span>
+                                            <span class="badge badge-success"><i class="fa-solid fa-check"></i> Approved</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- RECENT ATTENDANCE ACTIVITY -->
+                            <div class="card glass-card widget-card">
+                                <div class="card-header">
+                                    <h3><i class="fa-solid fa-bolt text-primary"></i> Recent Activity</h3>
+                                </div>
+                                <div class="card-body">
+                                    <ul id="recentActivityList" class="activity-feed">
+                                        <!-- Populated dynamically -->
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+                <!-- ==========================================
+                     TAB 2: MY ATTENDANCE (FULL SUBJECT BREAKDOWN)
+                     ========================================== -->
+                <section id="sectionAttendance" class="tab-section hidden">
+                    <div class="section-header">
+                        <h2>Subject-Wise Attendance Details</h2>
+                        <p class="text-muted">Detailed log of your registered courses, faculty in-charge, and threshold percentages.</p>
+                    </div>
+
+                    <div id="fullSubjectCardsGrid" class="full-subject-grid">
+                        <!-- Populated dynamically -->
+                    </div>
+                </section>
+
+                <!-- ==========================================
+                     TAB 3: ATTENDANCE HISTORY
+                     ========================================== -->
+                <section id="sectionHistory" class="tab-section hidden">
+                    <div class="section-header">
+                        <h2>Attendance Logs & History</h2>
+                        <p class="text-muted">Searchable, filterable database of daily lecture entries and faculty verifications.</p>
+                    </div>
+
+                    <!-- SEARCH & FILTER BAR -->
+                    <div class="history-filter-bar glass-card">
+                        <div class="filter-group search-group">
+                            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                            <input type="text" id="historySearchInput" placeholder="Search by subject, faculty, remarks..." class="form-control">
+                        </div>
+
+                        <div class="filter-group">
+                            <label for="historySubjectFilter">Subject:</label>
+                            <select id="historySubjectFilter" class="form-select">
+                                <option value="ALL">All Subjects</option>
+                                <option value="Web Development">Web Development</option>
+                                <option value="Data Structures">Data Structures</option>
+                                <option value="Database Systems">Database Systems</option>
+                                <option value="Computer Networks">Computer Networks</option>
+                                <option value="Software Engineering">Software Engineering</option>
+                            </select>
+                        </div>
+
+                        <div class="filter-group">
+                            <label for="historyStatusFilter">Status:</label>
+                            <select id="historyStatusFilter" class="form-select">
+                                <option value="ALL">All Statuses</option>
+                                <option value="Present">Present Only</option>
+                                <option value="Absent">Absent Only</option>
+                            </select>
+                        </div>
+
+                        <div class="filter-group">
+                            <label for="historyDateFilter">Date:</label>
+                            <input type="date" id="historyDateFilter" class="form-control">
+                        </div>
+
+                        <button id="historyResetBtn" class="btn btn-outline-secondary btn-sm">
+                            <i class="fa-solid fa-rotate-left"></i> Reset
+                        </button>
+                    </div>
+
+                    <!-- HISTORY TABLE -->
+                    <div class="table-responsive glass-card">
+                        <table id="attendanceHistoryTable" class="history-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Subject</th>
+                                    <th>Faculty In-Charge</th>
+                                    <th>Status</th>
+                                    <th>Attendance %</th>
+                                    <th>Remarks</th>
+                                </tr>
+                            </thead>
+                            <tbody id="attendanceHistory">
+                                <!-- Populated dynamically by script.js -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- PAGINATION BAR -->
+                    <div class="pagination-wrapper glass-card">
+                        <span id="historyPaginationInfo" class="pagination-info">Showing 1 to 10 of 25 entries</span>
+                        <div class="pagination-controls">
+                            <button id="historyPrevBtn" class="btn btn-outline-primary btn-sm" disabled><i class="fa-solid fa-chevron-left"></i> Prev</button>
+                            <span id="historyPageNum" class="page-num">Page 1</span>
+                            <button id="historyNextBtn" class="btn btn-outline-primary btn-sm">Next <i class="fa-solid fa-chevron-right"></i></button>
+                        </div>
+                    </div>
+
+                </section>
+
+                <!-- ==========================================
+                     TAB 4: NOTIFICATIONS
+                     ========================================== -->
+                <section id="sectionNotifications" class="tab-section hidden">
+                    <div class="section-header">
+                        <h2>Notifications & Official Announcements</h2>
+                        <p class="text-muted">Stay updated on attendance warnings, GFM notices, and academic schedules.</p>
+                    </div>
+
+                    <div class="notifications-panel glass-card">
+                        <div class="notif-panel-header">
+                            <div class="notif-tabs">
+                                <button class="notif-tab-btn active" data-filter="ALL">All Notices</button>
+                                <button class="notif-tab-btn" data-filter="UNREAD">Unread Only</button>
+                                <button class="notif-tab-btn" data-filter="WARNING">Attendance Alerts</button>
+                            </div>
+                            <button id="clearAllNotifsBtn" class="btn btn-outline-danger btn-sm"><i class="fa-solid fa-trash-can"></i> Clear All</button>
+                        </div>
+
+                        <div id="notificationsList" class="full-notif-list">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ==========================================
+                     TAB 5: PROFILE CARD
+                     ========================================== -->
+                <section id="sectionProfile" class="tab-section hidden">
+                    <div class="section-header">
+                        <h2>Student ERP Profile</h2>
+                        <p class="text-muted">Official academic identification and contact records registered in GFM System.</p>
+                    </div>
+
+                    <div id="profileCard" class="profile-card-container glass-card">
+                        <div class="profile-cover-bg"></div>
+
+                        <div class="profile-header-content">
+                            <img id="profilePhoto" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=250" alt="Student Photo" class="profile-large-avatar">
+                            
+                            <div class="profile-title-group">
+                                <h2 id="profName">Rahul Patil</h2>
+                                <p id="profRole" class="text-muted">Computer Engineering Student | GFM Batch 2026</p>
+                                <div class="profile-badges">
+                                    <span class="badge badge-success"><i class="fa-solid fa-check"></i> Active Status</span>
+                                    <span class="badge badge-primary">Overall: 92%</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="profile-details-grid">
+                            <div class="profile-detail-box">
+                                <span class="detail-label"><i class="fa-solid fa-hashtag text-primary"></i> Roll Number</span>
+                                <span id="profRoll" class="detail-value">2024CS108</span>
+                            </div>
+                            <div class="profile-detail-box">
+                                <span class="detail-label"><i class="fa-solid fa-building-columns text-primary"></i> Department</span>
+                                <span id="profDept" class="detail-value">Computer Engineering</span>
+                            </div>
+                            <div class="profile-detail-box">
+                                <span class="detail-label"><i class="fa-solid fa-layer-group text-primary"></i> Semester & Division</span>
+                                <span id="profSemDiv" class="detail-value">Semester VI - Div A</span>
+                            </div>
+                            <div class="profile-detail-box">
+                                <span class="detail-label"><i class="fa-solid fa-calendar text-primary"></i> Academic Year</span>
+                                <span id="profAcadYear" class="detail-value">2025 - 2026</span>
+                            </div>
+                            <div class="profile-detail-box">
+                                <span class="detail-label"><i class="fa-solid fa-envelope text-primary"></i> Email Address</span>
+                                <span id="profEmail" class="detail-value">rahul.patil@gfm.edu.in</span>
+                            </div>
+                            <div class="profile-detail-box">
+                                <span class="detail-label"><i class="fa-solid fa-phone text-primary"></i> Phone Number</span>
+                                <span id="profPhone" class="detail-value">+91 98765 43210</span>
+                            </div>
+                            <div class="profile-detail-box">
+                                <span class="detail-label"><i class="fa-solid fa-user-shield text-primary"></i> GFM Faculty Counselor</span>
+                                <span id="profGfmName" class="detail-value">Prof. S. R. Sharma</span>
+                            </div>
+                            <div class="profile-detail-box">
+                                <span class="detail-label"><i class="fa-solid fa-hospital-user text-primary"></i> Emergency Contact</span>
+                                <span id="profGuardian" class="detail-value">+91 98220 11223 (Father)</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- ==========================================
+                     TAB 6: SETTINGS
+                     ========================================== -->
+                <section id="sectionSettings" class="tab-section hidden">
+                    <div class="section-header">
+                        <h2>Account & ERP Settings</h2>
+                        <p class="text-muted">Manage theme preferences, email alerts, and attendance threshold warnings.</p>
+                    </div>
+
+                    <div class="settings-grid glass-card">
+                        <div class="settings-group">
+                            <h3><i class="fa-solid fa-palette text-primary"></i> Appearance Settings</h3>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <strong>Dark Mode Theme</strong>
+                                    <p class="text-muted">Switch between crisp light mode and sleek modern dark theme.</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="settingsDarkSwitch">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="settings-group">
+                            <h3><i class="fa-solid fa-bell text-primary"></i> Notification Preferences</h3>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <strong>Low Attendance SMS Alerts</strong>
+                                    <p class="text-muted">Receive SMS when attendance drops below 75%.</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <strong>Daily Lecture Marking Email Digest</strong>
+                                    <p class="text-muted">Get daily evening summaries of marked attendance.</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="settings-footer">
+                            <button id="saveSettingsBtn" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Save Preferences</button>
+                        </div>
+                    </div>
+                </section>
+
+            </main>
+
+        </div>
+
+    </div>
+
+    <!-- Custom JavaScript -->
+    <script src="../js/student-dashboard.js"></script>
+</body>
 </html>
