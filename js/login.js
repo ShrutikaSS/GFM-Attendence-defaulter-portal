@@ -388,8 +388,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (forgotLink && forgotModal) {
     forgotLink.addEventListener('click', (e) => {
       e.preventDefault();
-      const mainInputVal = emailInput ? emailInput.value.trim() : '';
-      if (forgotPrnInput) forgotPrnInput.value = mainInputVal;
+      if (forgotPrnInput) forgotPrnInput.value = '';
       if (forgotNewPasswordInput) forgotNewPasswordInput.value = '';
       if (forgotConfirmPasswordInput) forgotConfirmPasswordInput.value = '';
       
