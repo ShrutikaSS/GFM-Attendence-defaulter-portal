@@ -37,7 +37,7 @@ try {
         `email` VARCHAR(100) NOT NULL UNIQUE,
         `password` VARCHAR(255) NOT NULL,
         `role` ENUM('student','gfm','hod') NOT NULL,
-        `department` VARCHAR(100) DEFAULT 'Computer Engineering',
+        `department` VARCHAR(100) DEFAULT 'Artificial Intelligence and Machine Learning',
         `roll_or_emp_id` VARCHAR(50) DEFAULT NULL,
         `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
@@ -47,7 +47,7 @@ try {
         `prn` VARCHAR(50) NOT NULL UNIQUE,
         `roll_no` VARCHAR(50) NOT NULL,
         `semester` VARCHAR(20) DEFAULT 'Semester VI',
-        `division` VARCHAR(10) DEFAULT 'Div A',
+        `division` VARCHAR(10) DEFAULT 'FY A',
         `phone` VARCHAR(20) DEFAULT NULL,
         `guardian_contact` VARCHAR(100) DEFAULT NULL,
         `academic_year` VARCHAR(20) DEFAULT '2025 - 2026',
@@ -119,19 +119,19 @@ try {
     $usersStmt = $pdo->prepare("INSERT INTO `users` (`id`, `full_name`, `email`, `password`, `role`, `department`, `roll_or_emp_id`) VALUES (?, ?, ?, ?, ?, ?, ?)");
 
     $users = [
-        [1,  'Dr. Dipali Shende',    'hod@college.edu',        $hodPass,     'hod',     'Computer Engineering', 'HOD-001'],
-        [3,  'Omkar Wadekar',        'omkar@college.edu',      $gfmPass,     'gfm',     'Computer Engineering', 'GFM-A101'],
-        [4,  'Pushkaraj Sonalkar',   'pushkaraj@college.edu',  $gfmPass,     'gfm',     'Computer Engineering', 'GFM-B102'],
-        [5,  'Shrutika Saudagar',    'shrutika@college.edu',   $gfmPass,     'gfm',     'Computer Engineering', 'GFM-C103'],
-        [6,  'Om potarkar',          'om@gmail.com',           $studentPass, 'student', 'Computer Engineering', '1'],
-        [7,  'Akib Momin',           'akib@gmail.com',         $studentPass, 'student', 'Computer Engineering', '2'],
-        [8,  'Sachin tompe',         'sachin@gmail.com',       $studentPass, 'student', 'Computer Engineering', '3'],
-        [9,  'Ram Mutthe',           'ram@gmail.com',          $studentPass, 'student', 'Computer Engineering', '1'],
-        [10, 'Yash lahase',          'yash@gmail.com',         $studentPass, 'student', 'Computer Engineering', '2'],
-        [11, 'Sumit Kulkarni',       'sumit@gmail.com',        $studentPass, 'student', 'Computer Engineering', '3'],
-        [12, 'Mahesh Jadhav',        'mahesh@gmail.com',       $studentPass, 'student', 'Computer Engineering', '1'],
-        [13, 'Pushkar Mali',         'pushkar@gmail.com',      $studentPass, 'student', 'Computer Engineering', '2'],
-        [14, 'rushi mane',           'rushi@gmail.com',        $studentPass, 'student', 'Computer Engineering', '3'],
+        [1,  'Dr. Dipali Shende',    'hod@college.edu',        $hodPass,     'hod',     'Artificial Intelligence and Machine Learning', 'HOD-001'],
+        [3,  'Omkar Wadekar',        'omkar@college.edu',      $gfmPass,     'gfm',     'Artificial Intelligence and Machine Learning', 'GFM-A101'],
+        [4,  'Pushkaraj Sonalkar',   'pushkaraj@college.edu',  $gfmPass,     'gfm',     'Artificial Intelligence and Machine Learning', 'GFM-B102'],
+        [5,  'Shrutika Saudagar',    'shrutika@college.edu',   $gfmPass,     'gfm',     'Artificial Intelligence and Machine Learning', 'GFM-C103'],
+        [6,  'Om potarkar',          'om@gmail.com',           $studentPass, 'student', 'Artificial Intelligence and Machine Learning', '1'],
+        [7,  'Akib Momin',           'akib@gmail.com',         $studentPass, 'student', 'Artificial Intelligence and Machine Learning', '2'],
+        [8,  'Sachin tompe',         'sachin@gmail.com',       $studentPass, 'student', 'Artificial Intelligence and Machine Learning', '3'],
+        [9,  'Ram Mutthe',           'ram@gmail.com',          $studentPass, 'student', 'Artificial Intelligence and Machine Learning', '1'],
+        [10, 'Yash lahase',          'yash@gmail.com',         $studentPass, 'student', 'Artificial Intelligence and Machine Learning', '2'],
+        [11, 'Sumit Kulkarni',       'sumit@gmail.com',        $studentPass, 'student', 'Artificial Intelligence and Machine Learning', '3'],
+        [12, 'Mahesh Jadhav',        'mahesh@gmail.com',       $studentPass, 'student', 'Artificial Intelligence and Machine Learning', '1'],
+        [13, 'Pushkar Mali',         'pushkar@gmail.com',      $studentPass, 'student', 'Artificial Intelligence and Machine Learning', '2'],
+        [14, 'rushi mane',           'rushi@gmail.com',        $studentPass, 'student', 'Artificial Intelligence and Machine Learning', '3'],
     ];
 
     foreach ($users as $user) {
@@ -141,24 +141,24 @@ try {
 
     // Seed GFM details
     $gfmStmt = $pdo->prepare("INSERT INTO `gfm_details` (`user_id`, `division_assigned`) VALUES (?, ?)");
-    $gfmStmt->execute([3, 'Div A']);
-    $gfmStmt->execute([4, 'Div B']);
-    $gfmStmt->execute([5, 'Div C']);
+    $gfmStmt->execute([3, 'FY A']);
+    $gfmStmt->execute([4, 'FY B']);
+    $gfmStmt->execute([5, 'FY C']);
     echo "GFM details seeded.\n";
 
     // Seed student details
     $sdStmt = $pdo->prepare("INSERT INTO `student_details` (`user_id`, `prn`, `roll_no`, `semester`, `division`, `phone`, `guardian_contact`, `academic_year`, `gfm_name`, `avatar_url`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
     $studentDetails = [
-        [6,  '125UAM1001', '1', 'Semester VI', 'Div A', '+91 98765 43201', '+91 98220 11201 (Father)', '2025 - 2026', 'Omkar Wadekar',      'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=250'],
-        [7,  '125UAM1002', '2', 'Semester VI', 'Div A', '+91 98765 43202', '+91 98220 11202 (Father)', '2025 - 2026', 'Omkar Wadekar',      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=250'],
-        [8,  '125UAM1003', '3', 'Semester VI', 'Div A', '+91 98765 43203', '+91 98220 11203 (Father)', '2025 - 2026', 'Omkar Wadekar',      'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&q=80&w=250'],
-        [9,  '125UAM1004', '1', 'Semester VI', 'Div B', '+91 98765 43204', '+91 98220 11204 (Father)', '2025 - 2026', 'Pushkaraj Sonalkar', 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&q=80&w=250'],
-        [10, '125UAM1005', '2', 'Semester VI', 'Div B', '+91 98765 43205', '+91 98220 11205 (Father)', '2025 - 2026', 'Pushkaraj Sonalkar', 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=250'],
-        [11, '125UAM1006', '3', 'Semester VI', 'Div B', '+91 98765 43206', '+91 98220 11206 (Father)', '2025 - 2026', 'Pushkaraj Sonalkar', 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=250'],
-        [12, '125UAM1007', '1', 'Semester VI', 'Div C', '+91 98765 43207', '+91 98220 11207 (Father)', '2025 - 2026', 'Shrutika Saudagar',  'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=250'],
-        [13, '125UAM1008', '2', 'Semester VI', 'Div C', '+91 98765 43208', '+91 98220 11208 (Father)', '2025 - 2026', 'Shrutika Saudagar',  'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=250'],
-        [14, '125UAM1009', '3', 'Semester VI', 'Div C', '+91 98765 43209', '+91 98220 11209 (Father)', '2025 - 2026', 'Shrutika Saudagar',  'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=250'],
+        [6,  '125UAM1001', '1', 'Semester I', 'FY A', '+91 98765 43201', '+91 98220 11201 (Father)', '2025 - 2026', 'Omkar Wadekar',      'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=250'],
+        [7,  '125UAM1002', '2', 'Semester I', 'FY A', '+91 98765 43202', '+91 98220 11202 (Father)', '2025 - 2026', 'Omkar Wadekar',      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=250'],
+        [8,  '125UAM1003', '3', 'Semester I', 'FY A', '+91 98765 43203', '+91 98220 11203 (Father)', '2025 - 2026', 'Omkar Wadekar',      'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&q=80&w=250'],
+        [9,  '125UAM1004', '1', 'Semester I', 'FY B', '+91 98765 43204', '+91 98220 11204 (Father)', '2025 - 2026', 'Pushkaraj Sonalkar', 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&q=80&w=250'],
+        [10, '125UAM1005', '2', 'Semester I', 'FY B', '+91 98765 43205', '+91 98220 11205 (Father)', '2025 - 2026', 'Pushkaraj Sonalkar', 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=250'],
+        [11, '125UAM1006', '3', 'Semester I', 'FY B', '+91 98765 43206', '+91 98220 11206 (Father)', '2025 - 2026', 'Pushkaraj Sonalkar', 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=250'],
+        [12, '125UAM1007', '1', 'Semester I', 'FY C', '+91 98765 43207', '+91 98220 11207 (Father)', '2025 - 2026', 'Shrutika Saudagar',  'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=250'],
+        [13, '125UAM1008', '2', 'Semester I', 'FY C', '+91 98765 43208', '+91 98220 11208 (Father)', '2025 - 2026', 'Shrutika Saudagar',  'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=250'],
+        [14, '125UAM1009', '3', 'Semester I', 'FY C', '+91 98765 43209', '+91 98220 11209 (Father)', '2025 - 2026', 'Shrutika Saudagar',  'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=250'],
     ];
 
     foreach ($studentDetails as $sd) {
@@ -169,11 +169,11 @@ try {
     // Seed Faculty
     $facStmt = $pdo->prepare("INSERT INTO `faculty` (`name`, `department`, `subject`, `division`, `email`, `phone`, `status`) VALUES (?, ?, ?, ?, ?, ?, ?)");
     $faculty = [
-        ['Prof. D. Shah',        'Computer Engineering', 'Database Systems',     'Div A', 'dipali.shah@college.edu',  '+91 98765 43210', 'Active'],
-        ['Prof. N. Joshi',       'Computer Engineering', 'Web Development',      'Div A', 'nidhi.joshi@college.edu',  '+91 91234 56789', 'On Leave'],
-        ['Prof. R. Mehta',       'Computer Engineering', 'Computer Networks',    'Div B', 'rohan.mehta@college.edu',  '+91 93322 11009', 'Active'],
-        ['Prof. A. V. Kulkarni', 'Computer Engineering', 'Data Structures',      'Div B', 'kulkarni@college.edu',     '+91 94433 22110', 'Active'],
-        ['Prof. P. T. Joshi',    'Computer Engineering', 'Software Engineering', 'Div C', 'joshi@college.edu',        '+91 98112 23344', 'Active'],
+        ['Prof. D. Shah',        'Artificial Intelligence and Machine Learning', 'Python Programming', 'FY A', 'dipali.shah@college.edu',  '+91 98765 43210', 'Active'],
+        ['Prof. N. Joshi',       'Artificial Intelligence and Machine Learning', 'Machine Learning',    'FY A', 'nidhi.joshi@college.edu',  '+91 91234 56789', 'On Leave'],
+        ['Prof. R. Mehta',       'Artificial Intelligence and Machine Learning', 'Deep Learning',       'FY B', 'rohan.mehta@college.edu',  '+91 93322 11009', 'Active'],
+        ['Prof. A. V. Kulkarni', 'Artificial Intelligence and Machine Learning', 'Data Science',        'FY B', 'kulkarni@college.edu',     '+91 94433 22110', 'Active'],
+        ['Prof. P. T. Joshi',    'Artificial Intelligence and Machine Learning', 'AI Ethics',           'FY C', 'joshi@college.edu',        '+91 98112 23344', 'Active'],
     ];
     foreach ($faculty as $f) {
         $facStmt->execute($f);
@@ -183,9 +183,9 @@ try {
     // Seed Notices
     $noticeStmt = $pdo->prepare("INSERT INTO `notices` (`title`, `target`, `message`, `created_by`, `created_at`) VALUES (?, ?, ?, ?, ?)");
     $notices = [
-        ['Mid-Term Attendance Defaulter List Released', 'Div A', 'All students with attendance below 75% are required to submit leave applications with medical certificates by Friday.', 3, '2026-07-18 10:00:00'],
+        ['Mid-Term Attendance Defaulter List Released', 'FY A', 'All students with attendance below 75% are required to submit leave applications with medical certificates by Friday.', 3, '2026-07-18 10:00:00'],
         ['Parent-Teacher Meeting Scheduled', 'Critical Defaulters', 'Parent-teacher meeting scheduled for all students falling under critical defaulter category (<60%).', 3, '2026-07-15 14:30:00'],
-        ['Urgent Notice: Review Meeting for Division B', 'Div B', 'A feedback session for Division B is scheduled on Thursday to review attendance issues.', 4, '2026-07-20 09:15:00'],
+        ['Urgent Notice: Review Meeting for FY B', 'FY B', 'A feedback session for FY B is scheduled on Thursday to review attendance issues.', 4, '2026-07-20 09:15:00'],
     ];
     foreach ($notices as $n) {
         $noticeStmt->execute($n);
@@ -195,15 +195,15 @@ try {
     // Seed Schedules
     $schedStmt = $pdo->prepare("INSERT INTO `schedules` (`division`, `title`, `time`, `room`, `status`) VALUES (?, ?, ?, ?, ?)");
     $schedules = [
-        ['Div A', 'Web Development Lab',       '09:30 AM - 11:30 AM', 'Computer Lab 4',    'Completed'],
-        ['Div A', 'Data Structures Lecture',   '11:45 AM - 12:45 PM', 'Auditorium Hall B', 'Ongoing'],
-        ['Div A', 'Database Systems',          '01:30 PM - 02:30 PM', 'Classroom 302',     'Upcoming'],
-        ['Div B', 'Computer Networks Lab',     '09:30 AM - 11:30 AM', 'Computer Lab 2',    'Completed'],
-        ['Div B', 'Data Structures Lab',       '11:45 AM - 12:45 PM', 'Computer Lab 3',    'Ongoing'],
-        ['Div B', 'Database Systems',          '01:30 PM - 02:30 PM', 'Classroom 303',     'Upcoming'],
-        ['Div C', 'Software Engineering',      '09:30 AM - 11:30 AM', 'Classroom 304',     'Completed'],
-        ['Div C', 'Web Development Lab',       '11:45 AM - 12:45 PM', 'Computer Lab 4',    'Ongoing'],
-        ['Div C', 'Data Structures',           '01:30 PM - 02:30 PM', 'Auditorium Hall B', 'Upcoming'],
+        ['FY A', 'Python Programming Lab', '09:30 AM - 11:30 AM', 'AI Lab 1', 'Completed'],
+        ['FY A', 'Machine Learning Lecture', '11:45 AM - 12:45 PM', 'Seminar Hall A', 'Ongoing'],
+        ['FY A', 'Data Science Workshop', '01:30 PM - 02:30 PM', 'Classroom 302', 'Upcoming'],
+        ['FY B', 'Deep Learning Lab', '09:30 AM - 11:30 AM', 'AI Lab 2', 'Completed'],
+        ['FY B', 'Python Programming Lab', '11:45 AM - 12:45 PM', 'AI Lab 3', 'Ongoing'],
+        ['FY B', 'Machine Learning Lecture', '01:30 PM - 02:30 PM', 'Classroom 303', 'Upcoming'],
+        ['FY C', 'AI Ethics Seminar', '09:30 AM - 11:30 AM', 'Classroom 304', 'Completed'],
+        ['FY C', 'Data Science Workshop', '11:45 AM - 12:45 PM', 'AI Lab 1', 'Ongoing'],
+        ['FY C', 'Deep Learning Lecture', '01:30 PM - 02:30 PM', 'Seminar Hall A', 'Upcoming'],
     ];
     foreach ($schedules as $s) {
         $schedStmt->execute($s);
@@ -211,7 +211,7 @@ try {
     echo "Schedules seeded.\n";
 
     // Seed Attendance (realistic data across 50 days for all 9 students, 5 subjects)
-    $subjects = ['Web Development', 'Data Structures', 'Database Systems', 'Computer Networks', 'Software Engineering'];
+    $subjects = ['Python Programming', 'Machine Learning', 'Data Science', 'Deep Learning', 'AI Ethics'];
     $studentIds = [6 => 92, 7 => 88, 8 => 58, 9 => 85, 10 => 78, 11 => 70, 12 => 95, 13 => 72, 14 => 80];
     // target percentages: Om~92%, Akib~88%, Sachin~58% (critical), Ram~85%, Yash~78%, Sumit~70%, Mahesh~95%, Pushkar~72%, Rushi~80%
 

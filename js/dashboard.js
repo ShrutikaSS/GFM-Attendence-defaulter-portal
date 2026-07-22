@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     full_name: 'Prof. Aniket Verma',
     email: 'gfm@college.edu',
     role: 'gfm',
-    department: 'Computer Engineering',
+    department: 'Artificial Intelligence and Machine Learning',
     roll_or_emp_id: 'GFM-204'
   };
 
@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (profEmpIdText) profEmpIdText.textContent = currentUser.roll_or_emp_id || 'GFM-204';
 
     const profDeptText = document.getElementById('profDeptText');
-    if (profDeptText) profDeptText.textContent = currentUser.department || 'Computer Engineering';
+    if (profDeptText) profDeptText.textContent = currentUser.department || 'Artificial Intelligence and Machine Learning';
 
     const profEmailText = document.getElementById('profEmailText');
     if (profEmailText) profEmailText.textContent = currentUser.email;
@@ -395,32 +395,61 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 7. ATTENDANCE ENTRY MODULE
   // ==========================================
   const entryDateInput = document.getElementById('entryDateInput');
+  const entrySubjectSelect = document.getElementById('entrySubjectSelect');
+  const entryTimeSelect = document.getElementById('entryTimeSelect');
+  const entryClassSelect = document.getElementById('entryClassSelect');
+  const loadRosterBtn = document.getElementById('loadRosterBtn');
+  const summaryTextEl = document.getElementById('attendanceSummaryText');
+
   if (entryDateInput) {
     entryDateInput.value = new Date().toISOString().split('T')[0];
   }
 
-  let attendanceState = {}; // { roll: boolean }
-  studentsData.forEach(s => { attendanceState[s.roll] = true; }); // Default all present
+  function getSelectedAttendanceDivision() {
+    return entryClassSelect?.value || 'FY A';
+  }
+
+  let attendanceEntryStudents = [];
+  let rosterLoaded = false;
+
+  function setAttendanceSummary(text) {
+    if (summaryTextEl) {
+      summaryTextEl.textContent = text;
+    }
+  }
+
+  function resetAttendanceEntryState() {
+    attendanceEntryStudents = [];
+    rosterLoaded = false;
+    setAttendanceSummary('Select class, subject, and date, then click "Load Roster".');
+    renderAttendanceEntryRoster();
+  }
 
   function renderAttendanceEntryRoster() {
     const tbody = document.getElementById('attendanceEntryTableBody');
     if (!tbody) return;
     tbody.innerHTML = '';
 
-    studentsData.forEach((student, index) => {
-      const isPresent = attendanceState[student.roll] !== false;
+    if (attendanceEntryStudents.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="5" class="center-align" style="padding: 30px; color: var(--text-secondary);">Please select a class and date, then click "Load Roster".</td></tr>`;
+      updateAttendanceCounters();
+      return;
+    }
+
+    attendanceEntryStudents.forEach((student, index) => {
+      const isPresent = student.isPresent !== false;
       const tr = document.createElement('tr');
       tr.innerHTML = `
         <td>${index + 1}</td>
         <td><strong>${student.roll}</strong></td>
         <td>${student.name}</td>
-        <td>${((student.attended / student.conducted) * 100).toFixed(1)}%</td>
+        <td>${student.conducted > 0 ? ((student.attended / student.conducted) * 100).toFixed(1) : '0.0'}%</td>
         <td>
-          <div style="display: flex; gap: 8px;">
-            <button type="button" class="tag-status-btn ${isPresent ? 'bg-success-light' : 'secondary-solid'}" style="${isPresent ? 'background: #10B981; color: white;' : ''}" data-roll="${student.roll}" data-action="present">
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button type="button" class="tag-status-btn ${isPresent ? 'bg-success-light' : 'secondary-solid'}" style="${isPresent ? 'background: #10B981; color: white;' : ''}" data-id="${student.id}" data-action="present">
               <i class="fa-solid fa-check"></i> Present
             </button>
-            <button type="button" class="tag-status-btn ${!isPresent ? 'bg-danger-light' : 'secondary-solid'}" style="${!isPresent ? 'background: #EF4444; color: white;' : ''}" data-roll="${student.roll}" data-action="absent">
+            <button type="button" class="tag-status-btn ${!isPresent ? 'bg-danger-light' : 'secondary-solid'}" style="${!isPresent ? 'background: #EF4444; color: white;' : ''}" data-id="${student.id}" data-action="absent">
               <i class="fa-solid fa-xmark"></i> Absent
             </button>
           </div>
@@ -433,51 +462,122 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   function updateAttendanceCounters() {
-    const presentCount = Object.values(attendanceState).filter(val => val === true).length;
-    const absentCount = Object.values(attendanceState).filter(val => val === false).length;
+    const total = attendanceEntryStudents.length;
+    const presentCount = attendanceEntryStudents.filter(student => student.isPresent !== false).length;
+    const absentCount = attendanceEntryStudents.filter(student => student.isPresent === false).length;
 
     const presentElem = document.getElementById('presentCountText');
     const absentElem = document.getElementById('absentCountText');
+    const totalElem = document.getElementById('attendanceTotalText');
     if (presentElem) presentElem.textContent = presentCount;
     if (absentElem) absentElem.textContent = absentCount;
+    if (totalElem) totalElem.textContent = `${total} Students`;
   }
 
-  // Toggle present / absent on click
+  async function loadAttendanceForDate() {
+    const subject = entrySubjectSelect?.value || '';
+    const date = entryDateInput?.value || '';
+    const division = getSelectedAttendanceDivision();
+
+    if (!subject || !date || !division) {
+      showToast('Please select a class, subject, and date before loading the roster.', 'warning');
+      return;
+    }
+
+    setAttendanceSummary(`Loading roster for ${division} • ${subject} on ${date}...`);
+    attendanceEntryStudents = [];
+    rosterLoaded = false;
+    renderAttendanceEntryRoster();
+
+    try {
+      const response = await fetch(`../api/get_attendance_for_date.php?division=${encodeURIComponent(division)}&date=${encodeURIComponent(date)}&subject=${encodeURIComponent(subject)}`);
+      if (!response.ok) throw new Error('Unable to load attendance');
+      const result = await response.json();
+      if (!result.success) throw new Error(result.message || 'Unable to load attendance');
+
+      attendanceEntryStudents = (result.students || []).map(student => ({
+        ...student,
+        isPresent: student.status !== 'Absent',
+        attendanceStatus: student.status || 'Present'
+      }));
+      rosterLoaded = true;
+      renderAttendanceEntryRoster();
+      setAttendanceSummary(`${attendanceEntryStudents.length} students loaded for ${division} on ${date}.`);
+    } catch (err) {
+      console.error('Error loading attendance for date:', err);
+      showToast('Unable to load attendance for the selected date.', 'warning');
+      setAttendanceSummary('Could not load roster. Try again.');
+    }
+  }
+
   document.getElementById('attendanceEntryTableBody')?.addEventListener('click', (e) => {
     const btn = e.target.closest('button[data-action]');
     if (!btn) return;
-    const roll = btn.getAttribute('data-roll');
+    const id = Number(btn.getAttribute('data-id'));
     const action = btn.getAttribute('data-action');
-    attendanceState[roll] = action === 'present';
+    const student = attendanceEntryStudents.find(item => item.id === id);
+    if (!student) return;
+    student.isPresent = action === 'present';
+    student.attendanceStatus = action === 'present' ? 'Present' : 'Absent';
     renderAttendanceEntryRoster();
   });
 
-  // Mark All Present / Absent
   document.getElementById('markAllPresentBtn')?.addEventListener('click', () => {
-    studentsData.forEach(s => { attendanceState[s.roll] = true; });
+    if (!attendanceEntryStudents.length) {
+      showToast('Load the roster first.', 'warning');
+      return;
+    }
+    attendanceEntryStudents.forEach(student => {
+      student.isPresent = true;
+      student.attendanceStatus = 'Present';
+    });
     renderAttendanceEntryRoster();
     showToast('Marked all students as Present.');
   });
+
   document.getElementById('markAllAbsentBtn')?.addEventListener('click', () => {
-    studentsData.forEach(s => { attendanceState[s.roll] = false; });
+    if (!attendanceEntryStudents.length) {
+      showToast('Load the roster first.', 'warning');
+      return;
+    }
+    attendanceEntryStudents.forEach(student => {
+      student.isPresent = false;
+      student.attendanceStatus = 'Absent';
+    });
     renderAttendanceEntryRoster();
     showToast('Marked all students as Absent.', 'warning');
   });
 
-  // Submit Attendance
+  loadRosterBtn?.addEventListener('click', loadAttendanceForDate);
+
+  entryClassSelect?.addEventListener('change', () => {
+    resetAttendanceEntryState();
+  });
+
+  entryDateInput?.addEventListener('change', () => {
+    setAttendanceSummary('Date changed. Click Load Roster to refresh the student list.');
+  });
+  entrySubjectSelect?.addEventListener('change', () => {
+    setAttendanceSummary('Subject changed. Click Load Roster to refresh the student list.');
+  });
+  entryTimeSelect?.addEventListener('change', () => {
+    setAttendanceSummary('Time slot changed. Save attendance after loading roster.');
+  });
+
   document.getElementById('saveAttendanceBtn')?.addEventListener('click', async () => {
-    const subject = document.getElementById('entrySubjectSelect')?.value || 'Web Development';
-    const date = document.getElementById('entryDateInput')?.value || new Date().toISOString().split('T')[0];
-    const time_slot = document.getElementById('entryTimeSelect')?.value || '09:30 AM - 10:30 AM';
-    
-    const records = [];
-    studentsData.forEach(student => {
-      const isPresent = attendanceState[student.roll] !== false;
-      records.push({
-        student_id: student.id,
-        status: isPresent ? 'Present' : 'Absent'
-      });
-    });
+    const subject = entrySubjectSelect?.value || '';
+    const date = entryDateInput?.value || '';
+    const time_slot = entryTimeSelect?.value || '09:30 AM - 10:30 AM';
+
+    if (!rosterLoaded || !attendanceEntryStudents.length) {
+      showToast('Load the roster first before saving attendance.', 'warning');
+      return;
+    }
+
+    const records = attendanceEntryStudents.map(student => ({
+      student_id: student.id,
+      status: student.isPresent !== false ? 'Present' : 'Absent'
+    }));
 
     try {
       const response = await fetch('../api/save_attendance.php', {
@@ -490,16 +590,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (data.success) {
           showToast(`Attendance for ${subject} saved successfully!`, 'success');
           await loadGFMDashboardData();
+          await loadAttendanceForDate();
         } else {
           showToast(data.message || 'Failed to save attendance.', 'danger');
         }
       }
-    } catch(err) {
+    } catch (err) {
+      console.error('Error saving attendance:', err);
       showToast('Error saving attendance records.', 'danger');
     }
   });
 
-  renderAttendanceEntryRoster();
+  resetAttendanceEntryState();
 
 
   // ==========================================
@@ -722,7 +824,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     new Chart(reportsSubjectCtx, {
       type: 'bar',
       data: {
-        labels: ['Web Dev', 'Data Struct', 'DBMS', 'Networks'],
+        labels: ['Python', 'ML', 'Data Science', 'Deep Learning'],
         datasets: [{
           label: 'Avg Attendance %',
           data: [90, 85, 93, 84],
@@ -747,8 +849,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       data: {
         labels: ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
         datasets: [
-          { label: 'Div A', data: [88, 85, 92, 90, 93, 88], backgroundColor: '#3B82F6', borderRadius: 6 },
-          { label: 'Div B', data: [82, 84, 88, 86, 89, 85], backgroundColor: '#8B5CF6', borderRadius: 6 }
+          { label: 'FY A', data: [88, 85, 92, 90, 93, 88], backgroundColor: '#3B82F6', borderRadius: 6 },
+          { label: 'FY B', data: [82, 84, 88, 86, 89, 85], backgroundColor: '#8B5CF6', borderRadius: 6 }
         ]
       },
       options: {
@@ -831,16 +933,14 @@ document.addEventListener('DOMContentLoaded', async () => {
           const criticalCountText = document.getElementById('criticalCountText');
           if (criticalCountText) criticalCountText.textContent = `${stats.criticalCount} Students`;
 
-          studentsData.forEach(s => {
-            if (!(s.roll in attendanceState)) {
-              attendanceState[s.roll] = true;
-            }
-          });
-          
+          resetAttendanceEntryState();
           renderStudentTable();
           renderAttendanceEntryRoster();
           renderDefaulterTable();
           renderNotices();
+          if (entryDateInput && !entryDateInput.value) {
+            entryDateInput.value = new Date().toISOString().split('T')[0];
+          }
           return;
         }
       }

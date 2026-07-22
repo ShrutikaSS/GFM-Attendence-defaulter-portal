@@ -13,9 +13,9 @@ document.addEventListener('DOMContentLoaded', () => {
         student: {
             name: "Rahul Patil",
             rollNo: "2024CS108",
-            department: "Computer Engineering",
-            semester: "Semester VI",
-            division: "Div A",
+            department: "Artificial Intelligence and Machine Learning",
+            semester: "Semester I",
+            division: "FY A",
             email: "rahul.patil@gfm.edu.in",
             phone: "+91 98765 43210",
             academicYear: "2025 - 2026",
@@ -32,11 +32,11 @@ document.addEventListener('DOMContentLoaded', () => {
             targetGoal: 95
         },
         subjects: [
-            { id: 1, name: "Web Development", faculty: "Prof. S. R. Sharma", total: 40, present: 38, absent: 2, percent: 95, icon: "fa-code" },
-            { id: 2, name: "Data Structures", faculty: "Prof. A. V. Kulkarni", total: 36, present: 33, absent: 3, percent: 91.6, icon: "fa-diagram-project" },
-            { id: 3, name: "Database Systems", faculty: "Prof. M. B. Deshmukh", total: 30, present: 28, absent: 2, percent: 93.3, icon: "fa-database" },
-            { id: 4, name: "Computer Networks", faculty: "Prof. R. N. Mehta", total: 24, present: 21, absent: 3, percent: 87.5, icon: "fa-network-wired" },
-            { id: 5, name: "Software Engineering", faculty: "Prof. P. T. Joshi", total: 20, present: 18, absent: 2, percent: 90.0, icon: "fa-cubes" }
+            { id: 1, name: "Python Programming", faculty: "Prof. S. R. Sharma", total: 40, present: 38, absent: 2, percent: 95, icon: "fa-code" },
+            { id: 2, name: "Machine Learning", faculty: "Prof. A. V. Kulkarni", total: 36, present: 33, absent: 3, percent: 91.6, icon: "fa-diagram-project" },
+            { id: 3, name: "Data Science", faculty: "Prof. M. B. Deshmukh", total: 30, present: 28, absent: 2, percent: 93.3, icon: "fa-database" },
+            { id: 4, name: "Deep Learning", faculty: "Prof. R. N. Mehta", total: 24, present: 21, absent: 3, percent: 87.5, icon: "fa-network-wired" },
+            { id: 5, name: "AI Ethics", faculty: "Prof. P. T. Joshi", total: 20, present: 18, absent: 2, percent: 90.0, icon: "fa-cubes" }
         ],
         monthlyData: {
             months: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
@@ -46,29 +46,29 @@ document.addEventListener('DOMContentLoaded', () => {
             avgAttendance: "92%"
         },
         notifications: [
-            { id: 101, title: "Attendance Marked Today", desc: "Prof. Sharma marked Present for Web Development lecture.", time: "10 mins ago", unread: true, type: "SUCCESS", icon: "fa-circle-check", bgClass: "icon-bg-emerald" },
-            { id: 102, title: "Assignment Deadline Reminder", desc: "Database Systems Mini Project report submission due tomorrow.", time: "2 hours ago", unread: true, type: "WARNING", icon: "fa-clock", bgClass: "icon-bg-amber" },
+            { id: 101, title: "Attendance Marked Today", desc: "Prof. Sharma marked Present for Python Programming lecture.", time: "10 mins ago", unread: true, type: "SUCCESS", icon: "fa-circle-check", bgClass: "icon-bg-emerald" },
+            { id: 102, title: "Assignment Deadline Reminder", desc: "Data Science mini project submission due tomorrow.", time: "2 hours ago", unread: true, type: "WARNING", icon: "fa-clock", bgClass: "icon-bg-amber" },
             { id: 103, title: "Internal Exam Schedule Released", desc: "Unit Test II timetable uploaded to GFM ERP portal.", time: "1 day ago", unread: true, type: "SYSTEM", icon: "fa-calendar-days", bgClass: "icon-bg-blue" },
             { id: 104, title: "GFM Monthly Review Complete", desc: "Attendance standing verified above 75% criterion.", time: "3 days ago", unread: false, type: "SUCCESS", icon: "fa-shield-halved", bgClass: "icon-bg-green" }
         ],
         schedule: [
-            { id: 1, title: "Web Development Lab", time: "09:30 AM - 11:30 AM", room: "Computer Lab 4", status: "Completed" },
-            { id: 2, title: "Data Structures Lecture", time: "11:45 AM - 12:45 PM", room: "Auditorium Hall B", status: "Ongoing" },
-            { id: 3, title: "Database Systems", time: "01:30 PM - 02:30 PM", room: "Classroom 302", status: "Upcoming" }
+            { id: 1, title: "Python Programming Lab", time: "09:30 AM - 11:30 AM", room: "AI Lab 1", status: "Completed" },
+            { id: 2, title: "Machine Learning Lecture", time: "11:45 AM - 12:45 PM", room: "Seminar Hall A", status: "Ongoing" },
+            { id: 3, title: "Data Science Workshop", time: "01:30 PM - 02:30 PM", room: "Classroom 302", status: "Upcoming" }
         ],
         history: [
-            { date: "2026-07-21", subject: "Web Development", faculty: "Prof. S. R. Sharma", status: "Present", percent: "95%", remarks: "Punctual & Interactive" },
-            { date: "2026-07-21", subject: "Data Structures", faculty: "Prof. A. V. Kulkarni", status: "Present", percent: "91.6%", remarks: "Regular" },
-            { date: "2026-07-20", subject: "Database Systems", faculty: "Prof. M. B. Deshmukh", status: "Present", percent: "93.3%", remarks: "Regular" },
-            { date: "2026-07-20", subject: "Computer Networks", faculty: "Prof. R. N. Mehta", status: "Absent", percent: "87.5%", remarks: "Medical Leave Approved" },
-            { date: "2026-07-19", subject: "Software Engineering", faculty: "Prof. P. T. Joshi", status: "Present", percent: "90.0%", remarks: "Regular" },
-            { date: "2026-07-18", subject: "Web Development", faculty: "Prof. S. R. Sharma", status: "Present", percent: "95%", remarks: "Regular" },
-            { date: "2026-07-17", subject: "Data Structures", faculty: "Prof. A. V. Kulkarni", status: "Present", percent: "91.6%", remarks: "Regular" },
-            { date: "2026-07-16", subject: "Database Systems", faculty: "Prof. M. B. Deshmukh", status: "Present", percent: "93.3%", remarks: "Regular" },
-            { date: "2026-07-15", subject: "Computer Networks", faculty: "Prof. R. N. Mehta", status: "Present", percent: "87.5%", remarks: "Regular" },
-            { date: "2026-07-14", subject: "Software Engineering", faculty: "Prof. P. T. Joshi", status: "Absent", percent: "90.0%", remarks: "On Duty (NSS)" },
-            { date: "2026-07-13", subject: "Web Development", faculty: "Prof. S. R. Sharma", status: "Present", percent: "95%", remarks: "Regular" },
-            { date: "2026-07-12", subject: "Data Structures", faculty: "Prof. A. V. Kulkarni", status: "Present", percent: "91.6%", remarks: "Regular" }
+            { date: "2026-07-21", subject: "Python Programming", faculty: "Prof. S. R. Sharma", status: "Present", percent: "95%", remarks: "Punctual & Interactive" },
+            { date: "2026-07-21", subject: "Machine Learning", faculty: "Prof. A. V. Kulkarni", status: "Present", percent: "91.6%", remarks: "Regular" },
+            { date: "2026-07-20", subject: "Data Science", faculty: "Prof. M. B. Deshmukh", status: "Present", percent: "93.3%", remarks: "Regular" },
+            { date: "2026-07-20", subject: "Deep Learning", faculty: "Prof. R. N. Mehta", status: "Absent", percent: "87.5%", remarks: "Medical Leave Approved" },
+            { date: "2026-07-19", subject: "AI Ethics", faculty: "Prof. P. T. Joshi", status: "Present", percent: "90.0%", remarks: "Regular" },
+            { date: "2026-07-18", subject: "Python Programming", faculty: "Prof. S. R. Sharma", status: "Present", percent: "95%", remarks: "Regular" },
+            { date: "2026-07-17", subject: "Machine Learning", faculty: "Prof. A. V. Kulkarni", status: "Present", percent: "91.6%", remarks: "Regular" },
+            { date: "2026-07-16", subject: "Data Science", faculty: "Prof. M. B. Deshmukh", status: "Present", percent: "93.3%", remarks: "Regular" },
+            { date: "2026-07-15", subject: "Deep Learning", faculty: "Prof. R. N. Mehta", status: "Present", percent: "87.5%", remarks: "Regular" },
+            { date: "2026-07-14", subject: "AI Ethics", faculty: "Prof. P. T. Joshi", status: "Absent", percent: "90.0%", remarks: "On Duty (NSS)" },
+            { date: "2026-07-13", subject: "Python Programming", faculty: "Prof. S. R. Sharma", status: "Present", percent: "95%", remarks: "Regular" },
+            { date: "2026-07-12", subject: "Machine Learning", faculty: "Prof. A. V. Kulkarni", status: "Present", percent: "91.6%", remarks: "Regular" }
         ]
     };
 

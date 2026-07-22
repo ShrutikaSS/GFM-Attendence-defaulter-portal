@@ -4,6 +4,32 @@ require_once __DIR__ . '/db.php';
 
 header('Content-Type: application/json; charset=utf-8');
 
+function normalizeDivision($value) {
+    $normalized = trim((string)($value ?? ''));
+    if ($normalized === '') {
+        return 'FY A';
+    }
+    $map = [
+        'div a' => 'FY A',
+        'div b' => 'FY B',
+        'div c' => 'FY C',
+        'fy a' => 'FY A',
+        'fy b' => 'FY B',
+        'fy c' => 'FY C',
+        'se comp-a' => 'FY A',
+        'se comp a' => 'FY A',
+        'se comp-b' => 'FY B',
+        'se comp b' => 'FY B',
+        'se comp-c' => 'FY C',
+        'se comp c' => 'FY C',
+        'se computer - division a' => 'FY A',
+        'se computer - division b' => 'FY B',
+        'se computer - division c' => 'FY C'
+    ];
+    $lower = strtolower($normalized);
+    return $map[$lower] ?? $normalized;
+}
+
 // Ensure user is logged in as GFM
 $user = $_SESSION['user'] ?? null;
 if (!$user || $user['role'] !== 'gfm') {
@@ -12,7 +38,7 @@ if (!$user || $user['role'] !== 'gfm') {
 }
 
 $gfm_id = $user['id'];
-$division = $user['division_assigned'] ?? 'Div A';
+$division = normalizeDivision($user['division_assigned'] ?? 'FY A');
 
 if (!isset($pdo) || $pdo === null) {
     echo json_encode(['success' => false, 'message' => 'Database connection failed.']);
@@ -38,10 +64,9 @@ try {
             FROM attendance 
             GROUP BY student_id
         ) att ON u.id = att.student_id
-        WHERE sd.division = :division
         ORDER BY CAST(sd.roll_no AS UNSIGNED) ASC, sd.roll_no ASC
     ");
-    $studentsStmt->execute(['division' => $division]);
+    $studentsStmt->execute();
     $studentsList = $studentsStmt->fetchAll();
 
     // Calculate aggregated metrics

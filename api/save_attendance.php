@@ -24,6 +24,7 @@ $subject = trim($input['subject'] ?? '');
 $date = trim($input['date'] ?? '');
 $time_slot = trim($input['time_slot'] ?? '');
 $records = $input['records'] ?? [];
+$division = trim($input['division'] ?? '');
 
 if (empty($subject) || empty($date) || empty($records)) {
     echo json_encode([
@@ -33,8 +34,18 @@ if (empty($subject) || empty($date) || empty($records)) {
     exit;
 }
 
+$studentIds = array_unique(array_map('intval', array_column($records, 'student_id')));
+if (!$studentIds) {
+    echo json_encode(['success' => false, 'message' => 'Student records are invalid.']);
+    exit;
+}
+
 try {
     $pdo->beginTransaction();
+
+    $placeholders = implode(', ', array_fill(0, count($studentIds), '?'));
+    $deleteStmt = $pdo->prepare("DELETE FROM attendance WHERE subject = ? AND date = ? AND student_id IN ($placeholders)");
+    $deleteStmt->execute(array_merge([$subject, $date], $studentIds));
 
     $stmt = $pdo->prepare("
         INSERT INTO attendance (student_id, subject, date, time_slot, status, remarks) 

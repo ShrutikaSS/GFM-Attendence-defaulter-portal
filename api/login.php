@@ -30,6 +30,46 @@ if (!isset($pdo) || $pdo === null) {
 
 $matchedUser = null;
 
+function normalizeDepartment($value) {
+    $normalized = trim((string)($value ?? ''));
+    if ($normalized === '') {
+        return 'Artificial Intelligence and Machine Learning';
+    }
+    $lower = strtolower($normalized);
+    if (strpos($lower, 'computer') !== false || strpos($lower, 'engineering') !== false) {
+        return 'Artificial Intelligence and Machine Learning';
+    }
+    return $normalized;
+}
+
+function normalizeDivision($value) {
+    $normalized = trim((string)($value ?? ''));
+    if ($normalized === '') {
+        return 'FY A';
+    }
+
+    $map = [
+        'div a' => 'FY A',
+        'div b' => 'FY B',
+        'div c' => 'FY C',
+        'fy a' => 'FY A',
+        'fy b' => 'FY B',
+        'fy c' => 'FY C',
+        'se comp-a' => 'FY A',
+        'se comp a' => 'FY A',
+        'se comp-b' => 'FY B',
+        'se comp b' => 'FY B',
+        'se comp-c' => 'FY C',
+        'se comp c' => 'FY C',
+        'se computer - division a' => 'FY A',
+        'se computer - division b' => 'FY B',
+        'se computer - division c' => 'FY C'
+    ];
+
+    $lower = strtolower($normalized);
+    return $map[$lower] ?? $normalized;
+}
+
 try {
     // 1. Fetch base user info
     $stmt = $pdo->prepare("SELECT * FROM users WHERE email = :email LIMIT 1");
@@ -57,7 +97,7 @@ try {
                     'prn' => $studentDetails['prn'] ?? '',
                     'roll_no' => $studentDetails['roll_no'] ?? '',
                     'semester' => $studentDetails['semester'] ?? 'Semester VI',
-                    'division' => $studentDetails['division'] ?? 'Div A',
+                    'division' => normalizeDivision($studentDetails['division'] ?? 'FY A'),
                     'phone' => $studentDetails['phone'] ?? '',
                     'guardian_contact' => $studentDetails['guardian_contact'] ?? '',
                     'academic_year' => $studentDetails['academic_year'] ?? '2025 - 2026',
@@ -74,9 +114,9 @@ try {
                     'full_name' => $dbUser['full_name'],
                     'email' => $dbUser['email'],
                     'role' => $dbUser['role'],
-                    'department' => $dbUser['department'],
+                    'department' => normalizeDepartment($dbUser['department']),
                     'roll_or_emp_id' => $dbUser['roll_or_emp_id'],
-                    'division_assigned' => $gfmDetails['division_assigned'] ?? 'Div A'
+                    'division_assigned' => normalizeDivision($gfmDetails['division_assigned'] ?? 'FY A')
                 ];
             } else { // HOD
                 $matchedUser = [

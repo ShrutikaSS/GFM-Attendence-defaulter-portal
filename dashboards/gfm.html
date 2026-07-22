@@ -122,7 +122,7 @@
           <div class="profile-chip" id="userAvatarChip" style="width: 42px; height: 42px; border-radius: 50%; background: linear-gradient(135deg, #3B82F6, #1D4ED8); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1rem; flex-shrink: 0;">AV</div>
           <div class="quick-user-details">
             <span class="user-name" id="sidebarUserName">Prof. Aniket Verma</span>
-            <span class="user-role" id="sidebarUserRole">Computer Engineering (GFM)</span>
+            <span class="user-role" id="sidebarUserRole">Artificial Intelligence and Machine Learning (GFM)</span>
           </div>
         </div>
       </aside>
@@ -180,7 +180,7 @@
                       <i class="fa-solid fa-clipboard-check"></i>
                     </div>
                     <div class="notif-body">
-                      <p>Attendance entry for <strong>Web Development (Div A)</strong> submitted.</p>
+                      <p>Attendance entry for <strong>Python Programming (FY A)</strong> submitted.</p>
                       <span class="notif-time">10 minutes ago</span>
                     </div>
                   </li>
@@ -247,12 +247,12 @@
             <div class="dashboard-hero">
               <div class="hero-text">
                 <h1>Welcome back, <span class="user-name" id="heroUserName">Prof. Aniket Verma</span> 👋</h1>
-                <p>Guardian Faculty Member • <strong>Computer Engineering Department (<span id="gfmDivisionText">Division A</span>)</strong></p>
+                <p>Guardian Faculty Member • <strong>Artificial Intelligence and Machine Learning Department (<span id="gfmDivisionText">FY A</span>)</strong></p>
                 
                 <div class="hero-academic-meta">
                   <div class="meta-tag">
                     <span class="meta-label">Assigned Batch:</span>
-                    <span class="meta-val" id="gfmAssignedBatch">SE Comp-A (2025-2026)</span>
+                    <span class="meta-val" id="gfmAssignedBatch">FY A (2025-2026)</span>
                   </div>
                   <div class="meta-tag">
                     <span class="meta-label">Total Conducted Lectures:</span>
@@ -427,7 +427,7 @@
                   <ul style="list-style: none; display: flex; flex-direction: column; gap: 14px;">
                     <li style="padding-bottom: 12px; border-bottom: 1px solid var(--border);">
                       <strong style="font-size: 0.88rem; display: block; margin-bottom: 4px;">Mid-Term Defaulter List Released</strong>
-                      <span style="font-size: 0.78rem; color: var(--text-secondary);">Issued to SE Comp Div A • Jul 18, 2026</span>
+                      <span style="font-size: 0.78rem; color: var(--text-secondary);">Issued to FY A • Jul 18, 2026</span>
                     </li>
                     <li style="padding-bottom: 12px; border-bottom: 1px solid var(--border);">
                       <strong style="font-size: 0.88rem; display: block; margin-bottom: 4px;">Parent-Teacher Meeting Scheduled</strong>
@@ -458,8 +458,9 @@
                   </div>
                   <select class="custom-select-box" id="studentDivFilter">
                     <option value="ALL">All Divisions</option>
-                    <option value="Div A" selected>Division A</option>
-                    <option value="Div B">Division B</option>
+                    <option value="FY A" selected>FY A</option>
+                    <option value="FY B">FY B</option>
+                    <option value="FY C">FY C</option>
                   </select>
                   <select class="custom-select-box" id="studentStatusFilter">
                     <option value="ALL">All Statuses</option>
@@ -499,28 +500,28 @@
           <section id="view-attendance" class="tab-view hidden-view">
             <div class="section-title-wrapper" style="margin-bottom: 24px;">
               <h1>Mark Class Attendance</h1>
-              <p>Select subject, class division, and date to mark student attendance for today's lecture session.</p>
+              <p>Choose a class, subject, date, and then load the roster to mark attendance quickly.</p>
             </div>
 
-            <!-- SELECTION FORM HEADER -->
             <div class="data-table-card" style="padding: 24px; margin-bottom: 24px;">
-              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; align-items: end;">
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; align-items: end;">
                 <div>
-                  <label style="font-size: 0.82rem; font-weight: 700; display: block; margin-bottom: 6px; color: var(--text-secondary);">Select Class / Division</label>
+                  <label style="font-size: 0.82rem; font-weight: 700; display: block; margin-bottom: 6px; color: var(--text-secondary);">Select Class</label>
                   <select class="custom-select-box" id="entryClassSelect" style="width: 100%;">
-                    <option value="SE Comp-A">SE Computer - Division A</option>
-                    <option value="SE Comp-B">SE Computer - Division B</option>
-                    <option value="TE Comp-A">TE Computer - Division A</option>
+                    <option value="FY A">FY A</option>
+                    <option value="FY B">FY B</option>
+                    <option value="FY C">FY C</option>
                   </select>
                 </div>
 
                 <div>
                   <label style="font-size: 0.82rem; font-weight: 700; display: block; margin-bottom: 6px; color: var(--text-secondary);">Select Subject</label>
                   <select class="custom-select-box" id="entrySubjectSelect" style="width: 100%;">
-                    <option value="Web Development">Web Development</option>
-                    <option value="Data Structures">Data Structures & Algorithms</option>
-                    <option value="Database Systems">Database Management Systems</option>
-                    <option value="Computer Networks">Computer Networks</option>
+                    <option value="Python Programming">Python Programming</option>
+                    <option value="Machine Learning">Machine Learning</option>
+                    <option value="Data Science">Data Science</option>
+                    <option value="Deep Learning">Deep Learning</option>
+                    <option value="AI Ethics">AI Ethics</option>
                   </select>
                 </div>
 
@@ -538,18 +539,25 @@
                     <option value="01:30 PM - 02:30 PM">01:30 PM - 02:30 PM</option>
                   </select>
                 </div>
+
+                <div style="display:flex; align-items:flex-end; justify-content:flex-end;">
+                  <button type="button" class="table-action-btn primary-solid" id="loadRosterBtn" style="width:100%;">
+                    <i class="fa-solid fa-list-check"></i> Load Roster
+                  </button>
+                </div>
               </div>
+
+              <div id="attendanceSummaryText" style="margin-top: 16px; color: var(--text-secondary); font-size: 0.95rem;">Select class, subject, and date, then click "Load Roster".</div>
             </div>
 
-            <!-- STUDENT ATTENDANCE ENTRY ROSTER -->
             <div class="data-table-card">
               <div class="table-card-header">
                 <div>
                   <h2 style="margin-bottom: 4px;">Student Roster for Attendance Marking</h2>
                   <p style="font-size: 0.85rem; color: var(--text-secondary);">
-                    Present: <strong id="presentCountText" class="text-success">10</strong> | 
+                    Present: <strong id="presentCountText" class="text-success">0</strong> | 
                     Absent: <strong id="absentCountText" class="text-danger">0</strong> | 
-                    Total: <strong>10 Students</strong>
+                    Total: <strong id="attendanceTotalText">0 Students</strong>
                   </p>
                 </div>
 
@@ -578,7 +586,7 @@
                     </tr>
                   </thead>
                   <tbody id="attendanceEntryTableBody">
-                    <!-- Populated dynamically -->
+                    <tr><td colspan="5" class="center-align" style="padding: 30px; color: var(--text-secondary);">Please select a class and date, then click "Load Roster".</td></tr>
                   </tbody>
                 </table>
               </div>

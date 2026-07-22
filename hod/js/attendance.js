@@ -1,14 +1,20 @@
 document.addEventListener('DOMContentLoaded', async () => {
   const body = document.getElementById('attendanceTableBody');
   const search = document.getElementById('studentSearch');
+  const dateFilter = document.getElementById('hodAttendanceDateFilter');
 
   let rows = [];
 
   const renderRows = () => {
     if (!body) return;
     const query = (search?.value || '').trim().toLowerCase();
-    const filtered = rows.filter((row) => row.name.toLowerCase().includes(query) || row.roll.toLowerCase().includes(query) || row.prn.toLowerCase().includes(query));
-    
+    const selectedDate = dateFilter?.value || '';
+    const filtered = rows.filter((row) => {
+      const matchesQuery = row.name.toLowerCase().includes(query) || row.roll.toLowerCase().includes(query) || row.prn.toLowerCase().includes(query);
+      const matchesDate = !selectedDate || (row.latest_date || '').includes(selectedDate);
+      return matchesQuery && matchesDate;
+    });
+
     body.innerHTML = filtered.map((row) => {
       const pct = parseInt(row.attendance_pct);
       let status = 'Above 75%';
@@ -31,6 +37,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           <td>${row.sessions}</td>
           <td>${row.attended}</td>
           <td><span class="badge-status ${statusClass}">${status}</span></td>
+          <td>${row.latest_date ? row.latest_date : 'No update yet'}</td>
           <td>
             <div class="button-row">
               <button class="btn btn-secondary" onclick="alert('Viewing attendance logs for ${row.name}')">View</button>
@@ -56,4 +63,5 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   search?.addEventListener('input', renderRows);
+  dateFilter?.addEventListener('change', renderRows);
 });

@@ -4,6 +4,44 @@ require_once __DIR__ . '/db.php';
 
 header('Content-Type: application/json; charset=utf-8');
 
+function normalizeDepartment($value) {
+    $normalized = trim((string)($value ?? ''));
+    if ($normalized === '') {
+        return 'Artificial Intelligence and Machine Learning';
+    }
+    $lower = strtolower($normalized);
+    if (strpos($lower, 'computer') !== false || strpos($lower, 'engineering') !== false) {
+        return 'Artificial Intelligence and Machine Learning';
+    }
+    return $normalized;
+}
+
+function normalizeDivision($value) {
+    $normalized = trim((string)($value ?? ''));
+    if ($normalized === '') {
+        return 'FY A';
+    }
+    $map = [
+        'div a' => 'FY A',
+        'div b' => 'FY B',
+        'div c' => 'FY C',
+        'fy a' => 'FY A',
+        'fy b' => 'FY B',
+        'fy c' => 'FY C',
+        'se comp-a' => 'FY A',
+        'se comp a' => 'FY A',
+        'se comp-b' => 'FY B',
+        'se comp b' => 'FY B',
+        'se comp-c' => 'FY C',
+        'se comp c' => 'FY C',
+        'se computer - division a' => 'FY A',
+        'se computer - division b' => 'FY B',
+        'se computer - division c' => 'FY C'
+    ];
+    $lower = strtolower($normalized);
+    return $map[$lower] ?? $normalized;
+}
+
 // Ensure user is logged in as student
 $user = $_SESSION['user'] ?? null;
 if (!$user || $user['role'] !== 'student') {
@@ -34,7 +72,7 @@ try {
         exit;
     }
 
-    $division = $profile['division'];
+    $division = normalizeDivision($profile['division'] ?? 'FY A');
 
     // 2. Fetch Overall Attendance Stats
     $statsStmt = $pdo->prepare("
@@ -227,9 +265,9 @@ try {
             'student' => [
                 'name' => $profile['full_name'],
                 'rollNo' => $profile['roll_no'],
-                'department' => $profile['department'],
+                'department' => normalizeDepartment($profile['department'] ?? 'Artificial Intelligence and Machine Learning'),
                 'semester' => $profile['semester'],
-                'division' => $profile['division'],
+                'division' => $division,
                 'email' => $profile['email'],
                 'phone' => $profile['phone'] ?? 'N/A',
                 'academicYear' => $profile['academic_year'],
