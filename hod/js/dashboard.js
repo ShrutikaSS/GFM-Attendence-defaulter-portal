@@ -244,17 +244,19 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // Logout Handler
-  const logoutLinks = document.querySelectorAll('a[href*="index.html"]');
+  const logoutLinks = document.querySelectorAll('a[href*="index.html"], .logout-btn, #logoutBtn');
   logoutLinks.forEach(link => {
-    if (link.textContent.toLowerCase().includes('logout')) {
+    if (link.textContent.toLowerCase().includes('logout') || link.id === 'logoutBtn') {
       link.addEventListener('click', async (e) => {
         e.preventDefault();
-        sessionStorage.removeItem('attendance_user');
-        localStorage.removeItem('attendance_user');
-        try {
-          await fetch('../api/logout.php');
-        } catch(err) {}
-        window.location.href = '../login.html';
+        if (confirm('Are you sure you want to log out from GFM Portal?')) {
+          sessionStorage.clear();
+          localStorage.clear();
+          try {
+            await fetch('../api/logout.php');
+          } catch(err) {}
+          window.location.href = '../login.html';
+        }
       });
     }
   });

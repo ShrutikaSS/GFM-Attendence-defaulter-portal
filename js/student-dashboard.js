@@ -635,12 +635,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // Logout Buttons
-        const logoutHandler = () => {
+        const logoutHandler = async () => {
             if (confirm("Are you sure you want to log out from GFM Portal?")) {
                 showToast("Logging out...", "warning");
+                sessionStorage.clear();
+                localStorage.clear();
+                try {
+                    await fetch('../api/logout.php');
+                } catch (e) {}
                 setTimeout(() => {
-                    window.location.href = '../api/logout.php';
-                }, 1000);
+                    window.location.href = '../login.html';
+                }, 500);
             }
         };
         document.getElementById('logoutBtnNav')?.addEventListener('click', logoutHandler);

@@ -772,12 +772,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (btn) {
       btn.addEventListener('click', async (e) => {
         e.preventDefault();
-        sessionStorage.removeItem('attendance_user');
-        localStorage.removeItem('attendance_user');
-        try {
-          await fetch('../api/logout.php');
-        } catch(err) {}
-        window.location.href = '../login.html';
+        if (confirm('Are you sure you want to log out from GFM Portal?')) {
+          sessionStorage.clear();
+          localStorage.clear();
+          try {
+            await fetch('../api/logout.php');
+          } catch(err) {}
+          window.location.href = '../login.html';
+        }
       });
     }
   });

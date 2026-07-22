@@ -10,8 +10,18 @@ if (ini_get("session.use_cookies")) {
 }
 session_destroy();
 
-header('Content-Type: application/json; charset=utf-8');
-echo json_encode([
-    'success' => true,
-    'message' => 'Logged out successfully.'
-]);
+$isJson = isset($_GET['json']) || 
+          (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false) ||
+          (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest');
+
+if ($isJson) {
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode([
+        'success' => true,
+        'message' => 'Logged out successfully.'
+    ]);
+} else {
+    header('Location: ../login.html');
+    exit();
+}
+
