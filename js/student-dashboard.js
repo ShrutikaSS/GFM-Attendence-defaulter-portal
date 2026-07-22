@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
         student: {
             name: "Rahul Patil",
             rollNo: "2024CS108",
-            department: "Computer Engineering",
+            department: "Artificial Intelligence & Machine Learning",
             semester: "Semester VI",
             division: "Div A",
             email: "rahul.patil@gfm.edu.in",

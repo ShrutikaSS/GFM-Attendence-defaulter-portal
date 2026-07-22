@@ -20,7 +20,7 @@ CREATE TABLE `users` (
   `email` VARCHAR(100) NOT NULL UNIQUE,
   `password` VARCHAR(255) NOT NULL,
   `role` ENUM('student', 'gfm', 'hod') NOT NULL,
-  `department` VARCHAR(100) DEFAULT 'Computer Engineering',
+  `department` VARCHAR(100) DEFAULT 'Artificial Intelligence & Machine Learning',
   `roll_or_emp_id` VARCHAR(50) DEFAULT NULL,
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -108,28 +108,28 @@ CREATE TABLE `schedules` (
 INSERT INTO `users` (`id`, `full_name`, `email`, `password`, `role`, `department`, `roll_or_emp_id`)
 VALUES
 -- HOD (dipali123)
-(1, 'Dr. Dipali Shende', 'hod@college.edu', '$2y$10$85QGZlFqU2sUqQ5A9GzZVe1n10/Q5.n2h8h8y9.y0.y0.y0.y0.y0', 'hod', 'Computer Engineering', 'HOD-001'),
-(2, 'Dr. Dipali Shende', 'dipali.shende@college.edu', '$2y$10$85QGZlFqU2sUqQ5A9GzZVe1n10/Q5.n2h8h8y9.y0.y0.y0.y0.y0', 'hod', 'Computer Engineering', 'HOD-001'),
+(1, 'Dr. Dipali Shende', 'hod@college.edu', '$2y$10$85QGZlFqU2sUqQ5A9GzZVe1n10/Q5.n2h8h8y9.y0.y0.y0.y0.y0', 'hod', 'Artificial Intelligence & Machine Learning', 'HOD-001'),
+(2, 'Dr. Dipali Shende', 'dipali.shende@college.edu', '$2y$10$85QGZlFqU2sUqQ5A9GzZVe1n10/Q5.n2h8h8y9.y0.y0.y0.y0.y0', 'hod', 'Artificial Intelligence & Machine Learning', 'HOD-001'),
 
 -- GFMs (omkar123, pushkaraj123, shrutika123)
-(3, 'Omkar Wadekar', 'omkar@college.edu', '$2y$10$95QGZlFqU2sUqQ5A9GzZVe1n10/Q5.n2h8h8y9.y0.y0.y0.y0.y0', 'gfm', 'Computer Engineering', 'GFM-A101'),
-(4, 'Pushkaraj Sonalkar', 'pushkaraj@college.edu', '$2y$10$95QGZlFqU2sUqQ5A9GzZVe1n10/Q5.n2h8h8y9.y0.y0.y0.y0.y0', 'gfm', 'Computer Engineering', 'GFM-B102'),
-(5, 'Shrutika Saudagar', 'shrutika@college.edu', '$2y$10$95QGZlFqU2sUqQ5A9GzZVe1n10/Q5.n2h8h8y9.y0.y0.y0.y0.y0', 'gfm', 'Computer Engineering', 'GFM-C103'),
+(3, 'Omkar Wadekar', 'omkar@college.edu', '$2y$10$95QGZlFqU2sUqQ5A9GzZVe1n10/Q5.n2h8h8y9.y0.y0.y0.y0.y0', 'gfm', 'Artificial Intelligence & Machine Learning', 'GFM-A101'),
+(4, 'Pushkaraj Sonalkar', 'pushkaraj@college.edu', '$2y$10$95QGZlFqU2sUqQ5A9GzZVe1n10/Q5.n2h8h8y9.y0.y0.y0.y0.y0', 'gfm', 'Artificial Intelligence & Machine Learning', 'GFM-B102'),
+(5, 'Shrutika Saudagar', 'shrutika@college.edu', '$2y$10$95QGZlFqU2sUqQ5A9GzZVe1n10/Q5.n2h8h8y9.y0.y0.y0.y0.y0', 'gfm', 'Artificial Intelligence & Machine Learning', 'GFM-C103'),
 
 -- Division A Students (PRN: 125UAM1001, 125UAM1002, 125UAM1003)
-(6, 'Om potarkar', 'om@gmail.com', '$2y$10$75QGZlFqU2sUqQ5A9GzZVe1n10/Q5.n2h8h8y9.y0.y0.y0.y0.y0', 'student', 'Computer Engineering', '1'),
-(7, 'Akib Momin', 'akib@gmail.com', '$2y$10$75QGZlFqU2sUqQ5A9GzZVe1n10/Q5.n2h8h8y9.y0.y0.y0.y0.y0', 'student', 'Computer Engineering', '2'),
-(8, 'Sachin tompe', 'sachin@gmail.com', '$2y$10$75QGZlFqU2sUqQ5A9GzZVe1n10/Q5.n2h8h8y9.y0.y0.y0.y0.y0', 'student', 'Computer Engineering', '3'),
+(6, 'Om potarkar', 'om@gmail.com', '$2y$10$75QGZlFqU2sUqQ5A9GzZVe1n10/Q5.n2h8h8y9.y0.y0.y0.y0.y0', 'student', 'Artificial Intelligence & Machine Learning', '1'),
+(7, 'Akib Momin', 'akib@gmail.com', '$2y$10$75QGZlFqU2sUqQ5A9GzZVe1n10/Q5.n2h8h8y9.y0.y0.y0.y0.y0', 'student', 'Artificial Intelligence & Machine Learning', '2'),
+(8, 'Sachin tompe', 'sachin@gmail.com', '$2y$10$75QGZlFqU2sUqQ5A9GzZVe1n10/Q5.n2h8h8y9.y0.y0.y0.y0.y0', 'student', 'Artificial Intelligence & Machine Learning', '3'),
 
 -- Division B Students (PRN: 125UAM1004, 125UAM1005, 125UAM1006)
-(9, 'Ram Mutthe', 'ram@gmail.com', '$2y$10$75QGZlFqU2sUqQ5A9GzZVe1n10/Q5.n2h8h8y9.y0.y0.y0.y0.y0', 'student', 'Computer Engineering', '1'),
-(10, 'Yash lahase', 'yash@gmail.com', '$2y$10$75QGZlFqU2sUqQ5A9GzZVe1n10/Q5.n2h8h8y9.y0.y0.y0.y0.y0', 'student', 'Computer Engineering', '2'),
-(11, 'Sumit Kulkarni', 'sumit@gmail.com', '$2y$10$75QGZlFqU2sUqQ5A9GzZVe1n10/Q5.n2h8h8y9.y0.y0.y0.y0.y0', 'student', 'Computer Engineering', '3'),
+(9, 'Ram Mutthe', 'ram@gmail.com', '$2y$10$75QGZlFqU2sUqQ5A9GzZVe1n10/Q5.n2h8h8y9.y0.y0.y0.y0.y0', 'student', 'Artificial Intelligence & Machine Learning', '1'),
+(10, 'Yash lahase', 'yash@gmail.com', '$2y$10$75QGZlFqU2sUqQ5A9GzZVe1n10/Q5.n2h8h8y9.y0.y0.y0.y0.y0', 'student', 'Artificial Intelligence & Machine Learning', '2'),
+(11, 'Sumit Kulkarni', 'sumit@gmail.com', '$2y$10$75QGZlFqU2sUqQ5A9GzZVe1n10/Q5.n2h8h8y9.y0.y0.y0.y0.y0', 'student', 'Artificial Intelligence & Machine Learning', '3'),
 
 -- Division C Students (PRN: 125UAM1007, 125UAM1008, 125UAM1009)
-(12, 'Mahesh Jadhav', 'mahesh@gmail.com', '$2y$10$75QGZlFqU2sUqQ5A9GzZVe1n10/Q5.n2h8h8y9.y0.y0.y0.y0.y0', 'student', 'Computer Engineering', '1'),
-(13, 'Pushkar Mali', 'pushkar@gmail.com', '$2y$10$75QGZlFqU2sUqQ5A9GzZVe1n10/Q5.n2h8h8y9.y0.y0.y0.y0.y0', 'student', 'Computer Engineering', '2'),
-(14, 'rushi mane', 'rushi@gmail.com', '$2y$10$75QGZlFqU2sUqQ5A9GzZVe1n10/Q5.n2h8h8y9.y0.y0.y0.y0.y0', 'student', 'Computer Engineering', '3');
+(12, 'Mahesh Jadhav', 'mahesh@gmail.com', '$2y$10$75QGZlFqU2sUqQ5A9GzZVe1n10/Q5.n2h8h8y9.y0.y0.y0.y0.y0', 'student', 'Artificial Intelligence & Machine Learning', '1'),
+(13, 'Pushkar Mali', 'pushkar@gmail.com', '$2y$10$75QGZlFqU2sUqQ5A9GzZVe1n10/Q5.n2h8h8y9.y0.y0.y0.y0.y0', 'student', 'Artificial Intelligence & Machine Learning', '2'),
+(14, 'rushi mane', 'rushi@gmail.com', '$2y$10$75QGZlFqU2sUqQ5A9GzZVe1n10/Q5.n2h8h8y9.y0.y0.y0.y0.y0', 'student', 'Artificial Intelligence & Machine Learning', '3');
 
 -- Seed GFM detail assignments
 INSERT INTO `gfm_details` (`user_id`, `division_assigned`)
@@ -159,11 +159,11 @@ VALUES
 -- Seed Faculty List
 INSERT INTO `faculty` (`name`, `department`, `subject`, `division`, `email`, `phone`, `status`)
 VALUES
-('Prof. D. Shah', 'Computer Engineering', 'Database Systems', 'Div A', 'dipali.shah@college.edu', '+91 98765 43210', 'Active'),
-('Prof. N. Joshi', 'Computer Engineering', 'Web Development', 'Div A', 'nidhi.joshi@college.edu', '+91 91234 56789', 'On Leave'),
-('Prof. R. Mehta', 'Computer Engineering', 'Computer Networks', 'Div B', 'rohan.mehta@college.edu', '+91 93322 11009', 'Active'),
-('Prof. A. V. Kulkarni', 'Computer Engineering', 'Data Structures', 'Div B', 'kulkarni@college.edu', '+91 94433 22110', 'Active'),
-('Prof. P. T. Joshi', 'Computer Engineering', 'Software Engineering', 'Div C', 'joshi@college.edu', '+91 98112 23344', 'Active');
+('Prof. D. Shah', 'Artificial Intelligence & Machine Learning', 'Database Systems', 'Div A', 'dipali.shah@college.edu', '+91 98765 43210', 'Active'),
+('Prof. N. Joshi', 'Artificial Intelligence & Machine Learning', 'Web Development', 'Div A', 'nidhi.joshi@college.edu', '+91 91234 56789', 'On Leave'),
+('Prof. R. Mehta', 'Artificial Intelligence & Machine Learning', 'Computer Networks', 'Div B', 'rohan.mehta@college.edu', '+91 93322 11009', 'Active'),
+('Prof. A. V. Kulkarni', 'Artificial Intelligence & Machine Learning', 'Data Structures', 'Div B', 'kulkarni@college.edu', '+91 94433 22110', 'Active'),
+('Prof. P. T. Joshi', 'Artificial Intelligence & Machine Learning', 'Software Engineering', 'Div C', 'joshi@college.edu', '+91 98112 23344', 'Active');
 
 -- Seed initial notices
 INSERT INTO `notices` (`title`, `target`, `message`, `created_by`, `created_at`)

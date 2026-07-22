@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     full_name: 'Prof. Aniket Verma',
     email: 'gfm@college.edu',
     role: 'gfm',
-    department: 'Computer Engineering',
+    department: 'Artificial Intelligence & Machine Learning',
     roll_or_emp_id: 'GFM-204'
   };
 
@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (profEmpIdText) profEmpIdText.textContent = currentUser.roll_or_emp_id || 'GFM-204';
 
     const profDeptText = document.getElementById('profDeptText');
-    if (profDeptText) profDeptText.textContent = currentUser.department || 'Computer Engineering';
+    if (profDeptText) profDeptText.textContent = currentUser.department || 'Artificial Intelligence & Machine Learning';
 
     const profEmailText = document.getElementById('profEmailText');
     if (profEmailText) profEmailText.textContent = currentUser.email;

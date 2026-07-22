@@ -37,7 +37,7 @@ try {
         `email` VARCHAR(100) NOT NULL UNIQUE,
         `password` VARCHAR(255) NOT NULL,
         `role` ENUM('student','gfm','hod') NOT NULL,
-        `department` VARCHAR(100) DEFAULT 'Computer Engineering',
+        `department` VARCHAR(100) DEFAULT 'Artificial Intelligence & Machine Learning',
         `roll_or_emp_id` VARCHAR(50) DEFAULT NULL,
         `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
@@ -137,19 +137,19 @@ try {
     $usersStmt = $pdo->prepare("INSERT INTO `users` (`id`, `full_name`, `email`, `password`, `role`, `department`, `roll_or_emp_id`) VALUES (?, ?, ?, ?, ?, ?, ?)");
 
     $usersData = [
-        [1,  'Dr. Dipali Shende',    'hod@college.edu',        'hod',     'Computer Engineering', 'HOD-001'],
-        [3,  'Omkar Wadekar',        'omkar@college.edu',      'gfm',     'Computer Engineering', 'GFM-A101'],
-        [4,  'Pushkaraj Sonalkar',   'pushkaraj@college.edu',  'gfm',     'Computer Engineering', 'GFM-B102'],
-        [5,  'Shrutika Saudagar',    'shrutika@college.edu',   'gfm',     'Computer Engineering', 'GFM-C103'],
-        [6,  'Om potarkar',          'om@gmail.com',           'student', 'Computer Engineering', '1'],
-        [7,  'Akib Momin',           'akib@gmail.com',         'student', 'Computer Engineering', '2'],
-        [8,  'Sachin tompe',         'sachin@gmail.com',       'student', 'Computer Engineering', '3'],
-        [9,  'Ram Mutthe',           'ram@gmail.com',          'student', 'Computer Engineering', '1'],
-        [10, 'Yash lahase',          'yash@gmail.com',         'student', 'Computer Engineering', '2'],
-        [11, 'Sumit Kulkarni',       'sumit@gmail.com',        'student', 'Computer Engineering', '3'],
-        [12, 'Mahesh Jadhav',        'mahesh@gmail.com',       'student', 'Computer Engineering', '1'],
-        [13, 'Pushkar Mali',         'pushkar@gmail.com',      'student', 'Computer Engineering', '2'],
-        [14, 'rushi mane',           'rushi@gmail.com',        'student', 'Computer Engineering', '3'],
+        [1,  'Dr. Dipali Shende',    'hod@college.edu',        'hod',     'Artificial Intelligence & Machine Learning', 'HOD-001'],
+        [3,  'Omkar Wadekar',        'omkar@college.edu',      'gfm',     'Artificial Intelligence & Machine Learning', 'GFM-A101'],
+        [4,  'Pushkaraj Sonalkar',   'pushkaraj@college.edu',  'gfm',     'Artificial Intelligence & Machine Learning', 'GFM-B102'],
+        [5,  'Shrutika Saudagar',    'shrutika@college.edu',   'gfm',     'Artificial Intelligence & Machine Learning', 'GFM-C103'],
+        [6,  'Om potarkar',          'om@gmail.com',           'student', 'Artificial Intelligence & Machine Learning', '1'],
+        [7,  'Akib Momin',           'akib@gmail.com',         'student', 'Artificial Intelligence & Machine Learning', '2'],
+        [8,  'Sachin tompe',         'sachin@gmail.com',       'student', 'Artificial Intelligence & Machine Learning', '3'],
+        [9,  'Ram Mutthe',           'ram@gmail.com',          'student', 'Artificial Intelligence & Machine Learning', '1'],
+        [10, 'Yash lahase',          'yash@gmail.com',         'student', 'Artificial Intelligence & Machine Learning', '2'],
+        [11, 'Sumit Kulkarni',       'sumit@gmail.com',        'student', 'Artificial Intelligence & Machine Learning', '3'],
+        [12, 'Mahesh Jadhav',        'mahesh@gmail.com',       'student', 'Artificial Intelligence & Machine Learning', '1'],
+        [13, 'Pushkar Mali',         'pushkar@gmail.com',      'student', 'Artificial Intelligence & Machine Learning', '2'],
+        [14, 'rushi mane',           'rushi@gmail.com',        'student', 'Artificial Intelligence & Machine Learning', '3'],
     ];
 
     foreach ($usersData as $u) {
@@ -188,11 +188,11 @@ try {
     // Seed Faculty
     $facStmt = $pdo->prepare("INSERT INTO `faculty` (`name`, `department`, `subject`, `division`, `email`, `phone`, `status`) VALUES (?, ?, ?, ?, ?, ?, ?)");
     $faculty = [
-        ['Prof. D. Shah',        'Computer Engineering', 'Database Systems',     'Div A', 'dipali.shah@college.edu',  '+91 98765 43210', 'Active'],
-        ['Prof. N. Joshi',       'Computer Engineering', 'Web Development',      'Div A', 'nidhi.joshi@college.edu',  '+91 91234 56789', 'On Leave'],
-        ['Prof. R. Mehta',       'Computer Engineering', 'Computer Networks',    'Div B', 'rohan.mehta@college.edu',  '+91 93322 11009', 'Active'],
-        ['Prof. A. V. Kulkarni', 'Computer Engineering', 'Data Structures',      'Div B', 'kulkarni@college.edu',     '+91 94433 22110', 'Active'],
-        ['Prof. P. T. Joshi',    'Computer Engineering', 'Software Engineering', 'Div C', 'joshi@college.edu',        '+91 98112 23344', 'Active'],
+        ['Prof. D. Shah',        'Artificial Intelligence & Machine Learning', 'Database Systems',     'Div A', 'dipali.shah@college.edu',  '+91 98765 43210', 'Active'],
+        ['Prof. N. Joshi',       'Artificial Intelligence & Machine Learning', 'Web Development',      'Div A', 'nidhi.joshi@college.edu',  '+91 91234 56789', 'On Leave'],
+        ['Prof. R. Mehta',       'Artificial Intelligence & Machine Learning', 'Computer Networks',    'Div B', 'rohan.mehta@college.edu',  '+91 93322 11009', 'Active'],
+        ['Prof. A. V. Kulkarni', 'Artificial Intelligence & Machine Learning', 'Data Structures',      'Div B', 'kulkarni@college.edu',     '+91 94433 22110', 'Active'],
+        ['Prof. P. T. Joshi',    'Artificial Intelligence & Machine Learning', 'Software Engineering', 'Div C', 'joshi@college.edu',        '+91 98112 23344', 'Active'],
     ];
     foreach ($faculty as $f) {
         $facStmt->execute($f);
