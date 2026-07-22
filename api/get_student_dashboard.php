@@ -34,6 +34,10 @@ try {
         exit;
     }
 
+    if (empty($profile['department']) || $profile['department'] === 'Computer Engineering') {
+        $profile['department'] = 'Artificial Intelligence & Machine Learning';
+    }
+
     $division = $profile['division'];
 
     // 2. Fetch Overall Attendance Stats

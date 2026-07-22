@@ -37,6 +37,7 @@ try {
     $dbUser = $stmt->fetch();
 
     if ($dbUser) {
+        $dbUser['department'] = 'Artificial Intelligence & Machine Learning';
         // 2. Verify password (bcrypt or name123 fallback)
         $cleanName = preg_replace('/^(Dr\.|Prof\.|Mr\.|Mrs\.|Ms\.)\s*/i', '', trim($dbUser['full_name']));
         $firstName = strtolower(trim(explode(' ', $cleanName)[0]));

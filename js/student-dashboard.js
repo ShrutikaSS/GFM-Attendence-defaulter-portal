@@ -124,6 +124,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Render Student Profile Details
     function renderStudentProfile() {
         const p = state.student;
+        if (!p.department || p.department === 'Computer Engineering' || p.department.includes('Computer')) {
+            p.department = "Artificial Intelligence & Machine Learning";
+        }
         // Navigation & Banner Elements
         setElemText('studentName', p.name);
         setElemText('studentNameNav', p.name);
@@ -785,6 +788,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (result.success && result.data) {
                     // Overwrite default state with database results
                     state.student = result.data.student;
+                    if (state.student) {
+                        state.student.department = "Artificial Intelligence & Machine Learning";
+                    }
                     state.stats = result.data.stats;
                     state.subjects = result.data.subjects;
                     state.monthlyData = result.data.monthlyData;
