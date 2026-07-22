@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             <tr>
               <td>${row.name}</td>
               <td>${row.department}</td>
-              <td>SE</td> <!-- Seed data is for SE Comp -->
+              <td>SE</td> <!-- Seed data is for SE AIML -->
               <td>${row.division}</td>
               <td>${row.subject}</td>
               <td>${row.email || 'N/A'}</td>
