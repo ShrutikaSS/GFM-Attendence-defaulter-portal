@@ -366,7 +366,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const closeForgotModalBtn = document.getElementById('closeForgotModal');
   const requestOtpForm = document.getElementById('requestOtpForm');
   const verifyOtpForm = document.getElementById('verifyOtpForm');
-  const forgotEmailInput = document.getElementById('forgotEmailInput');
+  const forgotPrnInput = document.getElementById('forgotPrnInput') || document.getElementById('forgotEmailInput');
   const otpSentSubtitle = document.getElementById('otpSentSubtitle');
   const finishResetBtn = document.getElementById('finishResetBtn');
 
@@ -376,7 +376,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const forgotAlert = document.getElementById('forgotAlert');
   const otpAlert = document.getElementById('otpAlert');
 
-  let currentResetEmail = '';
+  let currentResetPrn = '';
 
   function showModalAlert(box, msg, type = 'error') {
     if (!box) return;
@@ -393,8 +393,8 @@ document.addEventListener('DOMContentLoaded', () => {
   if (forgotLink && forgotModal) {
     forgotLink.addEventListener('click', (e) => {
       e.preventDefault();
-      const mainEmail = emailInput ? emailInput.value.trim() : '';
-      if (forgotEmailInput) forgotEmailInput.value = mainEmail;
+      const mainInputVal = emailInput ? emailInput.value.trim() : '';
+      if (forgotPrnInput) forgotPrnInput.value = mainInputVal;
       
       forgotStep1.style.display = 'block';
       forgotStep2.style.display = 'none';
@@ -417,9 +417,9 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
       hideModalAlerts();
 
-      currentResetEmail = forgotEmailInput ? forgotEmailInput.value.trim() : '';
-      if (!currentResetEmail) {
-        showModalAlert(forgotAlert, 'Please enter your registered email address.');
+      currentResetPrn = forgotPrnInput ? forgotPrnInput.value.trim() : '';
+      if (!currentResetPrn) {
+        showModalAlert(forgotAlert, 'Please enter your registered ZPRN / PRN number.');
         return;
       }
 
@@ -427,14 +427,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const res = await fetch('api/forgot_password.php', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'request_otp', email: currentResetEmail })
+          body: JSON.stringify({ action: 'request_otp', prn: currentResetPrn })
         });
         if (res.ok) {
           const contentType = res.headers.get('content-type') || '';
           if (contentType.includes('application/json')) {
             const data = await res.json();
             if (!data.success) {
-              showModalAlert(forgotAlert, data.message || 'Account not found.');
+              showModalAlert(forgotAlert, data.message || 'ZPRN number not found.');
               return;
             }
           }
@@ -442,10 +442,10 @@ document.addEventListener('DOMContentLoaded', () => {
       } catch(err) {}
 
       // Trigger pop-up alert as requested by user
-      alert(`OTP has been sent to your email (${currentResetEmail}).`);
+      alert(`OTP has been sent for ZPRN (${currentResetPrn}).`);
 
       if (otpSentSubtitle) {
-        otpSentSubtitle.textContent = `An OTP has been sent to ${currentResetEmail}.`;
+        otpSentSubtitle.textContent = `An OTP has been sent for ZPRN: ${currentResetPrn}.`;
       }
       
       forgotStep1.style.display = 'none';
@@ -476,12 +476,16 @@ document.addEventListener('DOMContentLoaded', () => {
         await fetch('api/forgot_password.php', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'reset_password', email: currentResetEmail, otp, new_password: newPass })
+          body: JSON.stringify({ action: 'reset_password', prn: currentResetPrn, otp, new_password: newPass })
         });
       } catch(err) {}
 
       // Update demo database in local state
-      const foundUser = demoUsers.find(u => u.email.toLowerCase() === currentResetEmail.toLowerCase());
+      const foundUser = demoUsers.find(u => 
+        (u.prn && u.prn.toUpperCase() === currentResetPrn.toUpperCase()) ||
+        (u.roll_or_emp_id && u.roll_or_emp_id.toUpperCase() === currentResetPrn.toUpperCase()) ||
+        u.email.toLowerCase() === currentResetPrn.toLowerCase()
+      );
       if (foundUser) {
         foundUser.password = newPass;
       }
