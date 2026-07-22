@@ -75,51 +75,35 @@
       <div class="modal-card">
         <button type="button" class="modal-close" id="closeForgotModal" aria-label="Close Modal">&times;</button>
         
-        <!-- Step 1: Request OTP -->
+        <!-- Direct Reset by ZPRN -->
         <div id="forgotStep1">
           <div class="brand-block">
-            <p class="eyebrow">Password Reset</p>
+            <p class="eyebrow">Direct Reset</p>
             <h2>Forgot Password?</h2>
-            <p>Enter your registered ZPRN / PRN number to receive an OTP.</p>
+            <p>Enter your registered ZPRN / PRN number and your new password.</p>
           </div>
           <div class="alert-box" id="forgotAlert" style="display: none;"></div>
-          <form class="login-form" id="requestOtpForm" novalidate>
+          <form class="login-form" id="directResetForm" novalidate>
             <label>
-              Enter Your ZPRN Number
-              <input type="text" id="forgotPrnInput" placeholder="Enter ZPRN (e.g. 125UAM1004)" required />
-            </label>
-            <button type="submit" class="btn btn-primary">
-              <span>Send OTP</span>
-              <i class="fa-solid fa-paper-plane"></i>
-            </button>
-          </form>
-        </div>
-
-        <!-- Step 2: Enter OTP & Reset -->
-        <div id="forgotStep2" style="display: none;">
-          <div class="brand-block">
-            <p class="eyebrow">OTP Sent</p>
-            <h2>Enter 6-Digit OTP</h2>
-            <p id="otpSentSubtitle">An OTP has been sent to your email.</p>
-          </div>
-          <div class="alert-box" id="otpAlert" style="display: none;"></div>
-          <form class="login-form" id="verifyOtpForm" novalidate>
-            <label>
-              6-Digit OTP Code
-              <input type="text" id="otpCodeInput" placeholder="Enter OTP (e.g. 123456)" maxlength="6" required />
+              ZPRN / PRN Number
+              <input type="text" id="forgotPrnInput" class="modal-input" placeholder="e.g. 125UAM1004" required />
             </label>
             <label>
               New Password
-              <input type="password" id="newPasswordInput" placeholder="Enter new password" required />
+              <input type="password" id="forgotNewPasswordInput" class="modal-input" placeholder="Enter new password" required />
             </label>
-            <button type="submit" class="btn btn-primary">
-              <span>Verify OTP & Reset</span>
+            <label>
+              Confirm New Password
+              <input type="password" id="forgotConfirmPasswordInput" class="modal-input" placeholder="Confirm new password" required />
+            </label>
+            <button type="submit" class="btn btn-primary" style="margin-top: 6px;">
+              <span>Reset Password</span>
               <i class="fa-solid fa-key"></i>
             </button>
           </form>
         </div>
 
-        <!-- Step 3: Confirmation -->
+        <!-- Step 2: Confirmation -->
         <div id="forgotStep3" style="display: none; text-align: center; padding: 12px 0;">
           <div class="success-icon-badge">
             <i class="fa-solid fa-circle-check"></i>

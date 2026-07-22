@@ -226,21 +226,29 @@ body::after {
 }
 
 .login-form input[type="email"],
-.login-form input[type="password"] {
+.login-form input[type="password"],
+.login-form input[type="text"],
+.modal-input {
   width: 100%;
-  border: 1px solid rgba(31, 111, 235, 0.18);
+  border: 1.5px solid rgba(31, 111, 235, 0.2);
   border-radius: 16px;
   padding: 14px 16px;
-  font-size: 1rem;
+  font-size: 0.95rem;
+  font-family: inherit;
   color: var(--text);
-  background: #ffffff;
-  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  background: #f8fafc;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.02);
+  transition: all 0.25s ease;
+  appearance: none;
+  -webkit-appearance: none;
 }
 
-.login-form input:focus {
+.login-form input:focus,
+.modal-input:focus {
   outline: none;
+  background: #ffffff;
   border-color: var(--primary);
-  box-shadow: 0 0 0 4px rgba(31, 111, 235, 0.1);
+  box-shadow: 0 0 0 4px rgba(31, 111, 235, 0.12);
 }
 
 .form-row {

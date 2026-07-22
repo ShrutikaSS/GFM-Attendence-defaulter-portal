@@ -359,24 +359,20 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ==========================================
-  // FORGOT PASSWORD MODAL & OTP WORKFLOW
+  // DIRECT ZPRN PASSWORD RESET WORKFLOW (NO OTP)
   // ==========================================
   const forgotLink = document.getElementById('forgotPasswordLink');
   const forgotModal = document.getElementById('forgotModal');
   const closeForgotModalBtn = document.getElementById('closeForgotModal');
-  const requestOtpForm = document.getElementById('requestOtpForm');
-  const verifyOtpForm = document.getElementById('verifyOtpForm');
-  const forgotPrnInput = document.getElementById('forgotPrnInput') || document.getElementById('forgotEmailInput');
-  const otpSentSubtitle = document.getElementById('otpSentSubtitle');
+  const directResetForm = document.getElementById('directResetForm');
+  const forgotPrnInput = document.getElementById('forgotPrnInput');
+  const forgotNewPasswordInput = document.getElementById('forgotNewPasswordInput');
+  const forgotConfirmPasswordInput = document.getElementById('forgotConfirmPasswordInput');
   const finishResetBtn = document.getElementById('finishResetBtn');
 
   const forgotStep1 = document.getElementById('forgotStep1');
-  const forgotStep2 = document.getElementById('forgotStep2');
   const forgotStep3 = document.getElementById('forgotStep3');
   const forgotAlert = document.getElementById('forgotAlert');
-  const otpAlert = document.getElementById('otpAlert');
-
-  let currentResetPrn = '';
 
   function showModalAlert(box, msg, type = 'error') {
     if (!box) return;
@@ -387,7 +383,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function hideModalAlerts() {
     if (forgotAlert) forgotAlert.style.display = 'none';
-    if (otpAlert) otpAlert.style.display = 'none';
   }
 
   if (forgotLink && forgotModal) {
@@ -395,10 +390,11 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
       const mainInputVal = emailInput ? emailInput.value.trim() : '';
       if (forgotPrnInput) forgotPrnInput.value = mainInputVal;
+      if (forgotNewPasswordInput) forgotNewPasswordInput.value = '';
+      if (forgotConfirmPasswordInput) forgotConfirmPasswordInput.value = '';
       
-      forgotStep1.style.display = 'block';
-      forgotStep2.style.display = 'none';
-      forgotStep3.style.display = 'none';
+      if (forgotStep1) forgotStep1.style.display = 'block';
+      if (forgotStep3) forgotStep3.style.display = 'none';
       hideModalAlerts();
       
       forgotModal.style.display = 'grid';
@@ -411,15 +407,28 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Request OTP Form Submission
-  if (requestOtpForm) {
-    requestOtpForm.addEventListener('submit', async (e) => {
+  // Direct ZPRN Password Reset Form Submission
+  if (directResetForm) {
+    directResetForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       hideModalAlerts();
 
-      currentResetPrn = forgotPrnInput ? forgotPrnInput.value.trim() : '';
-      if (!currentResetPrn) {
+      const prn = forgotPrnInput ? forgotPrnInput.value.trim() : '';
+      const newPass = forgotNewPasswordInput ? forgotNewPasswordInput.value.trim() : '';
+      const confirmPass = forgotConfirmPasswordInput ? forgotConfirmPasswordInput.value.trim() : '';
+
+      if (!prn) {
         showModalAlert(forgotAlert, 'Please enter your registered ZPRN / PRN number.');
+        return;
+      }
+
+      if (!newPass) {
+        showModalAlert(forgotAlert, 'Please enter a new password.');
+        return;
+      }
+
+      if (newPass !== confirmPass) {
+        showModalAlert(forgotAlert, 'New password and confirm password do not match.');
         return;
       }
 
@@ -427,7 +436,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const res = await fetch('api/forgot_password.php', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'request_otp', prn: currentResetPrn })
+          body: JSON.stringify({ prn: prn, new_password: newPass })
         });
         if (res.ok) {
           const contentType = res.headers.get('content-type') || '';
@@ -441,57 +450,24 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       } catch(err) {}
 
-      // Trigger pop-up alert as requested by user
-      alert(`OTP has been sent for ZPRN (${currentResetPrn}).`);
-
-      if (otpSentSubtitle) {
-        otpSentSubtitle.textContent = `An OTP has been sent for ZPRN: ${currentResetPrn}.`;
-      }
-      
-      forgotStep1.style.display = 'none';
-      forgotStep2.style.display = 'block';
-    });
-  }
-
-  // Verify OTP & Reset Password Form Submission
-  if (verifyOtpForm) {
-    verifyOtpForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      hideModalAlerts();
-
-      const otp = document.getElementById('otpCodeInput')?.value.trim();
-      const newPass = document.getElementById('newPasswordInput')?.value.trim();
-
-      if (!otp || !newPass) {
-        showModalAlert(otpAlert, 'Please enter both the OTP code and your new password.');
-        return;
-      }
-
-      if (otp.length < 4) {
-        showModalAlert(otpAlert, 'Please enter a valid 6-digit OTP.');
-        return;
-      }
-
-      try {
-        await fetch('api/forgot_password.php', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'reset_password', prn: currentResetPrn, otp, new_password: newPass })
-        });
-      } catch(err) {}
-
-      // Update demo database in local state
+      // Update demo Users in local state
       const foundUser = demoUsers.find(u => 
-        (u.prn && u.prn.toUpperCase() === currentResetPrn.toUpperCase()) ||
-        (u.roll_or_emp_id && u.roll_or_emp_id.toUpperCase() === currentResetPrn.toUpperCase()) ||
-        u.email.toLowerCase() === currentResetPrn.toLowerCase()
+        (u.prn && u.prn.toUpperCase() === prn.toUpperCase()) ||
+        (u.roll_or_emp_id && u.roll_or_emp_id.toUpperCase() === prn.toUpperCase()) ||
+        u.email.toLowerCase() === prn.toLowerCase()
       );
       if (foundUser) {
         foundUser.password = newPass;
       }
 
-      forgotStep2.style.display = 'none';
-      forgotStep3.style.display = 'block';
+      if (forgotStep1) forgotStep1.style.display = 'none';
+      if (forgotStep3) forgotStep3.style.display = 'block';
+    });
+  }
+
+  if (finishResetBtn && forgotModal) {
+    finishResetBtn.addEventListener('click', () => {
+      forgotModal.style.display = 'none';
     });
   }
 
