@@ -46,14 +46,16 @@ try {
                 WHEN COUNT(a.id) > 0 THEN ROUND(SUM(CASE WHEN a.status = 'Present' THEN 1 ELSE 0 END) / COUNT(a.id) * 100, 2)
                 ELSE 0
             END AS attendance_percentage,
-            COALESCE(s.status, 'Regular') AS defaulter_status
+            CASE 
+                WHEN COUNT(a.id) > 0 AND (SUM(CASE WHEN a.status = 'Present' THEN 1 ELSE 0 END) / COUNT(a.id) * 100) < 60 THEN 'Defaulter'
+                WHEN COUNT(a.id) > 0 AND (SUM(CASE WHEN a.status = 'Present' THEN 1 ELSE 0 END) / COUNT(a.id) * 100) < 75 THEN 'Warning'
+                ELSE 'Regular'
+            END AS defaulter_status
         FROM users u
         JOIN student_details sd ON u.id = sd.user_id
         LEFT JOIN attendance a ON u.id = a.student_id
             AND (:division IS NULL OR sd.division = :division)
             AND (:semester IS NULL OR a.semester = :semester)
-        LEFT JOIN attendance_summary s ON u.id = s.student_id
-            AND s.semester = :semester
     ";
 
     $params = [
@@ -70,10 +72,6 @@ try {
         $where[] = "u.department = :department";
         $params['department'] = $department;
     }
-    if ($status && $status !== 'ALL') {
-        $where[] = "COALESCE(s.status, 'Regular') = :status";
-        $params['status'] = $status;
-    }
     if ($search) {
         $where[] = "(u.full_name LIKE :search OR sd.prn LIKE :search OR sd.roll_no LIKE :search)";
         $params['search'] = "%$search%";
@@ -83,8 +81,19 @@ try {
         $query .= " WHERE " . implode(' AND ', $where);
     }
 
-    $query .= " GROUP BY u.id, sd.roll_no, sd.prn, u.full_name, sd.division, s.status
-                ORDER BY sd.division ASC, CAST(sd.roll_no AS UNSIGNED) ASC, sd.roll_no ASC";
+    $query .= " GROUP BY u.id, sd.roll_no, sd.prn, u.full_name, sd.division, sd.phone, sd.academic_year, sd.gfm_name";
+
+    $having = [];
+    if ($status && $status !== 'ALL') {
+        $having[] = "defaulter_status = :status";
+        $params['status'] = $status;
+    }
+
+    if (!empty($having)) {
+        $query .= " HAVING " . implode(' AND ', $having);
+    }
+
+    $query .= " ORDER BY sd.division ASC, CAST(sd.roll_no AS UNSIGNED) ASC, sd.roll_no ASC";
 
     $stmt = $pdo->prepare($query);
     $stmt->execute($params);

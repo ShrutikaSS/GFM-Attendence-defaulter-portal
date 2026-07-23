@@ -34,8 +34,12 @@ SELECT
     sd.academic_year,
     sd.gfm_name,
     sd.avatar_url,
-    COALESCE(s.attendance_percentage, 0) AS attendance_percentage
+    COALESCE(
+        (SELECT CASE WHEN COUNT(*) > 0 THEN ROUND(SUM(CASE WHEN a.status = 'Present' THEN 1 ELSE 0 END) / COUNT(*) * 100, 2) ELSE 0 END
+         FROM attendance a
+         WHERE a.student_id = u.id),
+        0
+    ) AS attendance_percentage
 FROM `users` u
 JOIN `student_details` sd ON u.id = sd.user_id
-LEFT JOIN `attendance_summary` s ON u.id = s.student_id
 WHERE u.role = 'student';
