@@ -672,10 +672,28 @@ document.addEventListener('DOMContentLoaded', () => {
         // Mark all read button
         const markAllBtn = document.getElementById('markAllReadBtn');
         if (markAllBtn) {
-            markAllBtn.addEventListener('click', () => {
-                state.notifications.forEach(n => n.unread = false);
-                renderNotifications();
-                showToast("All notifications marked as read", "success");
+            markAllBtn.addEventListener('click', async () => {
+                try {
+                    const res = await fetch('../api/notification_actions.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({ action: 'mark_all_read' })
+                    });
+                    const data = await res.json();
+                    
+                    if (data.success) {
+                        state.notifications.forEach(n => n.unread = false);
+                        renderNotifications();
+                        showToast("All notifications marked as read", "success");
+                    } else {
+                        showToast(data.message || "Failed to mark as read", "warning");
+                    }
+                } catch (err) {
+                    showToast("Error communicating with server", "danger");
+                }
             });
         }
 

@@ -647,6 +647,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const tbody = document.getElementById('defaulterTableBody');
     const searchVal = (document.getElementById('defaulterSearchInput')?.value || '').toLowerCase().trim();
     const catVal = document.getElementById('defaulterCategoryFilter')?.value || 'ALL';
+    const divVal = document.getElementById('defaulterDivisionFilter')?.value || 'ALL';
+    const thresholdVal = parseInt(document.getElementById('defaulterThresholdInput')?.value || '75');
 
     if (!tbody) return;
     tbody.innerHTML = '';
@@ -654,14 +656,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     const defaulters = studentsData.filter(s => {
       if (s.conducted == 0) return false;
       const pct = (s.attended / s.conducted) * 100;
-      const isDefaulter = pct < 75;
+      const isDefaulter = pct < thresholdVal;
       const matchSearch = s.name.toLowerCase().includes(searchVal) || s.roll.toLowerCase().includes(searchVal);
 
       let matchCat = true;
-      if (catVal === 'CRITICAL') matchCat = pct < 60;
-      else if (catVal === 'WARNING') matchCat = pct >= 60 && pct < 75;
+      if (catVal === 'CRITICAL') matchCat = pct < (thresholdVal - 15);
+      else if (catVal === 'WARNING') matchCat = pct >= (thresholdVal - 15) && pct < thresholdVal;
+      
+      let matchDiv = true;
+      if (divVal !== 'ALL') matchDiv = s.div === divVal;
 
-      return isDefaulter && matchSearch && matchCat;
+      return isDefaulter && matchSearch && matchCat && matchDiv;
     });
 
     if (defaulters.length === 0) {
@@ -692,6 +697,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   document.getElementById('defaulterSearchInput')?.addEventListener('input', renderDefaulterTable);
   document.getElementById('defaulterCategoryFilter')?.addEventListener('change', renderDefaulterTable);
+  document.getElementById('defaulterDivisionFilter')?.addEventListener('change', renderDefaulterTable);
+  document.getElementById('defaulterThresholdInput')?.addEventListener('input', renderDefaulterTable);
 
   renderDefaulterTable();
 
@@ -749,6 +756,21 @@ document.addEventListener('DOMContentLoaded', async () => {
   // ==========================================
   let noticesList = [];
 
+  async function loadNotices() {
+    try {
+      const res = await fetch('../api/get_notices.php?scope=public');
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success && data.notices) {
+          noticesList = data.notices;
+          renderNotices();
+        }
+      }
+    } catch (err) {
+      console.error('Failed to load notices:', err);
+    }
+  }
+
   function renderNotices() {
     const container = document.getElementById('publishedNoticesList');
     if (!container) return;
@@ -782,6 +804,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       container.appendChild(div);
     });
   }
+
+  // Initialize Notices on Load
+  loadNotices();
 
   document.getElementById('newNoticeForm')?.addEventListener('submit', async (e) => {
     e.preventDefault();

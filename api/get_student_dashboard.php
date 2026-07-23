@@ -154,51 +154,18 @@ try {
         'avgAttendance' => $overallAttendance . '%'
     ];
 
-    // 5. Fetch Notices
-    // Target matches 'ALL' or student division or 'Critical Defaulters' (if overall attendance < 60)
-    $targets = ['ALL', $division];
-    if ($overallAttendance < 60) {
-        $targets[] = 'Critical Defaulters';
-    }
-    
-    $inClause = implode(',', array_map(function($i) { return ':target' . $i; }, range(0, count($targets) - 1)));
-    $noticeQuery = "
-        SELECT n.id, n.title, n.message AS `desc`, n.created_at, u.full_name AS sender
-        FROM notices n 
-        LEFT JOIN users u ON n.created_by = u.id 
-        WHERE n.target IN ($inClause) 
-        ORDER BY n.created_at DESC 
-        LIMIT 10
-    ";
-    
-    $noticeParams = [];
-    foreach ($targets as $i => $t) {
-        $noticeParams['target' . $i] = $t;
-    }
-    
-    $noticeStmt = $pdo->prepare($noticeQuery);
-    $noticeStmt->execute($noticeParams);
-    $dbNotices = $noticeStmt->fetchAll();
-
+    // 5. Fetch Notices (Removed as they are now handled by the notifications table)
     $notifications = [];
-    $notifId = 101;
-    foreach ($dbNotices as $not) {
-        // Human readable time diff or date format
-        $timeStr = date('M d, Y', strtotime($not['created_at']));
-        $notifications[] = [
-            'id' => $not['id'],
-            'title' => $not['title'],
-            'desc' => $not['desc'],
-            'time' => $timeStr,
-            'unread' => true,
-            'type' => 'SYSTEM',
-            'icon' => 'fa-bell',
-            'bgClass' => 'icon-bg-blue'
-        ];
-    }
 
     // 5.5 Fetch Personal Notifications (from notifications table)
-    $persNotifStmt = $pdo->prepare("SELECT * FROM notifications WHERE user_id = :student_id ORDER BY created_at DESC LIMIT 15");
+    $persNotifStmt = $pdo->prepare("
+        SELECT * FROM notifications 
+        WHERE user_id = :student_id 
+           OR target_role = 'student' 
+           OR target_role = 'all' 
+        ORDER BY created_at DESC 
+        LIMIT 15
+    ");
     $persNotifStmt->execute(['student_id' => $student_id]);
     $dbPersNotifs = $persNotifStmt->fetchAll();
 

@@ -49,32 +49,6 @@ if ($user['role'] === 'student') {
 }
 
 try {
-    $query = "
-        SELECT 
-            a.id,
-            a.student_id,
-            u.full_name,
-            sd.prn,
-            sd.roll_no,
-            a.subject,
-            a.date,
-            a.lecture_number,
-            a.status,
-            a.remarks,
-            a.semester,
-            a.division,
-            a.created_at,
-            a.updated_at,
-            ah.old_status,
-            ah.new_status,
-            ah.editor_name,
-            ah.editor_role,
-            ah.reason,
-            ah.timestamp AS edited_at
-        FROM attendance a
-        JOIN users u ON a.student_id = u.id
-        JOIN student_details sd ON a.student_id = sd.user_id
-        LEFT JOIN attendance_history ah ON ah.attendance_id = a.id
     $whereSql = " WHERE 1=1";
     $params = [];
 

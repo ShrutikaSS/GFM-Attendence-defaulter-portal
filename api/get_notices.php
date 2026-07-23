@@ -57,7 +57,7 @@ if ($scope === 'all') {
             COALESCE(u.full_name, 'Department Admin') AS created_by_name
         FROM notices n
         LEFT JOIN users u ON n.created_by = u.id
-        WHERE n.target IN ('ALL', 'All Batches')
+        WHERE n.target IN ('ALL', 'All Batches', 'All Classes')
         ORDER BY n.created_at DESC
         LIMIT :limit
     ";

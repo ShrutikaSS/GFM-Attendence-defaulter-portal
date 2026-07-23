@@ -23,10 +23,12 @@ try {
             sd.prn,
             u.full_name AS name,
             sd.division,
+            sd.avatar_url,
+            sd.phone,
             COALESCE(att.conducted, 0) AS sessions,
             COALESCE(att.attended, 0) AS attended,
             CASE 
-                WHEN COALESCE(att.conducted, 0) > 0 THEN ROUND(COALESCE(att.attended, 0) / COALESCE(att.conducted, 0) * 100, 0)
+                WHEN COALESCE(att.conducted, 0) > 0 THEN ROUND(COALESCE(att.attended, 0) / COALESCE(att.conducted, 0) * 100, 2)
                 ELSE 0
             END AS attendance_pct
         FROM users u 
@@ -36,6 +38,7 @@ try {
             FROM attendance 
             GROUP BY student_id
         ) att ON u.id = att.student_id
+        WHERE u.role = 'student'
         ORDER BY sd.division ASC, CAST(sd.roll_no AS UNSIGNED) ASC
     ");
     

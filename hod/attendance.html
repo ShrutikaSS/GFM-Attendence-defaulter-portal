@@ -6,6 +6,7 @@
   <title>Attendance Management | HOD Dashboard</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
   <link rel="stylesheet" href="css/dashboard.css" />
+  <link rel="stylesheet" href="../css/attendance.css" />
   <style>
     .attendance-tabs-nav {
       display: flex;
@@ -61,40 +62,6 @@
       border-radius: 8px;
       font-size: 0.9rem;
       background: white;
-    }
-    .radio-pill-group {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
-    .radio-pill-group label {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      padding: 5px 10px;
-      border-radius: 8px;
-      border: 1px solid #cbd5e1;
-      font-size: 0.8rem;
-      font-weight: 600;
-      cursor: pointer;
-      background: white;
-      user-select: none;
-      transition: all 0.15s ease;
-    }
-    .radio-pill-group input[type="radio"] {
-      display: none;
-    }
-    .radio-pill-group label.opt-present:has(input:checked) {
-      background: #10b981; color: white; border-color: #10b981;
-    }
-    .radio-pill-group label.opt-absent:has(input:checked) {
-      background: #ef4444; color: white; border-color: #ef4444;
-    }
-    .radio-pill-group label.opt-medical:has(input:checked) {
-      background: #f59e0b; color: white; border-color: #f59e0b;
-    }
-    .radio-pill-group label.opt-duty:has(input:checked) {
-      background: #6366f1; color: white; border-color: #6366f1;
     }
     .edit-modal-overlay {
       display: none;
@@ -225,90 +192,108 @@
           </button>
         </div>
 
-        <!-- ========================================== -->
-        <!-- SECTION 1: MARK NEW ATTENDANCE ENTRY      -->
-        <!-- ========================================== -->
+        <!-- ==========================================
+             SECTION 1: MARK NEW ATTENDANCE (GFM STRUCTURE)
+             ========================================== -->
         <div id="sectionMarkAttendance" class="reveal">
-          <div class="filter-bar">
-            <label>
-              <span>Division <span style="color: red;">*</span></span>
-              <select id="entryDivision">
-                <option value="Div A">Division A</option>
-                <option value="Div B">Division B</option>
-                <option value="Div C">Division C</option>
-              </select>
-            </label>
-            <label>
-              <span>Subject <span style="color: red;">*</span></span>
-              <select id="entrySubject">
-                <option value="Web Development">Web Development</option>
-                <option value="Data Structures">Data Structures</option>
-                <option value="Database Systems">Database Systems</option>
-                <option value="Computer Networks">Computer Networks</option>
-                <option value="Software Engineering">Software Engineering</option>
-                <option value="Machine Learning">Machine Learning</option>
-                <option value="Artificial Intelligence">Artificial Intelligence</option>
-              </select>
-            </label>
-            <label>
-              <span>Date</span>
-              <input type="date" id="entryDate" />
-            </label>
-            <label>
-              <span>Lecture Number</span>
-              <select id="entryLectureNo">
-                <option value="1">Lecture 1 (09:00 AM - 10:00 AM)</option>
-                <option value="2">Lecture 2 (10:15 AM - 11:15 AM)</option>
-                <option value="3">Lecture 3 (11:30 AM - 12:30 PM)</option>
-                <option value="4">Lecture 4 (01:30 PM - 02:30 PM)</option>
-              </select>
-            </label>
-            <div>
-              <button class="table-action-btn primary-solid" id="loadRosterBtn">
-                <i class="fa-solid fa-users-viewfinder"></i> Load Roster
-              </button>
+          <!-- SELECTION FORM - Same as GFM -->
+          <div class="data-table-card" style="padding: 24px; margin-bottom: 24px;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; align-items: end;">
+              <div>
+                <label style="font-size: 0.82rem; font-weight: 700; display: block; margin-bottom: 6px; color: #64748b;">Select Class / Division <span style="color: #EF4444;">*</span></label>
+                <select class="custom-select-box" id="entryClassSelect" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.9rem;">
+                  <option value="">-- Select Class --</option>
+                  <option value="FY A">FY A</option>
+                  <option value="FY B">FY B</option>
+                  <option value="FY C">FY C</option>
+                </select>
+              </div>
+              <div>
+                <label style="font-size: 0.82rem; font-weight: 700; display: block; margin-bottom: 6px; color: #64748b;">Select Subject</label>
+                <select class="custom-select-box" id="entrySubjectSelect" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.9rem;">
+                  <option value="Web Development">Web Development</option>
+                  <option value="Data Structures">Data Structures & Algorithms</option>
+                  <option value="Database Systems">Database Management Systems</option>
+                  <option value="Computer Networks">Computer Networks</option>
+                  <option value="Software Engineering">Software Engineering</option>
+                  <option value="Machine Learning">Machine Learning</option>
+                  <option value="Artificial Intelligence">Artificial Intelligence</option>
+                  <option value="Mobile Application Development">Mobile Application Development</option>
+                </select>
+              </div>
+              <div>
+                <label style="font-size: 0.82rem; font-weight: 700; display: block; margin-bottom: 6px; color: #64748b;">Lecture Date</label>
+                <input type="date" class="custom-select-box" id="entryDateInput" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.9rem;" />
+              </div>
+              <div>
+                <label style="font-size: 0.82rem; font-weight: 700; display: block; margin-bottom: 6px; color: #64748b;">Time Slot</label>
+                <select class="custom-select-box" id="entryTimeSelect" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.9rem;">
+                  <option value="09:00 AM - 10:00 AM">09:00 AM - 10:00 AM</option>
+                  <option value="10:15 AM - 11:15 AM">10:15 AM - 11:15 AM</option>
+                  <option value="11:30 AM - 12:30 PM">11:30 AM - 12:30 PM</option>
+                  <option value="01:30 PM - 02:30 PM">01:30 PM - 02:30 PM</option>
+                </select>
+              </div>
             </div>
           </div>
 
+          <!-- STUDENT ATTENDANCE ENTRY ROSTER - Same as GFM -->
           <div class="data-table-card">
             <div class="table-card-header">
-              <h2>Mark Attendance Roster</h2>
+              <div>
+                <h2 style="margin-bottom: 4px;">Student Roster for Attendance Marking</h2>
+                <p style="font-size: 0.85rem; color: #64748b;">
+                  Present: <strong id="entryPresentCount" class="text-success">0</strong> | 
+                  Absent: <strong id="entryAbsentCount" class="text-danger">0</strong> | 
+                  Medical Leave: <strong id="entryMedicalCount" style="color: #F59E0B;">0</strong> | 
+                  Duty Leave: <strong id="entryDutyCount" style="color: #6366F1;">0</strong> | 
+                  Total: <strong id="entryTotalCount">0 Students</strong>
+                </p>
+              </div>
               <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
-                <button class="table-action-btn secondary-solid" id="btnMarkAllPresent">
-                  <i class="fa-solid fa-check text-success"></i> Mark All Present
+                <button type="button" class="table-action-btn secondary-solid" id="markAllPresentBtn">
+                  <i class="fa-solid fa-user-check text-success"></i> Mark All Present
                 </button>
-                <button class="table-action-btn secondary-solid" id="btnMarkAllAbsent">
-                  <i class="fa-solid fa-xmark text-danger"></i> Mark All Absent
+                <button type="button" class="table-action-btn secondary-solid" id="markAllAbsentBtn">
+                  <i class="fa-solid fa-user-xmark text-danger"></i> Mark All Absent
                 </button>
-                <button class="table-action-btn primary-solid" id="btnSubmitAttendance">
-                  <i class="fa-solid fa-floppy-disk"></i> Save Attendance
+                <button type="button" class="table-action-btn primary-solid" id="saveAttendanceBtn">
+                  <i class="fa-solid fa-floppy-disk"></i> Submit Attendance
                 </button>
               </div>
             </div>
 
             <div class="responsive-table-container">
-              <table class="dashboard-table">
+              <table class="dashboard-table attendance-fast-table">
                 <thead>
                   <tr>
-                    <th>Roll No</th>
+                    <th>Roll Number</th>
                     <th>PRN</th>
                     <th>Student Name</th>
-                    <th>Division</th>
-                    <th style="text-align: center;">Attendance Status</th>
+                    <th>Current Attendance %</th>
+                    <th class="cell-center" style="color: #10B981;">Present</th>
+                    <th class="cell-center" style="color: #EF4444;">Absent</th>
+                    <th class="cell-center" style="color: #F59E0B;">Medical Leave</th>
+                    <th class="cell-center" style="color: #6366F1;">Duty Leave</th>
                     <th>Remarks</th>
                   </tr>
                 </thead>
-                <tbody id="entryRosterTableBody">
-                  <tr><td colspan="6" style="text-align: center; padding: 40px;">Select Division & Subject, then click <strong>Load Roster</strong>.</td></tr>
+                <tbody id="attendanceEntryTableBody">
+                  <tr id="emptyStateRow">
+                    <td colspan="9" style="text-align: center; padding: 40px; color: #64748b;">
+                      <i class="fa-solid fa-inbox" style="font-size: 2rem; margin-bottom: 12px; display: block;"></i>
+                      Select FY A, FY B or FY C to load students.
+                    </td>
+                  </tr>
                 </tbody>
               </table>
             </div>
           </div>
         </div>
 
-        <!-- ========================================== -->
-        <!-- SECTION 2: ATTENDANCE RECORDS & HISTORY   -->
-        <!-- ========================================== -->
+        <!-- ==========================================
+             SECTION 2: ATTENDANCE RECORDS & HISTORY
+             ========================================== -->
         <div id="sectionManageRecords" class="reveal" style="display: none;">
           <!-- Filters -->
           <div class="filter-bar">
@@ -418,7 +403,7 @@
       </div>
       <div class="form-group">
         <label>New Status</label>
-        <select id="editNewStatus" class="custom-select-box" style="width: 100%;">
+        <select id="editNewStatus" class="custom-select-box" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px;">
           <option value="Present">Present</option>
           <option value="Absent">Absent</option>
           <option value="Medical Leave">Medical Leave</option>
@@ -427,7 +412,7 @@
       </div>
       <div class="form-group">
         <label>Remarks</label>
-        <input type="text" id="editNewRemarks" class="custom-select-box" style="width: 100%;" placeholder="Enter remarks" />
+        <input type="text" id="editNewRemarks" class="custom-select-box" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px;" placeholder="Enter remarks" />
       </div>
       <div class="form-group">
         <label>Reason for Change <span style="color: #EF4444;">*</span></label>

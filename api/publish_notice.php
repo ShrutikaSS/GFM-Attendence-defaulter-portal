@@ -83,6 +83,33 @@ try {
         'message' => $message,
         'created_by' => $created_by
     ]);
+    
+    // Also broadcast to notifications
+    $targetRole = 'all';
+    $targetDivision = null;
+    $notifType = 'regular';
+    if ($target !== 'All Batches' && $target !== 'ALL' && $target !== 'All Classes') {
+        $targetRole = 'student';
+        // Assume target might be a division name like "Div A"
+        $targetDivision = $target;
+    }
+
+    try {
+        $notifStmt = $pdo->prepare("
+            INSERT INTO notifications (target_role, target_division, type, title, message, created_by)
+            VALUES (:target_role, :target_division, :type, :title, :message, :created_by)
+        ");
+        $notifStmt->execute([
+            'target_role' => $targetRole,
+            'target_division' => $targetDivision,
+            'type' => $notifType,
+            'title' => 'New Notice: ' . $title,
+            'message' => $message,
+            'created_by' => $created_by
+        ]);
+    } catch (Exception $e) {
+        // Ignore if notification fails, notice was still created.
+    }
 
     echo json_encode([
         'success' => true,

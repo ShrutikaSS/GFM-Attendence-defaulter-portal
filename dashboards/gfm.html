@@ -54,15 +54,6 @@
             <span>Dashboard</span>
           </a>
 
-          <a class="menu-item" data-tab="students" href="#students">
-            <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-              <circle cx="9" cy="7" r="4"></circle>
-              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-            </svg>
-            <span>Student Roster</span>
-          </a>
 
           <a class="menu-item" data-tab="attendance" href="#attendance">
             <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -620,10 +611,20 @@
                   <div class="search-box-pill">
                     <input type="text" id="defaulterSearchInput" placeholder="Search defaulter student..." />
                   </div>
+                  <select class="custom-select-box" id="defaulterDivisionFilter">
+                    <option value="ALL">All Divisions</option>
+                    <option value="A">Division A</option>
+                    <option value="B">Division B</option>
+                    <option value="C">Division C</option>
+                  </select>
+                  <div class="search-box-pill" style="display: flex; align-items: center; gap: 8px; padding: 0 12px;">
+                    <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); white-space: nowrap;">Threshold %:</span>
+                    <input type="number" id="defaulterThresholdInput" value="75" min="1" max="100" style="width: 50px; border: none; outline: none; font-weight: 700; color: var(--danger); text-align: center; background: transparent;" />
+                  </div>
                   <select class="custom-select-box" id="defaulterCategoryFilter">
                     <option value="ALL">All Categories</option>
-                    <option value="CRITICAL">Critical (&lt;60%)</option>
-                    <option value="WARNING">Warning (60%-75%)</option>
+                    <option value="CRITICAL">Critical</option>
+                    <option value="WARNING">Warning</option>
                   </select>
                 </div>
 

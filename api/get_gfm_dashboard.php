@@ -39,10 +39,9 @@ try {
             FROM attendance 
             GROUP BY student_id
         ) att ON u.id = att.student_id
-        WHERE sd.division = :division
-        ORDER BY CAST(sd.roll_no AS UNSIGNED) ASC, sd.roll_no ASC
+        ORDER BY sd.division ASC, CAST(sd.roll_no AS UNSIGNED) ASC, sd.roll_no ASC
     ");
-    $studentsStmt->execute(['division' => $division]);
+    $studentsStmt->execute();
     $studentsList = $studentsStmt->fetchAll();
 
     // Calculate aggregated metrics
