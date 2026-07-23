@@ -20,6 +20,27 @@
     setupEventListeners();
     loadHodStats();
     setDefaultDate();
+
+    // Parse query parameter search
+    const urlParams = new URLSearchParams(window.location.search);
+    const searchParam = urlParams.get('search');
+    if (searchParam) {
+      const globalSearch = document.getElementById('globalSearch');
+      if (globalSearch) {
+        globalSearch.value = searchParam;
+        
+        // Switch to records tab automatically
+        const tabRecords = document.getElementById('tabRecordsBtn');
+        if (tabRecords) {
+          tabRecords.click();
+        }
+        
+        // Wait briefly for records to load, then apply search
+        setTimeout(() => {
+          filterVisibleTables(searchParam.toLowerCase());
+        }, 400);
+      }
+    }
   }
 
   function setDefaultDate() {
@@ -263,6 +284,12 @@
     });
 
     updateAttendanceCounters();
+
+    // Re-apply global search filter if input has value
+    const searchVal = document.getElementById('globalSearch')?.value.toLowerCase().trim() || '';
+    if (searchVal) {
+      filterVisibleTables(searchVal);
+    }
   }
 
   function updateAttendanceCounters() {
@@ -436,6 +463,12 @@
     });
     
     updateRecordsCounters(filtered);
+
+    // Re-apply global search filter if input has value
+    const searchVal = document.getElementById('globalSearch')?.value.toLowerCase().trim() || '';
+    if (searchVal) {
+      filterVisibleTables(searchVal);
+    }
   }
 
   function updateRecordsCounters(records) {
@@ -552,9 +585,19 @@
 
   function filterVisibleTables(search) {
     // Basic search filtering for whichever section is active
-    if (document.getElementById('sectionManageRecords').style.display !== 'none') {
+    const secRecords = document.getElementById('sectionManageRecords');
+    const secMark = document.getElementById('sectionMarkAttendance');
+
+    if (secRecords && secRecords.style.display !== 'none') {
       const rows = document.querySelectorAll('#hodAttendanceTableBody tr');
       rows.forEach(r => {
+        const text = r.textContent.toLowerCase();
+        r.style.display = text.includes(search) ? '' : 'none';
+      });
+    } else if (secMark && secMark.style.display !== 'none') {
+      const rows = document.querySelectorAll('#attendanceEntryTableBody tr');
+      rows.forEach(r => {
+        if (r.id === 'emptyStateRow') return;
         const text = r.textContent.toLowerCase();
         r.style.display = text.includes(search) ? '' : 'none';
       });

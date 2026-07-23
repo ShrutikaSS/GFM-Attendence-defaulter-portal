@@ -702,6 +702,28 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   renderDefaulterTable();
 
+  // Global Search Input Synchronization
+  const globalSearch = document.getElementById('globalSearchInput');
+  if (globalSearch) {
+    globalSearch.addEventListener('input', (e) => {
+      const val = e.target.value;
+
+      // Update student roster search
+      const studentSearch = document.getElementById('studentSearchInput');
+      if (studentSearch) {
+        studentSearch.value = val;
+        renderStudentTable();
+      }
+
+      // Update defaulter search
+      const defaulterSearch = document.getElementById('defaulterSearchInput');
+      if (defaulterSearch) {
+        defaulterSearch.value = val;
+        renderDefaulterTable();
+      }
+    });
+  }
+
   // Quick Send Defaulter Warnings Button
   document.getElementById('quickSendDefaulterAlertsBtn')?.addEventListener('click', async () => {
     const defaulters = studentsData.filter(s => s.conducted > 0 && (s.attended/s.conducted)*100 < 75);

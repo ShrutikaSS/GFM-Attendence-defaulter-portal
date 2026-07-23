@@ -65,6 +65,19 @@
     document.getElementById('resetAttendanceBtn').addEventListener('click', resetAttendance);
     document.getElementById('saveAttendanceBtn').addEventListener('click', saveAttendance);
     document.getElementById('attendanceSearchInput').addEventListener('input', filterAttendanceTable);
+
+    // Global Search synchronization
+    const globalSearch = document.getElementById('globalSearchInput');
+    if (globalSearch) {
+      globalSearch.addEventListener('input', (e) => {
+        const val = e.target.value;
+        const localSearch = document.getElementById('attendanceSearchInput');
+        if (localSearch) {
+          localSearch.value = val;
+          filterAttendanceTable();
+        }
+      });
+    }
     document.getElementById('duplicateCancelBtn').addEventListener('click', closeDuplicateModal);
     document.getElementById('duplicateOverwriteBtn').addEventListener('click', () => saveAttendance(true));
 
