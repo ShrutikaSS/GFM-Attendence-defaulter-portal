@@ -31,11 +31,20 @@ if (isset($_POST['payload']) && is_string($_POST['payload'])) {
 }
 
 $division = trim($payload['division'] ?? ($user['division_assigned'] ?? ''));
-$semester = trim($payload['semester'] ?? 'Semester VI');
+if (strtoupper($division) === 'ALL') $division = '';
+
+$semester = trim($payload['semester'] ?? '');
+if (strtoupper($semester) === 'ALL') $semester = '';
+
 $subject = trim($payload['subject'] ?? '');
+if (strtoupper($subject) === 'ALL') $subject = '';
+
 $startDate = trim($payload['start_date'] ?? '');
 $endDate = trim($payload['end_date'] ?? '');
+
 $status = trim($payload['status'] ?? '');
+if (strtoupper($status) === 'ALL') $status = '';
+
 $format = trim($payload['format'] ?? 'excel');
 
 if ($user['role'] === 'gfm' && empty($division)) {

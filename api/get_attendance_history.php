@@ -19,12 +19,21 @@ $rawInput = file_get_contents('php://input');
 $input = json_decode($rawInput, true);
 
 $studentId = (int)($input['student_id'] ?? 0);
-$subject = trim($input['subject'] ?? '');
-$semester = trim($input['semester'] ?? '');
 $division = trim($input['division'] ?? '');
+if (strtoupper($division) === 'ALL') $division = '';
+
+$subject = trim($input['subject'] ?? '');
+if (strtoupper($subject) === 'ALL') $subject = '';
+
+$semester = trim($input['semester'] ?? '');
+if (strtoupper($semester) === 'ALL') $semester = '';
+
 $startDate = trim($input['start_date'] ?? '');
 $endDate = trim($input['end_date'] ?? '');
+
 $statusFilter = trim($input['status'] ?? '');
+if (strtoupper($statusFilter) === 'ALL') $statusFilter = '';
+
 $limit = (int)($input['limit'] ?? 100);
 $offset = (int)($input['offset'] ?? 0);
 
