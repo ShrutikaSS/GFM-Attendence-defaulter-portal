@@ -182,7 +182,6 @@ document.addEventListener('DOMContentLoaded', () => {
         setElemText('studentName', p.name);
         setElemText('studentNameNav', p.name);
         setElemText('studentRoll', p.rollNo);
-        setElemText('studentRollNav', p.rollNo);
         setElemText('studentDept', p.department);
         setElemText('studentSem', p.semester);
         setElemText('studentDiv', p.division);

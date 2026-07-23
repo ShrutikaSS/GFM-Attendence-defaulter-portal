@@ -46,8 +46,8 @@ http://localhost/GFM-Attendence-defaulter-portal/
 
 | Role    | Email                       | Password      |
 |---------|-----------------------------|---------------|
-| HOD     | hod@gfm.edu.in              | hod123        |
-| GFM     | gfm@gfm.edu.in              | gfm123        |
+| HOD     | hod@college.edu             | hod123        |
+| GFM     | omkar@college.edu           | gfm123        |
 | Student | (use student email from DB) | (PRN number)  |
 
 ---
