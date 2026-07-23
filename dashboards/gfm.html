@@ -506,11 +506,12 @@
             <div class="data-table-card" style="padding: 24px; margin-bottom: 24px;">
               <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; align-items: end;">
                 <div>
-                  <label style="font-size: 0.82rem; font-weight: 700; display: block; margin-bottom: 6px; color: var(--text-secondary);">Select Class / Division</label>
+                  <label style="font-size: 0.82rem; font-weight: 700; display: block; margin-bottom: 6px; color: var(--text-secondary);">Select Class / Division <span style="color: #EF4444;">*</span></label>
                   <select class="custom-select-box" id="entryClassSelect" style="width: 100%;">
-                    <option value="SE AIML-A">SE AIML - Division A</option>
-                    <option value="SE AIML-B">SE AIML - Division B</option>
-                    <option value="TE AIML-A">TE AIML - Division A</option>
+                    <option value="">-- Select Class --</option>
+                    <option value="FY A">FY A</option>
+                    <option value="FY B">FY B</option>
+                    <option value="FY C">FY C</option>
                   </select>
                 </div>
 
@@ -570,11 +571,15 @@
                 <table class="dashboard-table">
                   <thead>
                     <tr>
-                      <th>#</th>
                       <th>Roll Number</th>
+                      <th>PRN</th>
                       <th>Student Name</th>
-                      <th>Current %</th>
-                      <th>Mark Status</th>
+                      <th>Current Attendance %</th>
+                      <th class="cell-center" style="color: #10B981;">Present</th>
+                      <th class="cell-center" style="color: #EF4444;">Absent</th>
+                      <th class="cell-center" style="color: #F59E0B;">Medical Leave</th>
+                      <th class="cell-center" style="color: #6366F1;">Duty Leave</th>
+                      <th>Remarks</th>
                     </tr>
                   </thead>
                   <tbody id="attendanceEntryTableBody">
@@ -715,9 +720,10 @@
                   <div>
                     <label style="font-size: 0.82rem; font-weight: 700; color: var(--text-secondary); display: block; margin-bottom: 6px;">Target Division</label>
                     <select class="custom-select-box" id="noticeTargetSelect" style="width: 100%;">
-                      <option value="SE AIML Div A">SE AIML Div A</option>
-                      <option value="SE AIML Div B">SE AIML Div B</option>
-                      <option value="All Batches">All Assigned Batches</option>
+                      <option value="FY A">FY A</option>
+                      <option value="FY B">FY B</option>
+                      <option value="FY C">FY C</option>
+                      <option value="All Classes">All Classes</option>
                     </select>
                   </div>
                 </div>

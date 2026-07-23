@@ -779,6 +779,7 @@ input, select {
 .icon-bg-emerald { background: var(--success-light); color: var(--success); }
 .icon-bg-amber { background: var(--warning-light); color: var(--warning); }
 .icon-bg-green { background: var(--success-light); color: var(--success-dark); }
+.icon-bg-red { background: rgba(239,68,68,0.12); color: #ef4444; }
 
 .stat-details {
     display: flex;
@@ -1214,11 +1215,55 @@ input, select {
 }
 
 .schedule-list,
-.activity-feed {
+.activity-feed,
+.absent-dates-list {
     list-style: none;
     display: flex;
     flex-direction: column;
     gap: 0.85rem;
+}
+
+.absent-date-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0.65rem 0.85rem;
+    background: var(--danger-light);
+    border-radius: var(--radius-sm);
+    border-left: 3px solid var(--danger);
+}
+
+.absent-date-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(239, 68, 68, 0.15);
+    color: var(--danger);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.absent-date-info {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.absent-date-info strong {
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.absent-date-info span {
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+}
+
+.absent-date-info small {
+    font-size: 0.68rem;
+    color: var(--text-muted);
 }
 
 .schedule-item {
@@ -1472,6 +1517,14 @@ input, select {
     border-left: 4px solid var(--primary);
     background: var(--primary-light);
 }
+
+/* Warning notifications from GFM get a red highlight */
+.notif-card.unread .icon-bg-red ~ .notif-body-content,
+.notif-card:has(.icon-bg-red).unread {
+    border-left-color: #ef4444 !important;
+    background: rgba(239,68,68,0.06) !important;
+}
+
 
 .notif-icon-large {
     width: 42px;

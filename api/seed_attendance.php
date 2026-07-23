@@ -56,7 +56,7 @@ $dates = array_reverse($dates);
 $pdo->beginTransaction();
 
 try {
-    $stmt = $pdo->prepare("INSERT INTO attendance (student_id, subject, date, time_slot, status, remarks) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt = $pdo->prepare("INSERT INTO attendance (student_id, subject, date, lecture_number, status, remarks) VALUES (?, ?, ?, ?, ?, ?)");
 
     foreach ($students as $id => $info) {
         foreach ($subjects as $subject) {
@@ -72,10 +72,9 @@ try {
                     $remarks = $remarks_absent[array_rand($remarks_absent)];
                 }
                 
-                // Simple timeslot logic
-                $time_slot = '09:30 AM - 10:30 AM';
+                // Fixed lecture number
                 
-                $stmt->execute([$id, $subject, $date, $time_slot, $status, $remarks]);
+                $stmt->execute([$id, $subject, $date, 1, $status, $remarks]);
             }
         }
     }

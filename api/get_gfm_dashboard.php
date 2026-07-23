@@ -12,7 +12,8 @@ if (!$user || $user['role'] !== 'gfm') {
 }
 
 $gfm_id = $user['id'];
-$division = $user['division_assigned'] ?? 'Div A';
+$division = $user['division_assigned'] ?? 'A';
+$division = str_replace('Div ', '', $division);
 
 if (!isset($pdo) || $pdo === null) {
     echo json_encode(['success' => false, 'message' => 'Database connection failed.']);
@@ -60,10 +61,12 @@ try {
         $totalConductedSum += $student['conducted'];
         $totalAttendedSum += $student['attended'];
 
-        if ($pct < 60) {
-            $criticalCount++;
-        } elseif ($pct < 75) {
-            $warningCount++;
+        if ($student['conducted'] > 0) {
+            if ($pct < 60) {
+                $criticalCount++;
+            } elseif ($pct < 75) {
+                $warningCount++;
+            }
         }
     }
 

@@ -197,6 +197,34 @@ try {
         ];
     }
 
+    // 5.5 Fetch Personal Notifications (from notifications table)
+    $persNotifStmt = $pdo->prepare("SELECT * FROM notifications WHERE user_id = :student_id ORDER BY created_at DESC LIMIT 15");
+    $persNotifStmt->execute(['student_id' => $student_id]);
+    $dbPersNotifs = $persNotifStmt->fetchAll();
+
+    foreach ($dbPersNotifs as $pn) {
+        $timeStr = date('M d, Y', strtotime($pn['created_at']));
+        $notifType = strtoupper($pn['type'] ?: 'WARNING'); // Default to WARNING if not set
+        if ($notifType === 'DANGER' || $notifType === 'ALERT') {
+            $notifType = 'WARNING';
+        }
+        $notifications[] = [
+            'id' => 'pn_' . $pn['id'],
+            'title' => $pn['title'],
+            'desc' => $pn['message'],
+            'time' => $timeStr,
+            'unread' => ((int)$pn['is_read'] === 0),
+            'type' => $notifType,
+            'icon' => $notifType === 'WARNING' ? 'fa-triangle-exclamation' : 'fa-bell',
+            'bgClass' => $notifType === 'WARNING' ? 'icon-bg-red' : 'icon-bg-blue'
+        ];
+    }
+
+    // Sort combined notifications by date descending (we use time roughly, or just leave as is since personal notifications are important)
+    usort($notifications, function($a, $b) {
+        return strtotime($b['time']) - strtotime($a['time']);
+    });
+
     // 6. Fetch Schedules
     $schedStmt = $pdo->prepare("SELECT id, title, time, room, status FROM schedules WHERE division = :division");
     $schedStmt->execute(['division' => $division]);
@@ -204,7 +232,7 @@ try {
 
     // 7. Fetch Attendance History
     $historyStmt = $pdo->prepare("
-        SELECT a.date, a.subject, a.status, a.remarks 
+        SELECT a.date, a.subject, a.status, a.remarks, a.lecture_number
         FROM attendance a
         WHERE a.student_id = :student_id 
         ORDER BY a.date DESC, a.id DESC
@@ -213,6 +241,8 @@ try {
     $dbHistory = $historyStmt->fetchAll();
 
     $history = [];
+    $absentDates = [];
+
     foreach ($dbHistory as $hist) {
         $subName = $hist['subject'];
         $history[] = [
@@ -220,9 +250,18 @@ try {
             'subject' => $subName,
             'faculty' => $facultyMap[$subName] ?? 'Faculty',
             'status' => $hist['status'],
-            'percent' => $overallAttendance . '%', // Fallback or summary
+            'percent' => $overallAttendance . '%',
             'remarks' => $hist['remarks']
         ];
+
+        if ($hist['status'] === 'Absent') {
+            $absentDates[] = [
+                'date' => $hist['date'],
+                'subject' => $subName,
+                'remarks' => $hist['remarks'],
+                'lecture' => $hist['lecture_number']
+            ];
+        }
     }
 
     echo json_encode([
@@ -246,7 +285,8 @@ try {
             'monthlyData' => $monthlyData,
             'notifications' => $notifications,
             'schedule' => $schedule,
-            'history' => $history
+            'history' => $history,
+            'absent_dates' => $absentDates
         ]
     ]);
 

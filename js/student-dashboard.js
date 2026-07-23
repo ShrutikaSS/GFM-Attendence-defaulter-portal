@@ -69,6 +69,10 @@ document.addEventListener('DOMContentLoaded', () => {
             { date: "2026-07-14", subject: "Software Engineering", faculty: "Prof. P. T. Joshi", status: "Absent", percent: "90.0%", remarks: "On Duty (NSS)" },
             { date: "2026-07-13", subject: "Web Development", faculty: "Prof. S. R. Sharma", status: "Present", percent: "95%", remarks: "Regular" },
             { date: "2026-07-12", subject: "Data Structures", faculty: "Prof. A. V. Kulkarni", status: "Present", percent: "91.6%", remarks: "Regular" }
+        ],
+        absent_dates: [
+            { date: "2026-07-20", subject: "Computer Networks", remarks: "Medical Leave Approved", lecture: 3 },
+            { date: "2026-07-14", subject: "Software Engineering", remarks: "On Duty (NSS)", lecture: 2 }
         ]
     };
 
@@ -102,23 +106,70 @@ document.addEventListener('DOMContentLoaded', () => {
             } catch(e) {}
         }
 
-        renderStudentProfile();
-        renderSummaryCards();
-        renderSubjectCards();
-        renderScheduleAndActivities();
-        renderNotifications();
-        renderHistoryTable();
-        initAttendanceChart();
-        initBunkCalculator();
-        setupEventListeners();
-        animateCounters();
+        // Load real data from API
+        loadRealStudentData().then(apiData => {
+            if (apiData) {
+                Object.assign(state.stats, apiData.stats);
+                if (apiData.subjects && apiData.subjects.length > 0) {
+                    state.subjects = apiData.subjects;
+                }
+                if (apiData.monthlyData) {
+                    state.monthlyData = apiData.monthlyData;
+                }
+                if (apiData.history && apiData.history.length > 0) {
+                    state.history = apiData.history;
+                }
+                if (apiData.notifications && apiData.notifications.length > 0) {
+                    state.notifications = apiData.notifications;
+                }
+                if (apiData.absent_dates && apiData.absent_dates.length > 0) {
+                    state.absent_dates = apiData.absent_dates;
+                }
+                if (apiData.student) {
+                    state.student = { ...state.student, ...apiData.student };
+                }
+            }
 
-        // Update current date
-        const currentDateElem = document.getElementById('currentDate');
-        if (currentDateElem) {
-            const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
-            currentDateElem.textContent = new Date().toLocaleDateString('en-US', options);
+            renderStudentProfile();
+            renderSummaryCards();
+            renderSubjectCards();
+            renderScheduleAndActivities();
+            renderNotifications();
+            renderHistoryTable();
+            initAttendanceChart();
+            initBunkCalculator();
+            setupEventListeners();
+            animateCounters();
+
+            // Update current date
+            const currentDateElem = document.getElementById('currentDate');
+            if (currentDateElem) {
+                const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
+                currentDateElem.textContent = new Date().toLocaleDateString('en-US', options);
+            }
+        });
+    }
+
+    async function loadRealStudentData() {
+        try {
+            const res = await fetch('../api/get_student_dashboard.php');
+            if (!res.ok) return null;
+            const data = await res.json();
+            if (data.success && data.data) {
+                const mapped = {};
+                if (data.data.student) mapped.student = data.data.student;
+                if (data.data.stats) mapped.stats = data.data.stats;
+                if (data.data.subjects) mapped.subjects = data.data.subjects;
+                if (data.data.monthlyData) mapped.monthlyData = data.data.monthlyData;
+                if (data.data.notifications) mapped.notifications = data.data.notifications;
+                if (data.data.history) mapped.history = data.data.history;
+                if (data.data.absent_dates) mapped.absent_dates = data.data.absent_dates;
+                return mapped;
+            }
+        } catch (e) {
+            console.warn('Could not load real student data, using defaults:', e.message);
         }
+        return null;
     }
 
     // Render Student Profile Details
@@ -282,6 +333,32 @@ document.addEventListener('DOMContentLoaded', () => {
                 </li>
             `).join('');
         }
+
+        // Render Absent Dates
+        const absentList = document.getElementById('absentDatesList');
+        const absentBadge = document.getElementById('absentCountBadge');
+        if (absentList) {
+            const absentDates = state.absent_dates || [];
+            if (absentBadge) absentBadge.textContent = absentDates.length + ' Days';
+            
+            if (absentDates.length === 0) {
+                absentList.innerHTML = '<li style="padding: 12px; text-align: center; color: var(--text-secondary);">No absences recorded. Great job!</li>';
+            } else {
+                absentList.innerHTML = absentDates.map(ad => `
+                    <li class="absent-date-item">
+                        <div class="absent-date-icon">
+                            <i class="fa-solid fa-calendar-xmark"></i>
+                        </div>
+                        <div class="absent-date-info">
+                            <strong>${ad.date}</strong>
+                            <span>${ad.subject} ${ad.lecture ? '• Lecture ' + ad.lecture : ''}</span>
+                            ${ad.remarks ? '<small class="text-muted">' + ad.remarks + '</small>' : ''}
+                        </div>
+                        <span class="badge badge-sm badge-danger">Absent</span>
+                    </li>
+                `).join('');
+            }
+        }
     }
 
     // Render Notifications Panel & Quick Dropdown
@@ -294,20 +371,25 @@ document.addEventListener('DOMContentLoaded', () => {
         if (filter === "WARNING") filtered = state.notifications.filter(n => n.type === "WARNING");
 
         if (listContainer) {
-            listContainer.innerHTML = filtered.map(n => `
-                <div class="notif-card ${n.unread ? 'unread' : ''}">
-                    <div class="notif-icon-large ${n.bgClass}">
-                        <i class="fa-solid ${n.icon}"></i>
-                    </div>
-                    <div class="notif-body-content">
-                        <div class="notif-title-row">
-                            <strong>${n.title}</strong>
-                            <span class="notif-time-badge">${n.time}</span>
+            if (filtered.length === 0) {
+                listContainer.innerHTML = `<div style="text-align:center;padding:2.5rem 1rem;color:var(--text-muted)"><i class="fa-solid fa-bell-slash" style="font-size:2rem;margin-bottom:0.75rem;display:block;opacity:0.4"></i><p style="font-size:0.9rem">No notifications found.</p></div>`;
+            } else {
+                listContainer.innerHTML = filtered.map(n => `
+                    <div class="notif-card ${n.unread ? 'unread' : ''}" data-type="${n.type || 'SYSTEM'}" style="${n.type === 'WARNING' && n.unread ? 'border-left:4px solid #ef4444;background:rgba(239,68,68,0.07);' : ''}">
+                        <div class="notif-icon-large ${n.bgClass}">
+                            <i class="fa-solid ${n.icon}"></i>
                         </div>
-                        <p class="text-muted" style="font-size: 0.85rem;">${n.desc}</p>
+                        <div class="notif-body-content">
+                            <div class="notif-title-row">
+                                <strong>${n.title}</strong>
+                                <span class="notif-time-badge">${n.time}</span>
+                            </div>
+                            <p class="text-muted" style="font-size: 0.85rem;">${n.desc}</p>
+                            ${n.unread ? '<span style="font-size:0.7rem;font-weight:600;color:var(--primary);margin-top:0.3rem;display:inline-block;">● UNREAD</span>' : ''}
+                        </div>
                     </div>
-                </div>
-            `).join('');
+                `).join('');
+            }
         }
 
         if (quickContainer) {

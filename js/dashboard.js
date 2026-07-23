@@ -201,7 +201,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Handle internal navigation buttons
   document.querySelectorAll('.nav-to-attendance-btn').forEach(btn => {
-    btn.addEventListener('click', () => switchTab('attendance'));
+    btn.addEventListener('click', () => {
+      window.location.href = 'gfm-attendance-entry.html';
+    });
   });
   document.querySelectorAll('.nav-to-notices-btn').forEach(btn => {
     btn.addEventListener('click', () => switchTab('notices'));
@@ -315,16 +317,21 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Helper to calculate percentage & status
   function getAttendanceStatus(attended, conducted) {
-    const pct = ((attended / conducted) * 100).toFixed(1);
+    let pctVal = 0;
+    if (conducted > 0) {
+      pctVal = (attended / conducted) * 100;
+    }
+    const pct = pctVal.toFixed(1);
+    
     let category = 'Regular';
     let badgeClass = 'bg-success-light';
     let badgeIcon = 'fa-check';
 
-    if (pct < 60) {
+    if (conducted > 0 && pctVal < 60) {
       category = 'Critical Defaulter';
       badgeClass = 'bg-danger-light';
       badgeIcon = 'fa-triangle-exclamation';
-    } else if (pct < 75) {
+    } else if (conducted > 0 && pctVal < 75) {
       category = 'Warning';
       badgeClass = 'bg-warning-light';
       badgeIcon = 'fa-exclamation-circle';
@@ -399,96 +406,227 @@ document.addEventListener('DOMContentLoaded', async () => {
     entryDateInput.value = new Date().toISOString().split('T')[0];
   }
 
-  let attendanceState = {}; // { roll: boolean }
-  studentsData.forEach(s => { attendanceState[s.roll] = true; }); // Default all present
+  let liveClassStudents = [];
+  let classAttendanceState = {}; // { student_id: status }
+
+  const entryClassSelect = document.getElementById('entryClassSelect');
+
+  async function loadClassStudentsForEntry() {
+    const classVal = entryClassSelect ? entryClassSelect.value : '';
+    const tbody = document.getElementById('attendanceEntryTableBody');
+    if (!tbody) return;
+
+    if (!classVal) {
+      liveClassStudents = [];
+      classAttendanceState = {};
+      tbody.innerHTML = `
+        <tr id="emptyStateRow">
+          <td colspan="5" style="text-align: center; padding: 40px; color: var(--text-secondary);">
+            <i class="fa-solid fa-inbox" style="font-size: 2rem; margin-bottom: 12px; display: block;"></i>
+            Select FY A, FY B or FY C to load students.
+          </td>
+        </tr>`;
+      updateAttendanceCounters();
+      return;
+    }
+
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="5" style="text-align: center; padding: 30px; color: var(--text-secondary);">
+          <i class="fa-solid fa-spinner fa-spin" style="font-size: 1.5rem; margin-bottom: 8px; display: block;"></i>
+          Loading student list for ${classVal}...
+        </td>
+      </tr>`;
+
+    const subject = document.getElementById('entrySubjectSelect')?.value || 'Web Development';
+    const date = entryDateInput?.value || new Date().toISOString().split('T')[0];
+
+    try {
+      const res = await fetch('../api/attendance_entry.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ class: classVal, subject: subject, date: date })
+      });
+      const data = await res.json();
+
+      if (data.success && data.data && data.data.students) {
+        liveClassStudents = data.data.students;
+        classAttendanceState = {};
+        liveClassStudents.forEach(s => {
+          classAttendanceState[s.student_id] = s.existing_status || 'Present';
+        });
+        renderAttendanceEntryRoster();
+        showToast(`Loaded ${liveClassStudents.length} students for ${classVal}.`, 'success');
+      } else {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 30px; color: #EF4444;">${data.message || 'Failed to load students.'}</td></tr>`;
+      }
+    } catch (e) {
+      tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 30px; color: #EF4444;">Network error while fetching students.</td></tr>`;
+    }
+  }
+
+  if (entryClassSelect) {
+    entryClassSelect.addEventListener('change', loadClassStudentsForEntry);
+  }
 
   function renderAttendanceEntryRoster() {
     const tbody = document.getElementById('attendanceEntryTableBody');
     if (!tbody) return;
     tbody.innerHTML = '';
 
-    studentsData.forEach((student, index) => {
-      const isPresent = attendanceState[student.roll] !== false;
+    if (liveClassStudents.length === 0) {
+      tbody.innerHTML = `
+        <tr id="emptyStateRow">
+          <td colspan="9" style="text-align: center; padding: 40px; color: var(--text-secondary);">
+            <i class="fa-solid fa-inbox" style="font-size: 2rem; margin-bottom: 12px; display: block;"></i>
+            Select FY A, FY B or FY C to load students.
+          </td>
+        </tr>`;
+      updateAttendanceCounters();
+      return;
+    }
+
+    liveClassStudents.forEach((student, index) => {
+      const existingStatus = classAttendanceState[student.student_id] || 'Present';
+      const existingRemarks = student.existing_remarks || 'Regular';
+      const pct = parseFloat(student.attendance_percentage || 0);
+      const pctClass = pct >= 75 ? 'text-success' : pct >= 60 ? 'text-warning' : 'text-danger';
+
       const tr = document.createElement('tr');
+      tr.className = 'attendance-row';
+      tr.setAttribute('data-student-id', student.student_id);
+      
       tr.innerHTML = `
-        <td>${index + 1}</td>
-        <td><strong>${student.roll}</strong></td>
-        <td>${student.name}</td>
-        <td>${((student.attended / student.conducted) * 100).toFixed(1)}%</td>
+        <td><strong>${student.roll_no}</strong></td>
+        <td>${student.prn}</td>
         <td>
-          <div style="display: flex; gap: 8px;">
-            <button type="button" class="tag-status-btn ${isPresent ? 'bg-success-light' : 'secondary-solid'}" style="${isPresent ? 'background: #10B981; color: white;' : ''}" data-roll="${student.roll}" data-action="present">
-              <i class="fa-solid fa-check"></i> Present
-            </button>
-            <button type="button" class="tag-status-btn ${!isPresent ? 'bg-danger-light' : 'secondary-solid'}" style="${!isPresent ? 'background: #EF4444; color: white;' : ''}" data-roll="${student.roll}" data-action="absent">
-              <i class="fa-solid fa-xmark"></i> Absent
-            </button>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <img src="${student.avatar_url || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=250'}" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover;" alt="" />
+            <strong>${student.student_name}</strong>
           </div>
+        </td>
+        <td><strong class="${pctClass}">${pct.toFixed(2)}%</strong></td>
+        <td class="cell-center">
+          <label class="radio-option radio-present" style="justify-content: center; cursor: pointer;">
+            <input type="radio" name="status_${student.student_id}" value="Present" ${existingStatus === 'Present' ? 'checked' : ''} />
+            <span>Present</span>
+          </label>
+        </td>
+        <td class="cell-center">
+          <label class="radio-option radio-absent" style="justify-content: center; cursor: pointer;">
+            <input type="radio" name="status_${student.student_id}" value="Absent" ${existingStatus === 'Absent' ? 'checked' : ''} />
+            <span>Absent</span>
+          </label>
+        </td>
+        <td class="cell-center">
+          <label class="radio-option radio-medical" style="justify-content: center; cursor: pointer;">
+            <input type="radio" name="status_${student.student_id}" value="Medical Leave" ${existingStatus === 'Medical Leave' ? 'checked' : ''} />
+            <span>Medical</span>
+          </label>
+        </td>
+        <td class="cell-center">
+          <label class="radio-option radio-duty" style="justify-content: center; cursor: pointer;">
+            <input type="radio" name="status_${student.student_id}" value="Duty Leave" ${existingStatus === 'Duty Leave' ? 'checked' : ''} />
+            <span>Duty</span>
+          </label>
+        </td>
+        <td>
+          <input type="text" class="attendance-remark-input" 
+                 value="${existingRemarks}" 
+                 placeholder="Add remark" style="width: 100%; border: 1px solid var(--border-color); padding: 4px; border-radius: 4px;" />
         </td>
       `;
       tbody.appendChild(tr);
+    });
+    
+    // Add change listeners to radio buttons
+    tbody.querySelectorAll('input[type="radio"]').forEach(radio => {
+      radio.addEventListener('change', (e) => {
+        const tr = e.target.closest('tr');
+        const studentId = tr.getAttribute('data-student-id');
+        classAttendanceState[studentId] = e.target.value;
+        updateAttendanceCounters();
+      });
     });
 
     updateAttendanceCounters();
   }
 
   function updateAttendanceCounters() {
-    const presentCount = Object.values(attendanceState).filter(val => val === true).length;
-    const absentCount = Object.values(attendanceState).filter(val => val === false).length;
+    let present = 0, absent = 0, medical = 0, duty = 0;
+    Object.values(classAttendanceState).forEach(val => {
+      if (val === 'Present') present++;
+      if (val === 'Absent') absent++;
+      if (val === 'Medical Leave') medical++;
+      if (val === 'Duty Leave') duty++;
+    });
 
     const presentElem = document.getElementById('presentCountText');
     const absentElem = document.getElementById('absentCountText');
-    if (presentElem) presentElem.textContent = presentCount;
-    if (absentElem) absentElem.textContent = absentCount;
+    if (presentElem) presentElem.textContent = present;
+    if (absentElem) absentElem.textContent = absent;
+    // Note: gfm.html only has present and absent counts by default, but we can update them anyway.
   }
 
   // Toggle present / absent on click
   document.getElementById('attendanceEntryTableBody')?.addEventListener('click', (e) => {
     const btn = e.target.closest('button[data-action]');
     if (!btn) return;
-    const roll = btn.getAttribute('data-roll');
+    const studentId = btn.getAttribute('data-student-id');
     const action = btn.getAttribute('data-action');
-    attendanceState[roll] = action === 'present';
+    classAttendanceState[studentId] = action === 'present' ? 'Present' : 'Absent';
     renderAttendanceEntryRoster();
   });
 
   // Mark All Present / Absent
   document.getElementById('markAllPresentBtn')?.addEventListener('click', () => {
-    studentsData.forEach(s => { attendanceState[s.roll] = true; });
+    liveClassStudents.forEach(s => { classAttendanceState[s.student_id] = 'Present'; });
     renderAttendanceEntryRoster();
     showToast('Marked all students as Present.');
   });
   document.getElementById('markAllAbsentBtn')?.addEventListener('click', () => {
-    studentsData.forEach(s => { attendanceState[s.roll] = false; });
+    liveClassStudents.forEach(s => { classAttendanceState[s.student_id] = 'Absent'; });
     renderAttendanceEntryRoster();
     showToast('Marked all students as Absent.', 'warning');
   });
 
   // Submit Attendance
   document.getElementById('saveAttendanceBtn')?.addEventListener('click', async () => {
+    const classVal = entryClassSelect ? entryClassSelect.value : '';
+    if (!classVal) {
+      showToast('Please select a class (FY A, FY B, or FY C).', 'danger');
+      return;
+    }
+    if (liveClassStudents.length === 0) {
+      showToast('No students loaded to mark attendance.', 'danger');
+      return;
+    }
+
     const subject = document.getElementById('entrySubjectSelect')?.value || 'Web Development';
     const date = document.getElementById('entryDateInput')?.value || new Date().toISOString().split('T')[0];
-    const time_slot = document.getElementById('entryTimeSelect')?.value || '09:30 AM - 10:30 AM';
     
     const records = [];
-    studentsData.forEach(student => {
-      const isPresent = attendanceState[student.roll] !== false;
-      records.push({
-        student_id: student.id,
-        status: isPresent ? 'Present' : 'Absent'
-      });
+    const rows = document.querySelectorAll('#attendanceEntryTableBody .attendance-row');
+    rows.forEach(row => {
+      const studentId = parseInt(row.getAttribute('data-student-id'));
+      const radio = row.querySelector('input[type="radio"]:checked');
+      const status = radio ? radio.value : 'Present';
+      const remarkInput = row.querySelector('.attendance-remark-input');
+      const remarks = remarkInput ? remarkInput.value : 'Regular';
+      records.push({ student_id: studentId, status: status, remarks: remarks });
     });
 
     try {
       const response = await fetch('../api/save_attendance.php', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ subject, date, time_slot, records })
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken },
+        body: JSON.stringify({ class: classVal, subject: subject, date: date, records: records, update_existing: true })
       });
       if (response.ok) {
         const data = await response.json();
         if (data.success) {
-          showToast(`Attendance for ${subject} saved successfully!`, 'success');
+          showToast(`Attendance for ${classVal} - ${subject} saved successfully!`, 'success');
+          await loadClassStudentsForEntry();
           await loadGFMDashboardData();
         } else {
           showToast(data.message || 'Failed to save attendance.', 'danger');
@@ -514,6 +652,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     tbody.innerHTML = '';
 
     const defaulters = studentsData.filter(s => {
+      if (s.conducted == 0) return false;
       const pct = (s.attended / s.conducted) * 100;
       const isDefaulter = pct < 75;
       const matchSearch = s.name.toLowerCase().includes(searchVal) || s.roll.toLowerCase().includes(searchVal);
@@ -557,15 +696,42 @@ document.addEventListener('DOMContentLoaded', async () => {
   renderDefaulterTable();
 
   // Quick Send Defaulter Warnings Button
-  document.getElementById('quickSendDefaulterAlertsBtn')?.addEventListener('click', () => {
-    showToast('SMS & Email warning notices sent to all 12 defaulter parents!', 'warning');
+  document.getElementById('quickSendDefaulterAlertsBtn')?.addEventListener('click', async () => {
+    const defaulters = studentsData.filter(s => s.conducted > 0 && (s.attended/s.conducted)*100 < 75);
+    if (defaulters.length === 0) {
+      showToast('No defaulters found to notify.', 'warning');
+      return;
+    }
+    
+    if (!confirm(`Are you sure you want to send warning notices to ${defaulters.length} students?`)) {
+      return;
+    }
+
+    try {
+      const studentIds = defaulters.map(s => s.id); // Assuming s.id is the user_id of the student
+      const res = await fetch('../api/send_defaulter_warnings.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ student_ids: studentIds })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast(data.message, 'success');
+      } else {
+        showToast(data.message || 'Failed to send warnings.', 'danger');
+      }
+    } catch (err) {
+      console.error(err);
+      showToast('Error communicating with server.', 'danger');
+    }
   });
 
   // Export CSV
   document.getElementById('exportDefaultersBtn')?.addEventListener('click', () => {
     let csvContent = "data:text/csv;charset=utf-8,Roll No,Name,Division,Attendance Pct,Phone\n";
-    studentsData.filter(s => (s.attended/s.conducted)*100 < 75).forEach(s => {
-      csvContent += `${s.roll},${s.name},${s.div},${((s.attended/s.conducted)*100).toFixed(1)}%,${s.phone}\n`;
+    studentsData.filter(s => s.conducted > 0 && (s.attended/s.conducted)*100 < 75).forEach(s => {
+      const pct = ((s.attended/s.conducted)*100).toFixed(1);
+      csvContent += `${s.roll},${s.name},${s.div},${pct}%,${s.phone}\n`;
     });
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement('a');
@@ -833,11 +999,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           const criticalCountText = document.getElementById('criticalCountText');
           if (criticalCountText) criticalCountText.textContent = `${stats.criticalCount} Students`;
 
-          studentsData.forEach(s => {
-            if (!(s.roll in attendanceState)) {
-              attendanceState[s.roll] = true;
-            }
-          });
+
           
           renderStudentTable();
           renderAttendanceEntryRoster();

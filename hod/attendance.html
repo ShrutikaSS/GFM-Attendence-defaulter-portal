@@ -1,162 +1,324 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Students Attendance | HOD Dashboard</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
-    <link rel="stylesheet" href="css/dashboard.css" />
-  </head>
-  <body data-page="attendance">
-    <div class="app-shell">
-      <aside class="sidebar">
-        <div class="sidebar-profile">
-          <div class="profile-avatar">
-            <img src="images/hod-profile.png" alt="Dr. Dipali Shende" />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Attendance Management | HOD Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+  <link rel="stylesheet" href="../css/dashboard.css" />
+  <link rel="stylesheet" href="../css/attendance.css" />
+  <style>
+    .filter-bar {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      margin-bottom: 20px;
+      padding: 16px;
+      background: white;
+      border-radius: 10px;
+      border: 1px solid #e2e8f0;
+    }
+    .filter-bar label {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #64748b;
+      text-transform: uppercase;
+      min-width: 140px;
+    }
+    .filter-bar select,
+    .filter-bar input {
+      padding: 8px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      background: white;
+    }
+    .edit-modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 10000;
+      justify-content: center;
+      align-items: center;
+    }
+    .edit-modal-overlay.active {
+      display: flex;
+    }
+    .edit-modal {
+      background: white;
+      padding: 28px;
+      border-radius: 16px;
+      max-width: 520px;
+      width: 90%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    .edit-modal h3 {
+      margin-top: 0;
+      margin-bottom: 16px;
+    }
+    .edit-modal .form-group {
+      margin-bottom: 14px;
+    }
+    .edit-modal label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: #64748b;
+    }
+    .edit-modal textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-family: inherit;
+      resize: vertical;
+      min-height: 80px;
+    }
+    .quick-actions-bar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .stat-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body data-page="attendance">
+  <div id="toastContainer" style="position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px;"></div>
+  <input type="hidden" id="csrfToken" value="" />
+
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="sidebar-profile">
+        <div class="profile-avatar">
+          <img src="images/hod-profile.png" alt="Dr. Dipali Shende" />
+        </div>
+        <div class="profile-meta">
+          <span class="profile-badge">HOD</span>
+          <h2>Dr. Dipali Shende</h2>
+          <p>Head of Department</p>
+          <div class="status-pill"><span class="status-dot"></span> Online</div>
+        </div>
+      </div>
+      <nav class="sidebar-menu">
+        <a href="dashboard.html"><i class="fa-solid fa-gauge"></i><span>Dashboard</span></a>
+        <a class="active" href="attendance.html"><i class="fa-solid fa-clipboard-user"></i><span>Attendance Management</span></a>
+        <a href="faculty.html"><i class="fa-solid fa-chalkboard-user"></i><span>Faculty Management</span></a>
+        <a href="defaulters.html"><i class="fa-solid fa-triangle-exclamation"></i><span>Defaulter List</span></a>
+        <a href="reports.html"><i class="fa-solid fa-chart-line"></i><span>Reports</span></a>
+        <a href="notice.html"><i class="fa-solid fa-bell"></i><span>Notice Board</span></a>
+        <a href="settings.html"><i class="fa-solid fa-gear"></i><span>Settings</span></a>
+        <a href="profile.html"><i class="fa-solid fa-user"></i><span>Profile</span></a>
+        <a href="../index.html"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a>
+      </nav>
+    </aside>
+
+    <div class="main-panel">
+      <header class="topbar">
+        <button class="menu-toggle" aria-label="Toggle sidebar"><i class="fa-solid fa-bars"></i></button>
+        <div class="topbar-title">Student Attendance Management System</div>
+        <div class="topbar-actions">
+          <button class="icon-btn" aria-label="Notifications"><i class="fa-solid fa-bell"></i></button>
+          <label class="search-box">
+            <i class="fa-solid fa-search"></i>
+            <input id="globalSearch" type="text" placeholder="Search students..." />
+          </label>
+          <div class="avatar-chip">
+            <img src="images/hod-profile.png" alt="Profile" />
           </div>
-          <div class="profile-meta">
-            <span class="profile-badge">HOD</span>
-            <h2>Dr. Dipali Shende</h2>
-            <p>Head of Department</p>
-            <div class="status-pill"><span class="status-dot"></span> Online</div>
+        </div>
+      </header>
+
+      <main class="content-area">
+        <section class="welcome-card reveal">
+          <div>
+            <p class="eyebrow">Attendance management</p>
+            <h1>Attendance Management</h1>
+            <p class="lead">Review, edit, and manage attendance records across all divisions. HOD can correct any attendance with mandatory reason documentation.</p>
+          </div>
+          <div class="badge-stack">
+            <span class="mini-badge"><i class="fa-solid fa-shield-halved"></i> HOD Access</span>
+            <span class="mini-badge"><i class="fa-solid fa-clock"></i> Real-time</span>
+          </div>
+        </section>
+
+        <!-- Stats Cards -->
+        <section class="summary-grid">
+          <article class="summary-card reveal">
+            <div class="summary-icon blue"><i class="fa-solid fa-calendar-check"></i></div>
+            <div>
+              <h3>Today's Attendance</h3>
+              <p class="metric" id="hodTodayStat">Loading...</p>
+            </div>
+          </article>
+          <article class="summary-card reveal">
+            <div class="summary-icon green"><i class="fa-solid fa-users"></i></div>
+            <div>
+              <h3>Total Students</h3>
+              <p class="metric" id="hodTotalStat">Loading...</p>
+            </div>
+          </article>
+          <article class="summary-card reveal">
+            <div class="summary-icon purple"><i class="fa-solid fa-chart-pie"></i></div>
+            <div>
+              <h3>Avg Attendance %</h3>
+              <p class="metric" id="hodAvgStat">Loading...</p>
+            </div>
+          </article>
+          <article class="summary-card reveal">
+            <div class="summary-icon red"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <div>
+              <h3>Defaulters</h3>
+              <p class="metric" id="hodDefaulterStat">Loading...</p>
+            </div>
+          </article>
+        </section>
+
+        <!-- Filters -->
+        <div class="filter-bar reveal">
+          <label>
+            <span>Division</span>
+            <select id="hodDivisionFilter">
+              <option value="ALL">All Divisions</option>
+              <option value="Div A">Division A</option>
+              <option value="Div B">Division B</option>
+              <option value="Div C">Division C</option>
+            </select>
+          </label>
+          <label>
+            <span>Subject</span>
+            <select id="hodSubjectFilter">
+              <option value="ALL">All Subjects</option>
+              <option value="Web Development">Web Development</option>
+              <option value="Data Structures">Data Structures</option>
+              <option value="Database Systems">Database Systems</option>
+              <option value="Computer Networks">Computer Networks</option>
+              <option value="Software Engineering">Software Engineering</option>
+              <option value="Machine Learning">Machine Learning</option>
+              <option value="Artificial Intelligence">Artificial Intelligence</option>
+            </select>
+          </label>
+          <label>
+            <span>Date From</span>
+            <input type="date" id="hodDateFrom" />
+          </label>
+          <label>
+            <span>Date To</span>
+            <input type="date" id="hodDateTo" />
+          </label>
+          <label>
+            <span>Status</span>
+            <select id="hodStatusFilter">
+              <option value="ALL">All Statuses</option>
+              <option value="Present">Present</option>
+              <option value="Absent">Absent</option>
+              <option value="Medical Leave">Medical Leave</option>
+              <option value="Duty Leave">Duty Leave</option>
+            </select>
+          </label>
+          <div style="display: flex; gap: 8px;">
+            <button class="table-action-btn primary-solid" id="hodApplyFilterBtn">
+              <i class="fa-solid fa-filter"></i> Apply
+            </button>
+            <button class="table-action-btn secondary-ghost" id="hodResetFilterBtn">
+              <i class="fa-solid fa-rotate-left"></i> Reset
+            </button>
+          </div>
+          <div style="margin-left: auto; display: flex; gap: 8px;">
+            <button class="table-action-btn primary-outline" id="hodExportExcelBtn">
+              <i class="fa-solid fa-file-csv"></i> Export Excel
+            </button>
+            <button class="table-action-btn primary-solid" id="hodExportPdfBtn">
+              <i class="fa-solid fa-file-pdf"></i> Export PDF
+            </button>
           </div>
         </div>
 
-        <nav class="sidebar-menu">
-          <a href="dashboard.html"><i class="fa-solid fa-gauge"></i><span>Dashboard</span></a>
-          <a class="active" href="attendance.html"><i class="fa-solid fa-clipboard-user"></i><span>Students Attendance</span></a>
-          <a href="faculty.html"><i class="fa-solid fa-chalkboard-user"></i><span>Faculty Management</span></a>
-          <a href="defaulters.html"><i class="fa-solid fa-triangle-exclamation"></i><span>Defaulter List</span></a>
-          <a href="reports.html"><i class="fa-solid fa-chart-line"></i><span>Reports</span></a>
-          <a href="notice.html"><i class="fa-solid fa-bell"></i><span>Notice Board</span></a>
-          <a href="settings.html"><i class="fa-solid fa-gear"></i><span>Settings</span></a>
-          <a href="profile.html"><i class="fa-solid fa-user"></i><span>Profile</span></a>
-          <a href="../index.html"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a>
-        </nav>
-      </aside>
-
-      <div class="main-panel">
-        <header class="topbar">
-          <button class="menu-toggle" aria-label="Toggle sidebar"><i class="fa-solid fa-bars"></i></button>
-          <div class="topbar-title">Student Attendance Management System</div>
-          <div class="topbar-actions">
-            <button class="icon-btn" aria-label="Notifications"><i class="fa-solid fa-bell"></i></button>
-            <label class="search-box">
-              <i class="fa-solid fa-search"></i>
-              <input id="studentSearch" type="text" placeholder="Search student" />
-            </label>
-            <div class="avatar-chip">
-              <img src="images/hod-profile.png" alt="Profile" />
+        <!-- Attendance Table -->
+        <div class="data-table-card reveal">
+          <div class="table-card-header">
+            <h2>Attendance Records</h2>
+            <div class="quick-actions-bar">
+              <span class="stat-badge bg-success-light"><i class="fa-solid fa-check"></i> <span id="hodPresentCount">0</span> Present</span>
+              <span class="stat-badge bg-danger-light"><i class="fa-solid fa-xmark"></i> <span id="hodAbsentCount">0</span> Absent</span>
+              <span class="stat-badge bg-warning-light" style="background: rgba(245,158,11,0.1); color: #D97706;"><i class="fa-solid fa-file-medical"></i> <span id="hodMedicalCount">0</span> Medical</span>
+              <span class="stat-badge bg-info-light" style="background: rgba(99,102,241,0.1); color: #4F46E5;"><i class="fa-solid fa-briefcase"></i> <span id="hodDutyCount">0</span> Duty</span>
             </div>
           </div>
-        </header>
-
-        <main class="content-area">
-          <section class="page-header reveal">
-            <div>
-              <p class="eyebrow">Student attendance overview</p>
-              <h1>Attendance Monitoring</h1>
-              <p class="lead">Review department-wide attendance trends and inspect each student record.</p>
-            </div>
-          </section>
-
-          <section class="filter-bar reveal">
-            <label>
-              <span>Academic Year</span>
-              <select id="filterYear">
-                <option value="all">All</option>
-                <option>First Year</option>
-                <option>Second Year</option>
-                <option>Third Year</option>
-                <option>Fourth Year</option>
-              </select>
-            </label>
-            <label>
-              <span>Department</span>
-              <select id="filterDepartment">
-                <option value="all">All</option>
-                <option>Artificial Intelligence & Machine Learning</option>
-              </select>
-            </label>
-            <label>
-              <span>Division</span>
-              <select id="filterDivision">
-                <option value="all">All</option>
-                <option>FY A</option>
-                <option>FY B</option>
-                <option>FY C</option>
-                <option>SY A</option>
-                <option>TY A</option>
-              </select>
-            </label>
-            <label>
-              <span>Subject</span>
-              <select id="filterSubject">
-                <option value="all">All</option>
-                <option>DBMS</option>
-                <option>OOP</option>
-                <option>Web Technology</option>
-              </select>
-            </label>
-            <label>
-              <span>Faculty</span>
-              <select id="filterFaculty">
-                <option value="all">All</option>
-                <option>Prof. D. Shah</option>
-                <option>Prof. N. Joshi</option>
-              </select>
-            </label>
-          </section>
-
-          <section class="table-card reveal">
-            <div class="panel-head">
-              <h3>Attendance Records</h3>
-              <div class="button-row">
-                <button class="btn btn-secondary"><i class="fa-solid fa-download"></i> Export</button>
-                <button class="btn btn-primary"><i class="fa-solid fa-print"></i> Print</button>
-              </div>
-            </div>
-            <div class="table-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Roll No</th>
-                    <th>PRN</th>
-                    <th>Student Name</th>
-                    <th>Division</th>
-                    <th>Attendance %</th>
-                    <th>Classes Conducted</th>
-                    <th>Classes Attended</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody id="attendanceTableBody"></tbody>
-              </table>
-            </div>
-          </section>
-        </main>
-
-        <footer class="app-footer">
-          <div>
-            <h3>Student Attendance Management System</h3>
-            <p>Version 1.0 • © 2026</p>
+          <div class="responsive-table-container">
+            <table class="dashboard-table">
+              <thead>
+                <tr>
+                  <th>Roll No</th>
+                  <th>PRN</th>
+                  <th>Student Name</th>
+                  <th>Division</th>
+                  <th>Subject</th>
+                  <th>Date</th>
+                  <th>Lecture</th>
+                  <th>Status</th>
+                  <th>Remarks</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="hodAttendanceTableBody">
+                <tr><td colspan="10" style="text-align: center; padding: 40px;">Click Apply to load attendance records.</td></tr>
+              </tbody>
+            </table>
           </div>
-          <div>
-            <h3>Quick Links</h3>
-            <a href="attendance.html">Attendance</a>
-            <a href="reports.html">Reports</a>
-            <a href="notice.html">Notice</a>
-          </div>
-          <div>
-            <h3>Support</h3>
-            <a href="mailto:support@collegeportal.edu">support@collegeportal.edu</a>
-          </div>
-        </footer>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Edit Modal -->
+  <div class="edit-modal-overlay" id="editModalOverlay">
+    <div class="edit-modal">
+      <h3><i class="fa-solid fa-pen-to-square primary-text"></i> Edit Attendance Record</h3>
+      <div class="form-group">
+        <label>Current Status</label>
+        <div id="editCurrentStatus" style="font-weight: 700;"></div>
+      </div>
+      <div class="form-group">
+        <label>New Status</label>
+        <select id="editNewStatus" class="custom-select-box" style="width: 100%;">
+          <option value="Present">Present</option>
+          <option value="Absent">Absent</option>
+          <option value="Medical Leave">Medical Leave</option>
+          <option value="Duty Leave">Duty Leave</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Remarks</label>
+        <input type="text" id="editNewRemarks" class="custom-select-box" style="width: 100%;" placeholder="Enter remarks" />
+      </div>
+      <div class="form-group">
+        <label>Reason for Change <span style="color: #EF4444;">*</span></label>
+        <textarea id="editReason" placeholder="Enter reason for this correction..."></textarea>
+      </div>
+      <div style="display: flex; gap: 10px; justify-content: flex-end;">
+        <button class="table-action-btn secondary-ghost" id="editCancelBtn">Cancel</button>
+        <button class="table-action-btn primary-solid" id="editSaveBtn">Save Changes</button>
       </div>
     </div>
+  </div>
 
-    <script src="js/dashboard.js"></script>
-    <script src="js/attendance.js"></script>
-  </body>
+  <script src="../js/dashboard.js"></script>
+  <script src="js/attendance_management.js"></script>
+</body>
 </html>

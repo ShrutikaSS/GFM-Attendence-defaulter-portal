@@ -1,0 +1,321 @@
+/* ============================================================
+   ATTENDANCE ENTRY - SPECIALIZED STYLES
+   ============================================================ */
+
+.attendance-fast-table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.attendance-fast-table thead th {
+  position: sticky;
+  top: 0;
+  background: #F8FAFC;
+  z-index: 10;
+}
+
+.attendance-fast-table tbody tr {
+  transition: background-color 0.15s ease;
+}
+
+.attendance-fast-table tbody tr:hover {
+  background-color: rgba(59, 130, 246, 0.03);
+}
+
+.attendance-fast-table tbody tr.attendance-row {
+  border-bottom: 1px solid var(--border);
+}
+
+.cell-center {
+  text-align: center;
+}
+
+/* Radio Button Groups */
+.attendance-radio-group {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.radio-option {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: white;
+  transition: all 0.2s ease;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.radio-option:hover {
+  border-color: #cbd5e1;
+  background: #f8fafc;
+}
+
+.radio-option input[type="radio"] {
+  display: none;
+}
+
+.radio-visual {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid #cbd5e1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.radio-visual::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: transparent;
+  transition: all 0.2s ease;
+}
+
+.radio-option input:checked + .radio-visual {
+  border-color: currentColor;
+}
+
+.radio-option input:checked + .radio-visual::after {
+  background: currentColor;
+}
+
+.radio-present { color: #10B981; border-color: rgba(16, 185, 129, 0.2); }
+.radio-present input:checked ~ span { color: #059669; font-weight: 600; }
+.radio-absent { color: #EF4444; border-color: rgba(239, 68, 68, 0.2); }
+.radio-absent input:checked ~ span { color: #DC2626; font-weight: 600; }
+.radio-medical { color: #F59E0B; border-color: rgba(245, 158, 11, 0.2); }
+.radio-medical input:checked ~ span { color: #D97706; font-weight: 600; }
+.radio-duty { color: #6366F1; border-color: rgba(99, 102, 241, 0.2); }
+.radio-duty input:checked ~ span { color: #4F46E5; font-weight: 600; }
+
+.radio-option:has(input:checked) {
+  box-shadow: 0 0 0 2px currentColor;
+  transform: translateY(-1px);
+}
+
+/* Remark Input */
+.attendance-remark-input {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 0.85rem;
+  width: 100%;
+  max-width: 180px;
+  transition: border-color 0.2s ease;
+  background: white;
+  color: var(--text-primary);
+}
+
+.attendance-remark-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Status Badges */
+.badge-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.bg-success-light { background: rgba(16, 185, 129, 0.1); color: #059669; }
+.bg-danger-light { background: rgba(239, 68, 68, 0.1); color: #DC2626; }
+.bg-warning-light { background: rgba(245, 158, 11, 0.1); color: #D97706; }
+.bg-info-light { background: rgba(99, 102, 241, 0.1); color: #4F46E5; }
+.bg-secondary-light { background: rgba(100, 116, 139, 0.1); color: #475569; }
+
+/* Table Action Buttons */
+.table-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.primary-solid {
+  background: #3B82F6;
+  color: white;
+}
+.primary-solid:hover {
+  background: #1D4ED8;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.secondary-solid {
+  background: white;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+}
+.secondary-solid:hover {
+  background: #f1f5f9;
+  transform: translateY(-1px);
+}
+
+.secondary-ghost {
+  background: transparent;
+  color: #64748B;
+  border: 1px solid transparent;
+}
+.secondary-ghost:hover {
+  background: #f1f5f9;
+  border-color: #e2e8f0;
+}
+
+.danger-outline {
+  background: transparent;
+  color: #EF4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+.danger-outline:hover {
+  background: rgba(239, 68, 68, 0.06);
+  transform: translateY(-1px);
+}
+
+/* Search Box Pill */
+.search-box-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #F8FAFC;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 12px;
+  transition: all 0.2s ease;
+}
+
+.search-box-pill:focus-within {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.08);
+}
+
+.search-icon-sm {
+  width: 16px;
+  height: 16px;
+  color: #94a3b8;
+  flex-shrink: 0;
+}
+
+.search-box-pill input {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 0.85rem;
+  width: 100%;
+  color: var(--text-primary);
+}
+
+/* Toast Notifications */
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  border-radius: 10px;
+  background: white;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  min-width: 300px;
+  max-width: 420px;
+  animation: toastSlideIn 0.3s ease;
+  border-left: 4px solid #3B82F6;
+}
+
+.toast-success { border-left-color: #10B981; }
+.toast-error { border-left-color: #EF4444; }
+.toast-info { border-left-color: #3B82F6; }
+
+.toast-hide {
+  animation: toastSlideOut 0.3s ease forwards;
+}
+
+.toast-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.toast-success .toast-icon { background: rgba(16, 185, 129, 0.1); color: #10B981; }
+.toast-error .toast-icon { background: rgba(239, 68, 68, 0.1); color: #EF4444; }
+.toast-info .toast-icon { background: rgba(59, 130, 246, 0.1); color: #3B82F6; }
+
+.toast-title {
+  font-weight: 700;
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.toast-message {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin: 2px 0 0;
+}
+
+/* Spinner */
+.spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid #E2E8F0;
+  border-top-color: #3B82F6;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes toastSlideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes toastSlideOut {
+  from { transform: translateX(0); opacity: 1; }
+  to { transform: translateX(100%); opacity: 0; }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .attendance-radio-group {
+    flex-direction: column;
+    gap: 4px;
+  }
+  .radio-option {
+    padding: 4px 8px;
+    font-size: 0.8rem;
+  }
+  .attendance-remark-input {
+    max-width: 100%;
+  }
+  .table-controls {
+    flex-wrap: wrap;
+  }
+}
