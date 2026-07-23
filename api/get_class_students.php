@@ -63,7 +63,7 @@ try {
 
     $where = ["u.role = 'student'"];
 
-    if ($user['role'] === 'gfm') {
+    if ($division && strtoupper($division) !== 'ALL') {
         $where[] = "sd.division = :division";
     }
     if ($department) {
