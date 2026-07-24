@@ -107,6 +107,73 @@
       </div>
     </div>
 
+    <!-- EDIT FACULTY MODAL -->
+    <div id="editFacultyModal" class="modal-overlay hidden">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h2><i class="fa-solid fa-pen-to-square"></i> Edit Faculty Information</h2>
+          <button class="modal-close-btn" id="closeEditModalBtn" aria-label="Close">&times;</button>
+        </div>
+        <form id="editFacultyForm">
+          <input type="hidden" id="editFacultyId" />
+          
+          <div class="form-group">
+            <label for="editFacultyName">Faculty Name</label>
+            <input type="text" id="editFacultyName" required placeholder="e.g. Prof. A. V. Kulkarni" />
+          </div>
+
+          <div class="form-group">
+            <label for="editFacultyDepartment">Department</label>
+            <select id="editFacultyDepartment" required>
+              <option value="Artificial Intelligence & Machine Learning">Artificial Intelligence & Machine Learning</option>
+              <option value="Computer Engineering">Computer Engineering</option>
+              <option value="Information Technology">Information Technology</option>
+              <option value="Data Science">Data Science</option>
+              <option value="Electronics & Telecommunication">Electronics & Telecommunication</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="editFacultySubject">Assigned Subject</label>
+            <input type="text" id="editFacultySubject" required placeholder="e.g. Data Structures" />
+          </div>
+
+          <div class="form-row" style="display: flex; gap: 15px;">
+            <div class="form-group" style="flex: 1;">
+              <label for="editFacultyDivision">Division</label>
+              <select id="editFacultyDivision">
+                <option value="Div A">Div A</option>
+                <option value="Div B">Div B</option>
+                <option value="Div C">Div C</option>
+              </select>
+            </div>
+            <div class="form-group" style="flex: 1;">
+              <label for="editFacultyStatus">Status</label>
+              <select id="editFacultyStatus">
+                <option value="Active">Active</option>
+                <option value="On Leave">On Leave</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="editFacultyEmail">Email</label>
+            <input type="email" id="editFacultyEmail" placeholder="faculty@college.edu" />
+          </div>
+
+          <div class="form-group">
+            <label for="editFacultyPhone">Phone</label>
+            <input type="text" id="editFacultyPhone" placeholder="+91 98765 43210" />
+          </div>
+
+          <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+            <button type="button" class="btn btn-secondary" id="cancelEditModalBtn">Cancel</button>
+            <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Save Changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
     <script src="js/dashboard.js"></script>
     <script src="js/faculty.js"></script>
   </body>

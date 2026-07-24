@@ -1,830 +1,910 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>GFM Dashboard | Student Attendance Management System</title>
 
-    <!-- Google Fonts: Inter & Outfit -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GFM Dashboard | Student Attendance Management System</title>
 
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!-- Google Fonts: Inter & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet" />
 
-    <!-- Chart.js CDN for interactive attendance charts -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-    <!-- Premium Dashboard CSS -->
-    <link rel="stylesheet" href="../css/dashboard.css" />
-  </head>
-  <body>
+  <!-- Chart.js CDN for interactive attendance charts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
-    <!-- Toast Notification Overlay -->
-    <div id="toastContainer" style="position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px;"></div>
+  <!-- Premium Dashboard CSS -->
+  <link rel="stylesheet" href="../css/dashboard.css" />
+</head>
 
-    <div class="dashboard-wrapper">
-      
-      <!-- ==========================================================================
+<body>
+
+  <!-- Toast Notification Overlay -->
+  <div id="toastContainer"
+    style="position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px;">
+  </div>
+
+  <div class="dashboard-wrapper">
+
+    <!-- ==========================================================================
            1. SIDEBAR NAVIGATION
            ========================================================================== -->
-      <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-          <div class="logo-box">
-            <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
-              <path d="M6 12v5c3 3 9 3 12 0v-5"/>
-            </svg>
-            <span class="portal-brand">GFM Portal</span>
-          </div>
-          <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close sidebar">
-            <i class="fa-solid fa-xmark"></i>
-          </button>
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="logo-box">
+          <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+            <path d="M6 12v5c3 3 9 3 12 0v-5" />
+          </svg>
+          <span class="portal-brand">GFM Portal</span>
         </div>
+        <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close sidebar">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
 
-        <nav class="sidebar-menu">
-          <a class="menu-item active" data-tab="dashboard" href="#dashboard">
-            <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="3" width="7" height="7"></rect>
-              <rect x="14" y="3" width="7" height="7"></rect>
-              <rect x="14" y="14" width="7" height="7"></rect>
-              <rect x="3" y="14" width="7" height="7"></rect>
-            </svg>
-            <span>Dashboard</span>
-          </a>
+      <nav class="sidebar-menu">
+        <a class="menu-item active" data-tab="dashboard" href="#dashboard">
+          <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="14" y="14" width="7" height="7"></rect>
+            <rect x="3" y="14" width="7" height="7"></rect>
+          </svg>
+          <span>Dashboard</span>
+        </a>
 
 
-          <a class="menu-item" data-tab="attendance" href="#attendance">
-            <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M9 11l3 3L22 4"></path>
-              <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
-            </svg>
-            <span>Attendance Entry</span>
-          </a>
+        <a class="menu-item" data-tab="attendance" href="#attendance">
+          <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 11l3 3L22 4"></path>
+            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+          </svg>
+          <span>Attendance Entry</span>
+        </a>
 
-          <a class="menu-item" data-tab="defaulters" href="#defaulters">
-            <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-              <line x1="12" y1="9" x2="12" y2="13"></line>
-              <line x1="12" y1="17" x2="12.01" y2="17"></line>
-            </svg>
-            <span>Defaulters List</span>
-          </a>
+        <a class="menu-item" data-tab="defaulters" href="#defaulters">
+          <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+            <line x1="12" y1="9" x2="12" y2="13"></line>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+          <span>Defaulters List</span>
+        </a>
 
-          <a class="menu-item" data-tab="reports" href="#reports">
-            <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="18" y1="20" x2="18" y2="10"></line>
-              <line x1="12" y1="20" x2="12" y2="4"></line>
-              <line x1="6" y1="20" x2="6" y2="14"></line>
-            </svg>
-            <span>Reports & Analytics</span>
-          </a>
+        <a class="menu-item" data-tab="reports" href="#reports">
+          <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+          </svg>
+          <span>Reports & Analytics</span>
+        </a>
 
-          <a class="menu-item" data-tab="notices" href="#notices">
-            <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-            </svg>
-            <span>Notice Board</span>
-          </a>
+        <a class="menu-item" data-tab="notices" href="#notices">
+          <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+          </svg>
+          <span>Notice Board</span>
+        </a>
 
-          <a class="menu-item" data-tab="profile" href="#profile">
-            <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="3"></circle>
-              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-            </svg>
-            <span>Profile & Settings</span>
-          </a>
+        <a class="menu-item" data-tab="profile" href="#profile">
+          <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path
+              d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
+            </path>
+          </svg>
+          <span>Profile & Settings</span>
+        </a>
 
-          <hr class="sidebar-divider" />
+        <hr class="sidebar-divider" />
 
-          <a class="menu-item logout" id="logoutBtn" href="../login.html">
-            <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-              <polyline points="16 17 21 12 16 7"></polyline>
-              <line x1="21" y1="12" x2="9" y2="12"></line>
-            </svg>
-            <span>Logout</span>
-          </a>
-        </nav>
+        <a class="menu-item logout" id="logoutBtn" href="../login.html">
+          <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
+          <span>Logout</span>
+        </a>
+      </nav>
 
-        <div class="sidebar-user-quick">
-          <div class="profile-chip" id="userAvatarChip" style="width: 42px; height: 42px; border-radius: 50%; background: linear-gradient(135deg, #3B82F6, #1D4ED8); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1rem; flex-shrink: 0;">AV</div>
-          <div class="quick-user-details">
-            <span class="user-name" id="sidebarUserName">Prof. Aniket Verma</span>
-            <span class="user-role" id="sidebarUserRole">Artificial Intelligence & Machine Learning (GFM)</span>
-          </div>
+      <div class="sidebar-user-quick">
+        <div class="profile-chip" id="userAvatarChip"
+          style="width: 42px; height: 42px; border-radius: 50%; background: linear-gradient(135deg, #3B82F6, #1D4ED8); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1rem; flex-shrink: 0;">
+          AV</div>
+        <div class="quick-user-details">
+          <span class="user-name" id="sidebarUserName">Prof. Aniket Verma</span>
+          <span class="user-role" id="sidebarUserRole">Artificial Intelligence & Machine Learning (GFM)</span>
         </div>
-      </aside>
+      </div>
+    </aside>
 
-      <!-- ==========================================================================
+    <!-- ==========================================================================
            2. MAIN CONTENT LAYOUT
            ========================================================================== -->
-      <div class="main-content-layout">
-        
-        <!-- TOP NAVBAR -->
-        <header class="top-navbar">
-          <div class="navbar-left">
-            <button class="hamburger-menu" id="hamburgerBtn" aria-label="Toggle Navigation">
-              <i class="fa-solid fa-bars"></i>
+    <div class="main-content-layout">
+
+      <!-- TOP NAVBAR -->
+      <header class="top-navbar">
+        <div class="navbar-left">
+          <button class="hamburger-menu" id="hamburgerBtn" aria-label="Toggle Navigation">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <div class="college-logo-container">
+            <div class="college-meta">
+              <span class="college-title">Student Attendance Management System</span>
+              <span class="portal-badge">Guardian Faculty Portal</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="navbar-center">
+          <div class="search-bar-wrapper">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" id="globalSearchInput" placeholder="Search student by name, roll no, or subject..." />
+          </div>
+        </div>
+
+        <div class="navbar-right">
+          <!-- Dark / Light Mode Toggle -->
+          <button class="navbar-action-btn" id="themeToggleBtn" title="Toggle Light/Dark Theme">
+            <i class="fa-solid fa-moon" id="themeIcon"></i>
+          </button>
+
+          <!-- Notifications Bell -->
+          <div class="notification-bell-container">
+            <button class="navbar-action-btn" id="notifBellBtn" title="Notifications">
+              <i class="fa-regular fa-bell"></i>
+              <span class="notification-badge" id="notifBadge">3</span>
             </button>
-            <div class="college-logo-container">
-              <div class="college-meta">
-                <span class="college-title">Student Attendance Management System</span>
-                <span class="portal-badge">Guardian Faculty Portal</span>
+
+            <div class="notification-dropdown-panel" id="notifDropdown">
+              <div class="dropdown-header">
+                <h4>Notifications</h4>
+                <span class="record-count">3 Unread</span>
+              </div>
+              <ul class="dropdown-notification-list">
+                <li class="unread">
+                  <div class="notif-icon-circle" style="background: rgba(59, 130, 246, 0.1); color: #3B82F6;">
+                    <i class="fa-solid fa-clipboard-check"></i>
+                  </div>
+                  <div class="notif-body">
+                    <p>Attendance entry for <strong>Web Development (Div A)</strong> submitted.</p>
+                    <span class="notif-time">10 minutes ago</span>
+                  </div>
+                </li>
+                <li class="unread">
+                  <div class="notif-icon-circle" style="background: rgba(239, 68, 68, 0.1); color: #EF4444;">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                  </div>
+                  <div class="notif-body">
+                    <p>12 students flagged in <strong>Defaulter List (&lt;75%)</strong>.</p>
+                    <span class="notif-time">1 hour ago</span>
+                  </div>
+                </li>
+                <li>
+                  <div class="notif-icon-circle" style="background: rgba(16, 185, 129, 0.1); color: #10B981;">
+                    <i class="fa-solid fa-bullhorn"></i>
+                  </div>
+                  <div class="notif-body">
+                    <p>Department meeting scheduled for Friday at 11:00 AM.</p>
+                    <span class="notif-time">Yesterday</span>
+                  </div>
+                </li>
+              </ul>
+              <div class="dropdown-footer">
+                <a href="#notices" data-tab="notices">View All Notices</a>
               </div>
             </div>
           </div>
 
-          <div class="navbar-center">
-            <div class="search-bar-wrapper">
-              <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-              </svg>
-              <input type="text" id="globalSearchInput" placeholder="Search student by name, roll no, or subject..." />
-            </div>
-          </div>
-
-          <div class="navbar-right">
-            <!-- Dark / Light Mode Toggle -->
-            <button class="navbar-action-btn" id="themeToggleBtn" title="Toggle Light/Dark Theme">
-              <i class="fa-solid fa-moon" id="themeIcon"></i>
+          <!-- Profile Menu -->
+          <div class="profile-dropdown-wrapper">
+            <button class="navbar-profile-trigger" id="profileDropdownBtn">
+              <div class="nav-user-avatar" id="navAvatarInitials"
+                style="width: 38px; height: 38px; border-radius: 50%; background: #3B82F6; color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem;">
+                AV</div>
+              <div class="nav-user-info">
+                <span class="user-fullname" id="topNavName">Prof. Aniket Verma</span>
+                <span class="user-role-label">GFM Faculty In-Charge</span>
+              </div>
+              <i class="fa-solid fa-chevron-down dropdown-chevron"></i>
             </button>
 
-            <!-- Notifications Bell -->
-            <div class="notification-bell-container">
-              <button class="navbar-action-btn" id="notifBellBtn" title="Notifications">
-                <i class="fa-regular fa-bell"></i>
-                <span class="notification-badge" id="notifBadge">3</span>
-              </button>
-
-              <div class="notification-dropdown-panel" id="notifDropdown">
-                <div class="dropdown-header">
-                  <h4>Notifications</h4>
-                  <span class="record-count">3 Unread</span>
-                </div>
-                <ul class="dropdown-notification-list">
-                  <li class="unread">
-                    <div class="notif-icon-circle" style="background: rgba(59, 130, 246, 0.1); color: #3B82F6;">
-                      <i class="fa-solid fa-clipboard-check"></i>
-                    </div>
-                    <div class="notif-body">
-                      <p>Attendance entry for <strong>Web Development (Div A)</strong> submitted.</p>
-                      <span class="notif-time">10 minutes ago</span>
-                    </div>
-                  </li>
-                  <li class="unread">
-                    <div class="notif-icon-circle" style="background: rgba(239, 68, 68, 0.1); color: #EF4444;">
-                      <i class="fa-solid fa-triangle-exclamation"></i>
-                    </div>
-                    <div class="notif-body">
-                      <p>12 students flagged in <strong>Defaulter List (&lt;75%)</strong>.</p>
-                      <span class="notif-time">1 hour ago</span>
-                    </div>
-                  </li>
-                  <li>
-                    <div class="notif-icon-circle" style="background: rgba(16, 185, 129, 0.1); color: #10B981;">
-                      <i class="fa-solid fa-bullhorn"></i>
-                    </div>
-                    <div class="notif-body">
-                      <p>Department meeting scheduled for Friday at 11:00 AM.</p>
-                      <span class="notif-time">Yesterday</span>
-                    </div>
-                  </li>
-                </ul>
-                <div class="dropdown-footer">
-                  <a href="#notices" data-tab="notices">View All Notices</a>
-                </div>
+            <div class="profile-dropdown-menu" id="profileMenu">
+              <div class="menu-header">
+                <strong id="dropdownName">Prof. Aniket Verma</strong>
+                <span id="dropdownEmail">gfm@college.edu</span>
               </div>
+              <a class="dropdown-item" href="#profile" data-tab="profile"><i class="fa-solid fa-user"></i> My
+                Profile</a>
+              <a class="dropdown-item" href="#profile" data-tab="profile"><i class="fa-solid fa-gear"></i> Settings</a>
+              <hr class="dropdown-divider" />
+              <a class="dropdown-item logout" id="menuLogoutBtn" href="../login.html"><i
+                  class="fa-solid fa-right-from-bracket"></i> Logout</a>
             </div>
-
-            <!-- Profile Menu -->
-            <div class="profile-dropdown-wrapper">
-              <button class="navbar-profile-trigger" id="profileDropdownBtn">
-                <div class="nav-user-avatar" id="navAvatarInitials" style="width: 38px; height: 38px; border-radius: 50%; background: #3B82F6; color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem;">AV</div>
-                <div class="nav-user-info">
-                  <span class="user-fullname" id="topNavName">Prof. Aniket Verma</span>
-                  <span class="user-role-label">GFM Faculty In-Charge</span>
-                </div>
-                <i class="fa-solid fa-chevron-down dropdown-chevron"></i>
-              </button>
-
-              <div class="profile-dropdown-menu" id="profileMenu">
-                <div class="menu-header">
-                  <strong id="dropdownName">Prof. Aniket Verma</strong>
-                  <span id="dropdownEmail">gfm@college.edu</span>
-                </div>
-                <a class="dropdown-item" href="#profile" data-tab="profile"><i class="fa-solid fa-user"></i> My Profile</a>
-                <a class="dropdown-item" href="#profile" data-tab="profile"><i class="fa-solid fa-gear"></i> Settings</a>
-                <hr class="dropdown-divider" />
-                <a class="dropdown-item logout" id="menuLogoutBtn" href="../login.html"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
-              </div>
-            </div>
-
           </div>
-        </header>
 
-        <!-- DASHBOARD BODY CONTENT -->
-        <main class="dashboard-body">
+        </div>
+      </header>
 
-          <!-- ==========================================================================
+      <!-- DASHBOARD BODY CONTENT -->
+      <main class="dashboard-body">
+
+        <!-- ==========================================================================
                TAB 1: OVERVIEW DASHBOARD
                ========================================================================== -->
-          <section id="view-dashboard" class="tab-view active">
-            
-            <!-- HERO BANNER -->
-            <div class="dashboard-hero">
-              <div class="hero-text">
-                <h1>Welcome back, <span class="user-name" id="heroUserName">Prof. Aniket Verma</span> 👋</h1>
-                <p>Guardian Faculty Member • <strong>Artificial Intelligence & Machine Learning Department (<span id="gfmDivisionText">Division A</span>)</strong></p>
-                
-                <div class="hero-academic-meta">
-                  <div class="meta-tag">
-                    <span class="meta-label">Assigned Batch:</span>
-                    <span class="meta-val" id="gfmAssignedBatch">SE AIML-A (2025-2026)</span>
-                  </div>
-                  <div class="meta-tag">
-                    <span class="meta-label">Total Conducted Lectures:</span>
-                    <span class="meta-val" id="gfmConductedLectures">150 Sessions</span>
-                  </div>
-                  <div class="meta-tag">
-                    <span class="meta-label">Department Stand:</span>
-                    <span class="meta-val" id="gfmAverageAttendance">88.4% Average Attendance</span>
-                  </div>
-                </div>
-              </div>
+        <section id="view-dashboard" class="tab-view active">
 
-              <div class="hero-clock-widget">
-                <div class="clock-icon">
-                  <i class="fa-regular fa-clock fa-2x"></i>
+          <!-- HERO BANNER -->
+          <div class="dashboard-hero">
+            <div class="hero-text">
+              <h1>Welcome back, <span class="user-name" id="heroUserName">Prof. Aniket Verma</span> 👋</h1>
+              <p>Guardian Faculty Member • <strong>Artificial Intelligence & Machine Learning Department (<span
+                    id="gfmDivisionText">Division A</span>)</strong></p>
+
+              <div class="hero-academic-meta">
+                <div class="meta-tag">
+                  <span class="meta-label">Assigned Batch:</span>
+                  <span class="meta-val" id="gfmAssignedBatch">SE AIML-A (2025-2026)</span>
                 </div>
-                <div class="clock-display">
-                  <span class="clock-time" id="realtimeClock">10:45 AM</span>
-                  <span class="clock-date" id="realtimeDate">Tuesday, Jul 21, 2026</span>
+                <div class="meta-tag">
+                  <span class="meta-label">Total Conducted Lectures:</span>
+                  <span class="meta-val" id="gfmConductedLectures">150 Sessions</span>
+                </div>
+                <div class="meta-tag">
+                  <span class="meta-label">Department Stand:</span>
+                  <span class="meta-val" id="gfmAverageAttendance">88.4% Average Attendance</span>
                 </div>
               </div>
             </div>
 
-            <!-- 4 METRICS CARDS -->
-            <div class="metrics-grid">
-              <div class="metric-card">
-                <div class="metric-info">
-                  <span class="metric-title">Assigned Classes</span>
-                  <span class="metric-value">3</span>
-                  <span class="metric-helper">Division Subjects</span>
-                </div>
-                <div class="metric-icon-box" style="background: rgba(59, 130, 246, 0.1); color: #3B82F6;">
-                  <i class="fa-solid fa-chalkboard-user fa-lg"></i>
-                </div>
-                <div class="card-glow-bg" style="background: #3B82F6;"></div>
+            <div class="hero-clock-widget">
+              <div class="clock-icon">
+                <i class="fa-regular fa-clock fa-2x"></i>
               </div>
-
-              <div class="metric-card">
-                <div class="metric-info">
-                  <span class="metric-title">Today's Attendance</span>
-                  <span class="metric-value" id="gfmTodayAttendance">88%</span>
-                  <span class="metric-helper text-success"><i class="fa-solid fa-arrow-up"></i> +2.4% vs last week</span>
-                </div>
-                <div class="metric-icon-box" style="background: rgba(16, 185, 129, 0.1); color: #10B981;">
-                  <i class="fa-solid fa-chart-line fa-lg"></i>
-                </div>
-                <div class="card-glow-bg" style="background: #10B981;"></div>
-              </div>
-
-              <div class="metric-card">
-                <div class="metric-info">
-                  <span class="metric-title">Total GFM Students</span>
-                  <span class="metric-value" id="gfmTotalStudents">180</span>
-                  <span class="metric-helper">Active Batch Students</span>
-                </div>
-                <div class="metric-icon-box" style="background: rgba(139, 92, 246, 0.1); color: #8B5CF6;">
-                  <i class="fa-solid fa-users fa-lg"></i>
-                </div>
-                <div class="card-glow-bg" style="background: #8B5CF6;"></div>
-              </div>
-
-              <div class="metric-card">
-                <div class="metric-info">
-                  <span class="metric-title">Defaulters Flagged</span>
-                  <span class="metric-value danger-text" id="gfmDefaultersCount">12</span>
-                  <span class="metric-helper text-danger" id="gfmDefaultersHelper">4 Critical (&lt;60%)</span>
-                </div>
-                <div class="metric-icon-box" style="background: rgba(239, 68, 68, 0.1); color: #EF4444;">
-                  <i class="fa-solid fa-triangle-exclamation fa-lg"></i>
-                </div>
-                <div class="card-glow-bg" style="background: #EF4444;"></div>
+              <div class="clock-display">
+                <span class="clock-time" id="realtimeClock">10:45 AM</span>
+                <span class="clock-date" id="realtimeDate">Tuesday, Jul 21, 2026</span>
               </div>
             </div>
+          </div>
 
-            <!-- DASHBOARD GRID LAYOUT -->
-            <div class="dashboard-grid-layout">
-              <!-- LEFT COLUMN: CHARTS & OVERVIEW -->
-              <div class="grid-column-left">
-                <div class="charts-card-panel">
-                  <!-- Attendance Trend Chart -->
-                  <div class="chart-box">
-                    <div class="chart-header">
-                      <h3>Monthly Class Attendance Trend</h3>
-                      <div class="chart-filters">
-                        <span class="chart-filter-tag active">Spring 2026</span>
-                      </div>
-                    </div>
-                    <div style="height: 240px; position: relative;">
-                      <canvas id="overviewTrendChart"></canvas>
-                    </div>
-                  </div>
-
-                  <!-- Attendance Status Distribution -->
-                  <div class="chart-box">
-                    <div class="chart-header">
-                      <h3>Student Category Distribution</h3>
-                    </div>
-                    <div style="height: 240px; position: relative;">
-                      <canvas id="overviewDonutChart"></canvas>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- QUICK ATTENDANCE ENTRY ACTION -->
-                <div class="data-table-card">
-                  <div class="table-card-header">
-                    <h2>Recent Class Sessions & Quick Actions</h2>
-                    <button class="table-action-btn primary-solid nav-to-attendance-btn">
-                      <i class="fa-solid fa-plus"></i> Mark Attendance Now
-                    </button>
-                  </div>
-                  <div class="responsive-table-container">
-                    <table class="dashboard-table">
-                      <thead>
-                        <tr>
-                          <th>Subject</th>
-                          <th>Division</th>
-                          <th>Date & Time</th>
-                          <th>Attended / Total</th>
-                          <th>Percentage</th>
-                          <th>Status</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td><strong>Web Development</strong></td>
-                          <td>Div A</td>
-                          <td>Today, 09:00 AM</td>
-                          <td>54 / 60</td>
-                          <td><strong class="text-success">90.0%</strong></td>
-                          <td><span class="badge-status bg-success-light"><i class="fa-solid fa-check"></i> Submitted</span></td>
-                        </tr>
-                        <tr>
-                          <td><strong>Data Structures</strong></td>
-                          <td>Div A</td>
-                          <td>Today, 10:30 AM</td>
-                          <td>51 / 60</td>
-                          <td><strong class="text-success">85.0%</strong></td>
-                          <td><span class="badge-status bg-success-light"><i class="fa-solid fa-check"></i> Submitted</span></td>
-                        </tr>
-                        <tr>
-                          <td><strong>Database Systems</strong></td>
-                          <td>Div B</td>
-                          <td>Yesterday, 02:00 PM</td>
-                          <td>56 / 60</td>
-                          <td><strong class="text-success">93.3%</strong></td>
-                          <td><span class="badge-status bg-success-light"><i class="fa-solid fa-check"></i> Submitted</span></td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
+          <!-- 4 METRICS CARDS -->
+          <div class="metrics-grid">
+            <div class="metric-card">
+              <div class="metric-info">
+                <span class="metric-title">Assigned Classes</span>
+                <span class="metric-value">3</span>
+                <span class="metric-helper">Division Subjects</span>
               </div>
+              <div class="metric-icon-box" style="background: rgba(59, 130, 246, 0.1); color: #3B82F6;">
+                <i class="fa-solid fa-chalkboard-user fa-lg"></i>
+              </div>
+              <div class="card-glow-bg" style="background: #3B82F6;"></div>
+            </div>
 
-              <!-- RIGHT COLUMN: NOTICES & ALERTS -->
-              <div class="grid-column-right">
-                <!-- Action Card -->
-                <div class="chart-box" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(139, 92, 246, 0.08) 100%); border-color: rgba(59, 130, 246, 0.2);">
-                  <h3 style="margin-bottom: 8px; font-size: 1.05rem;"><i class="fa-solid fa-bolt primary-text"></i> Quick Defaulter Action</h3>
-                  <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 16px;">Issue SMS & email alerts to 12 students with attendance below 75% threshold.</p>
-                  <button class="table-action-btn danger-outline" id="quickSendDefaulterAlertsBtn" style="width: 100%; justify-content: center;">
-                    <i class="fa-solid fa-paper-plane"></i> Send Defaulter Warnings
-                  </button>
-                </div>
+            <div class="metric-card">
+              <div class="metric-info">
+                <span class="metric-title">Today's Attendance</span>
+                <span class="metric-value" id="gfmTodayAttendance">88%</span>
+                <span class="metric-helper text-success"><i class="fa-solid fa-arrow-up"></i> +2.4% vs last week</span>
+              </div>
+              <div class="metric-icon-box" style="background: rgba(16, 185, 129, 0.1); color: #10B981;">
+                <i class="fa-solid fa-chart-line fa-lg"></i>
+              </div>
+              <div class="card-glow-bg" style="background: #10B981;"></div>
+            </div>
 
-                <!-- Recent Notices Widget -->
+            <div class="metric-card">
+              <div class="metric-info">
+                <span class="metric-title">Total GFM Students</span>
+                <span class="metric-value" id="gfmTotalStudents">180</span>
+                <span class="metric-helper">Active Batch Students</span>
+              </div>
+              <div class="metric-icon-box" style="background: rgba(139, 92, 246, 0.1); color: #8B5CF6;">
+                <i class="fa-solid fa-users fa-lg"></i>
+              </div>
+              <div class="card-glow-bg" style="background: #8B5CF6;"></div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-info">
+                <span class="metric-title">Defaulters Flagged</span>
+                <span class="metric-value danger-text" id="gfmDefaultersCount">12</span>
+                <span class="metric-helper text-danger" id="gfmDefaultersHelper">4 Critical (&lt;60%)</span>
+              </div>
+              <div class="metric-icon-box" style="background: rgba(239, 68, 68, 0.1); color: #EF4444;">
+                <i class="fa-solid fa-triangle-exclamation fa-lg"></i>
+              </div>
+              <div class="card-glow-bg" style="background: #EF4444;"></div>
+            </div>
+          </div>
+
+          <!-- DASHBOARD GRID LAYOUT -->
+          <div class="dashboard-grid-layout">
+            <!-- LEFT COLUMN: CHARTS & OVERVIEW -->
+            <div class="grid-column-left">
+              <div class="charts-card-panel">
+                <!-- Attendance Trend Chart -->
                 <div class="chart-box">
                   <div class="chart-header">
-                    <h3>Recent Notices</h3>
-                    <a href="#notices" class="nav-to-notices-btn" style="font-size: 0.8rem; color: var(--primary); font-weight: 700;">View All</a>
+                    <h3>Monthly Class Attendance Trend</h3>
+                    <div class="chart-filters">
+                      <span class="chart-filter-tag active">Spring 2026</span>
+                    </div>
                   </div>
-                  <ul style="list-style: none; display: flex; flex-direction: column; gap: 14px;">
-                    <li style="padding-bottom: 12px; border-bottom: 1px solid var(--border);">
-                      <strong style="font-size: 0.88rem; display: block; margin-bottom: 4px;">Mid-Term Defaulter List Released</strong>
-                      <span style="font-size: 0.78rem; color: var(--text-secondary);">Issued to SE AIML Div A • Jul 18, 2026</span>
-                    </li>
-                    <li style="padding-bottom: 12px; border-bottom: 1px solid var(--border);">
-                      <strong style="font-size: 0.88rem; display: block; margin-bottom: 4px;">Parent-Teacher Meeting Scheduled</strong>
-                      <span style="font-size: 0.78rem; color: var(--text-secondary);">For students below 60% attendance • Jul 15, 2026</span>
-                    </li>
-                  </ul>
+                  <div style="height: 240px; position: relative;">
+                    <canvas id="overviewTrendChart"></canvas>
+                  </div>
                 </div>
 
+                <!-- Attendance Status Distribution -->
+                <div class="chart-box">
+                  <div class="chart-header">
+                    <h3>Student Category Distribution</h3>
+                  </div>
+                  <div style="height: 240px; position: relative;">
+                    <canvas id="overviewDonutChart"></canvas>
+                  </div>
+                </div>
+              </div>
+
+              <!-- QUICK ATTENDANCE ENTRY ACTION -->
+              <div class="data-table-card">
+                <div class="table-card-header">
+                  <h2>Recently Marked Attendance</h2>
+                </div>
+                <div class="responsive-table-container">
+                  <table class="dashboard-table">
+                    <thead>
+                      <tr>
+                        <th>Subject</th>
+                        <th>Division</th>
+                        <th>Date & Time</th>
+                        <th>Attended / Total</th>
+                        <th>Percentage</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><strong>Web Development</strong></td>
+                        <td>Div A</td>
+                        <td>Today, 09:00 AM</td>
+                        <td>54 / 60</td>
+                        <td><strong class="text-success">90.0%</strong></td>
+                        <td><span class="badge-status bg-success-light"><i class="fa-solid fa-check"></i>
+                            Submitted</span></td>
+                      </tr>
+                      <tr>
+                        <td><strong>Data Structures</strong></td>
+                        <td>Div A</td>
+                        <td>Today, 10:30 AM</td>
+                        <td>51 / 60</td>
+                        <td><strong class="text-success">85.0%</strong></td>
+                        <td><span class="badge-status bg-success-light"><i class="fa-solid fa-check"></i>
+                            Submitted</span></td>
+                      </tr>
+                      <tr>
+                        <td><strong>Database Systems</strong></td>
+                        <td>Div B</td>
+                        <td>Yesterday, 02:00 PM</td>
+                        <td>56 / 60</td>
+                        <td><strong class="text-success">93.3%</strong></td>
+                        <td><span class="badge-status bg-success-light"><i class="fa-solid fa-check"></i>
+                            Submitted</span></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
 
-          </section>
+            <!-- RIGHT COLUMN: NOTICES & ALERTS -->
+            <div class="grid-column-right">
+              <!-- Action Card -->
+              <div class="chart-box"
+                style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(139, 92, 246, 0.08) 100%); border-color: rgba(59, 130, 246, 0.2);">
+                <h3 style="margin-bottom: 8px; font-size: 1.05rem;"><i class="fa-solid fa-bolt primary-text"></i> Quick
+                  Defaulter Action</h3>
+                <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 16px;">Issue SMS & email
+                  alerts to 12 students with attendance below 75% threshold.</p>
+                <button class="table-action-btn danger-outline" id="quickSendDefaulterAlertsBtn"
+                  style="width: 100%; justify-content: center;">
+                  <i class="fa-solid fa-paper-plane"></i> Send Defaulter Warnings
+                </button>
+              </div>
 
-          <!-- ==========================================================================
+              <!-- Recent Notices Widget -->
+              <div class="chart-box">
+                <div class="chart-header">
+                  <h3>Recent Notices</h3>
+                  <a href="#notices" class="nav-to-notices-btn"
+                    style="font-size: 0.8rem; color: var(--primary); font-weight: 700;">View All</a>
+                </div>
+                <ul style="list-style: none; display: flex; flex-direction: column; gap: 14px;">
+                  <li style="padding-bottom: 12px; border-bottom: 1px solid var(--border);">
+                    <strong style="font-size: 0.88rem; display: block; margin-bottom: 4px;">Mid-Term Defaulter List
+                      Released</strong>
+                    <span style="font-size: 0.78rem; color: var(--text-secondary);">Issued to SE AIML Div A • Jul 18,
+                      2026</span>
+                  </li>
+                  <li style="padding-bottom: 12px; border-bottom: 1px solid var(--border);">
+                    <strong style="font-size: 0.88rem; display: block; margin-bottom: 4px;">Parent-Teacher Meeting
+                      Scheduled</strong>
+                    <span style="font-size: 0.78rem; color: var(--text-secondary);">For students below 60% attendance •
+                      Jul 15, 2026</span>
+                  </li>
+                </ul>
+              </div>
+
+            </div>
+          </div>
+
+        </section>
+
+        <!-- ==========================================================================
                TAB 2: STUDENT ROSTER
                ========================================================================== -->
-          <section id="view-students" class="tab-view hidden-view">
-            <div class="section-title-wrapper" style="margin-bottom: 24px;">
-              <h1>Assigned Student Roster</h1>
-              <p>View, search, and monitor attendance records for students under your GFM mentorship.</p>
-            </div>
+        <section id="view-students" class="tab-view hidden-view">
+          <div class="section-title-wrapper" style="margin-bottom: 24px;">
+            <h1>Assigned Student Roster</h1>
+            <p>View, search, and monitor attendance records for students under your GFM mentorship.</p>
+          </div>
 
-            <div class="data-table-card">
-              <div class="table-card-header">
-                <div class="table-controls">
-                  <div class="search-box-pill">
-                    <input type="text" id="studentSearchInput" placeholder="Search by student name or roll..." />
-                  </div>
-                  <select class="custom-select-box" id="studentDivFilter">
-                    <option value="ALL">All Divisions</option>
-                    <option value="Div A" selected>Division A</option>
-                    <option value="Div B">Division B</option>
-                  </select>
-                  <select class="custom-select-box" id="studentStatusFilter">
-                    <option value="ALL">All Statuses</option>
-                    <option value="Regular">Regular (&gt;75%)</option>
-                    <option value="Warning">Warning (60%-75%)</option>
-                    <option value="Defaulter">Critical Defaulter (&lt;60%)</option>
-                  </select>
+          <div class="data-table-card">
+            <div class="table-card-header">
+              <div class="table-controls">
+                <div class="search-box-pill">
+                  <input type="text" id="studentSearchInput" placeholder="Search by student name or roll..." />
                 </div>
-                <span class="record-count" id="studentRosterCount">10 Students Loaded</span>
+                <select class="custom-select-box" id="studentDivFilter">
+                  <option value="ALL">All Divisions</option>
+                  <option value="Div A" selected>Division A</option>
+                  <option value="Div B">Division B</option>
+                </select>
+                <select class="custom-select-box" id="studentStatusFilter">
+                  <option value="ALL">All Statuses</option>
+                  <option value="Regular">Regular (&gt;75%)</option>
+                  <option value="Warning">Warning (60%-75%)</option>
+                  <option value="Defaulter">Critical Defaulter (&lt;60%)</option>
+                </select>
               </div>
-
-              <div class="responsive-table-container">
-                <table class="dashboard-table">
-                  <thead>
-                    <tr>
-                      <th>Roll No</th>
-                      <th>Student Name</th>
-                      <th>Division</th>
-                      <th>Email</th>
-                      <th>Conducted / Attended</th>
-                      <th>Attendance %</th>
-                      <th>Status</th>
-                      <th>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody id="studentTableBody">
-                    <!-- Populated dynamically by JS -->
-                  </tbody>
-                </table>
-              </div>
+              <span class="record-count" id="studentRosterCount">10 Students Loaded</span>
             </div>
-          </section>
 
-          <!-- ==========================================================================
+            <div class="responsive-table-container">
+              <table class="dashboard-table">
+                <thead>
+                  <tr>
+                    <th>Roll No</th>
+                    <th>Student Name</th>
+                    <th>Division</th>
+                    <th>Email</th>
+                    <th>Conducted / Attended</th>
+                    <th>Attendance %</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="studentTableBody">
+                  <!-- Populated dynamically by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==========================================================================
                TAB 3: ATTENDANCE ENTRY
                ========================================================================== -->
-          <section id="view-attendance" class="tab-view hidden-view">
-            <div class="section-title-wrapper" style="margin-bottom: 24px;">
-              <h1>Mark Class Attendance</h1>
-              <p>Select subject, class division, and date to mark student attendance for today's lecture session.</p>
+        <section id="view-attendance" class="tab-view hidden-view">
+          <div class="section-title-wrapper" style="margin-bottom: 24px;">
+            <h1>Mark Class Attendance</h1>
+            <p>Select subject, class division, and date to mark student attendance for today's lecture session.</p>
+          </div>
+
+          <!-- SELECTION FORM HEADER -->
+          <div class="data-table-card" style="padding: 24px; margin-bottom: 24px;">
+            <div
+              style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; align-items: end;">
+              <div>
+                <label
+                  style="font-size: 0.82rem; font-weight: 700; display: block; margin-bottom: 6px; color: var(--text-secondary);">Select
+                  Class / Division <span style="color: #EF4444;">*</span></label>
+                <select class="custom-select-box" id="entryClassSelect" style="width: 100%;">
+                  <option value="">-- Select Class --</option>
+                  <option value="FY A">FY A</option>
+                  <option value="FY B">FY B</option>
+                  <option value="FY C">FY C</option>
+                </select>
+              </div>
+
+              <div>
+                <label
+                  style="font-size: 0.82rem; font-weight: 700; display: block; margin-bottom: 6px; color: var(--text-secondary);">Select
+                  Subject</label>
+                <select class="custom-select-box" id="entrySubjectSelect" style="width: 100%;">
+                  <option value="Web Development">Web Development</option>
+                  <option value="Data Structures">Data Structures & Algorithms</option>
+                  <option value="Database Systems">Database Management Systems</option>
+                  <option value="Computer Networks">Computer Networks</option>
+                </select>
+              </div>
+
+              <div>
+                <label
+                  style="font-size: 0.82rem; font-weight: 700; display: block; margin-bottom: 6px; color: var(--text-secondary);">Lecture
+                  Date</label>
+                <input type="date" class="custom-select-box" id="entryDateInput" style="width: 100%;" />
+              </div>
+
+              <div>
+                <label
+                  style="font-size: 0.82rem; font-weight: 700; display: block; margin-bottom: 6px; color: var(--text-secondary);">Time
+                  Slot</label>
+                <select class="custom-select-box" id="entryTimeSelect" style="width: 100%;">
+                  <option value="09:00 AM - 10:00 AM">09:00 AM - 10:00 AM</option>
+                  <option value="10:15 AM - 11:15 AM">10:15 AM - 11:15 AM</option>
+                  <option value="11:30 AM - 12:30 PM">11:30 AM - 12:30 PM</option>
+                  <option value="01:30 PM - 02:30 PM">01:30 PM - 02:30 PM</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- STUDENT ATTENDANCE ENTRY ROSTER -->
+          <div class="data-table-card">
+            <div class="table-card-header">
+              <div>
+                <h2 style="margin-bottom: 4px;">Student Roster for Attendance Marking</h2>
+                <p style="font-size: 0.85rem; color: var(--text-secondary);">
+                  Present: <strong id="presentCountText" class="text-success">10</strong> |
+                  Absent: <strong id="absentCountText" class="text-danger">0</strong> |
+                  Total: <strong>10 Students</strong>
+                </p>
+              </div>
+
+              <div class="table-controls">
+                <button type="button" class="table-action-btn secondary-solid" id="markAllPresentBtn">
+                  <i class="fa-solid fa-user-check text-success"></i> Mark All Present
+                </button>
+                <button type="button" class="table-action-btn secondary-solid" id="markAllAbsentBtn">
+                  <i class="fa-solid fa-user-xmark text-danger"></i> Mark All Absent
+                </button>
+                <button type="button" class="table-action-btn primary-solid" id="saveAttendanceBtn">
+                  <i class="fa-solid fa-floppy-disk"></i> Submit Attendance
+                </button>
+              </div>
             </div>
 
-            <!-- SELECTION FORM HEADER -->
-            <div class="data-table-card" style="padding: 24px; margin-bottom: 24px;">
-              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; align-items: end;">
+            <div class="responsive-table-container">
+              <table class="dashboard-table">
+                <thead>
+                  <tr>
+                    <th>Roll Number</th>
+                    <th>PRN</th>
+                    <th>Student Name</th>
+                    <th>Current Attendance %</th>
+                    <th class="cell-center" style="color: #10B981;">Present</th>
+                    <th class="cell-center" style="color: #EF4444;">Absent</th>
+                    <th class="cell-center" style="color: #F59E0B;">Medical Leave</th>
+                    <th class="cell-center" style="color: #6366F1;">Duty Leave</th>
+                    <th>Remarks</th>
+                  </tr>
+                </thead>
+                <tbody id="attendanceEntryTableBody">
+                  <!-- Populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==========================================================================
+               TAB 4: DEFAULTERS LIST
+               ========================================================================== -->
+        <section id="view-defaulters" class="tab-view hidden-view">
+          <div class="section-title-wrapper" style="margin-bottom: 24px;">
+            <h1>Attendance Defaulters List</h1>
+            <p>Identify students with attendance below 75% warning and 60% critical levels, and dispatch alerts.</p>
+          </div>
+
+          <!-- SUMMARY BANNER -->
+          <div
+            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 24px;">
+            <div class="chart-box" style="border-left: 4px solid var(--warning);">
+              <span
+                style="font-size: 0.8rem; font-weight: 700; color: var(--warning); text-transform: uppercase;">Warning
+                Level (60% - 75%)</span>
+              <h2 style="font-size: 1.8rem; font-weight: 800; margin: 4px 0;" id="warningCountText">8 Students</h2>
+              <p style="font-size: 0.8rem; color: var(--text-secondary);">Requires counseling and monitoring.</p>
+            </div>
+
+            <div class="chart-box" style="border-left: 4px solid var(--danger);">
+              <span
+                style="font-size: 0.8rem; font-weight: 700; color: var(--danger); text-transform: uppercase;">Critical
+                Defaulters (&lt;60%)</span>
+              <h2 style="font-size: 1.8rem; font-weight: 800; margin: 4px 0;" id="criticalCountText">4 Students</h2>
+              <p style="font-size: 0.8rem; color: var(--text-secondary);">Requires immediate parent escalation &
+                official warning notice.</p>
+            </div>
+          </div>
+
+          <div class="data-table-card">
+            <div class="table-card-header">
+              <div class="table-controls">
+                <div class="search-box-pill">
+                  <input type="text" id="defaulterSearchInput" placeholder="Search defaulter student..." />
+                </div>
+                <select class="custom-select-box" id="defaulterDivisionFilter">
+                  <option value="ALL">All Divisions</option>
+                  <option value="A">Division A</option>
+                  <option value="B">Division B</option>
+                  <option value="C">Division C</option>
+                </select>
+                <div class="search-box-pill" style="display: flex; align-items: center; gap: 8px; padding: 0 12px;">
+                  <span
+                    style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); white-space: nowrap;">Threshold
+                    %:</span>
+                  <input type="number" id="defaulterThresholdInput" value="75" min="1" max="100"
+                    style="width: 50px; border: none; outline: none; font-weight: 700; color: var(--danger); text-align: center; background: transparent;" />
+                </div>
+                <select class="custom-select-box" id="defaulterCategoryFilter">
+                  <option value="ALL">All Categories</option>
+                  <option value="CRITICAL">Critical</option>
+                  <option value="WARNING">Warning</option>
+                </select>
+              </div>
+
+              <button class="table-action-btn primary-outline" id="exportDefaultersBtn">
+                <i class="fa-solid fa-file-csv"></i> Export Defaulter CSV
+              </button>
+            </div>
+
+            <div class="responsive-table-container">
+              <table class="dashboard-table">
+                <thead>
+                  <tr>
+                    <th>Roll No</th>
+                    <th>Student Name</th>
+                    <th>Division</th>
+                    <th>Attended / Total</th>
+                    <th>Attendance %</th>
+                    <th>Category</th>
+                    <th>Parent Contact</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="defaulterTableBody">
+                  <!-- Populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==========================================================================
+               TAB 5: REPORTS & ANALYTICS
+               ========================================================================== -->
+        <section id="view-reports" class="tab-view hidden-view">
+          <div class="section-title-wrapper" style="margin-bottom: 24px;">
+            <h1>Attendance Reports & Analytics</h1>
+            <p>Generate comprehensive performance reports and view subject-wise attendance analytics.</p>
+          </div>
+
+          <div class="charts-card-panel" style="margin-bottom: 24px;">
+            <div class="chart-box">
+              <div class="chart-header">
+                <h3>Subject-Wise Average Attendance</h3>
+              </div>
+              <div style="height: 260px; position: relative;">
+                <canvas id="reportsSubjectChart"></canvas>
+              </div>
+            </div>
+
+            <div class="chart-box">
+              <div class="chart-header">
+                <h3>Monthly Comparison (SE Div A vs B)</h3>
+              </div>
+              <div style="height: 260px; position: relative;">
+                <canvas id="reportsDivisionChart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <div class="data-table-card" style="padding: 24px;">
+            <h2 style="margin-bottom: 12px;">Download Official Reports</h2>
+            <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 20px;">Export monthly attendance
+              sheets, defaulter lists, and GFM semester summary reports.</p>
+
+            <div style="display: flex; gap: 14px; flex-wrap: wrap;">
+              <button class="table-action-btn primary-solid"
+                onclick="alert('Exporting Monthly Attendance Report PDF...');">
+                <i class="fa-solid fa-file-pdf"></i> Monthly Attendance Summary (PDF)
+              </button>
+              <button class="table-action-btn primary-outline"
+                onclick="alert('Exporting GFM Defaulter List Excel...');">
+                <i class="fa-solid fa-file-excel"></i> Defaulter List Report (XLSX)
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==========================================================================
+               TAB 6: NOTICE BOARD
+               ========================================================================== -->
+        <section id="view-notices" class="tab-view hidden-view">
+          <div class="section-title-wrapper" style="margin-bottom: 24px;">
+            <h1>GFM Notice Board</h1>
+            <p>Issue academic notices, attendance warnings, and announcements to your assigned GFM batch.</p>
+          </div>
+
+          <!-- POST NEW NOTICE FORM -->
+          <div class="data-table-card" style="padding: 24px; margin-bottom: 24px;">
+            <h2 style="margin-bottom: 16px;"><i class="fa-solid fa-plus-circle primary-text"></i> Create New Notice</h2>
+
+            <form id="newNoticeForm" style="display: flex; flex-direction: column; gap: 14px;">
+              <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 14px;">
                 <div>
-                  <label style="font-size: 0.82rem; font-weight: 700; display: block; margin-bottom: 6px; color: var(--text-secondary);">Select Class / Division <span style="color: #EF4444;">*</span></label>
-                  <select class="custom-select-box" id="entryClassSelect" style="width: 100%;">
-                    <option value="">-- Select Class --</option>
+                  <label
+                    style="font-size: 0.82rem; font-weight: 700; color: var(--text-secondary); display: block; margin-bottom: 6px;">Notice
+                    Title</label>
+                  <input type="text" id="noticeTitleInput" class="custom-select-box" style="width: 100%;"
+                    placeholder="e.g. Mandatory Attendance Warning Notice" required />
+                </div>
+                <div>
+                  <label
+                    style="font-size: 0.82rem; font-weight: 700; color: var(--text-secondary); display: block; margin-bottom: 6px;">Target
+                    Division</label>
+                  <select class="custom-select-box" id="noticeTargetSelect" style="width: 100%;">
                     <option value="FY A">FY A</option>
                     <option value="FY B">FY B</option>
                     <option value="FY C">FY C</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label style="font-size: 0.82rem; font-weight: 700; display: block; margin-bottom: 6px; color: var(--text-secondary);">Select Subject</label>
-                  <select class="custom-select-box" id="entrySubjectSelect" style="width: 100%;">
-                    <option value="Web Development">Web Development</option>
-                    <option value="Data Structures">Data Structures & Algorithms</option>
-                    <option value="Database Systems">Database Management Systems</option>
-                    <option value="Computer Networks">Computer Networks</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label style="font-size: 0.82rem; font-weight: 700; display: block; margin-bottom: 6px; color: var(--text-secondary);">Lecture Date</label>
-                  <input type="date" class="custom-select-box" id="entryDateInput" style="width: 100%;" />
-                </div>
-
-                <div>
-                  <label style="font-size: 0.82rem; font-weight: 700; display: block; margin-bottom: 6px; color: var(--text-secondary);">Time Slot</label>
-                  <select class="custom-select-box" id="entryTimeSelect" style="width: 100%;">
-                    <option value="09:00 AM - 10:00 AM">09:00 AM - 10:00 AM</option>
-                    <option value="10:15 AM - 11:15 AM">10:15 AM - 11:15 AM</option>
-                    <option value="11:30 AM - 12:30 PM">11:30 AM - 12:30 PM</option>
-                    <option value="01:30 PM - 02:30 PM">01:30 PM - 02:30 PM</option>
+                    <option value="All Classes">All Classes</option>
                   </select>
                 </div>
               </div>
-            </div>
 
-            <!-- STUDENT ATTENDANCE ENTRY ROSTER -->
-            <div class="data-table-card">
-              <div class="table-card-header">
-                <div>
-                  <h2 style="margin-bottom: 4px;">Student Roster for Attendance Marking</h2>
-                  <p style="font-size: 0.85rem; color: var(--text-secondary);">
-                    Present: <strong id="presentCountText" class="text-success">10</strong> | 
-                    Absent: <strong id="absentCountText" class="text-danger">0</strong> | 
-                    Total: <strong>10 Students</strong>
-                  </p>
-                </div>
-
-                <div class="table-controls">
-                  <button type="button" class="table-action-btn secondary-solid" id="markAllPresentBtn">
-                    <i class="fa-solid fa-user-check text-success"></i> Mark All Present
-                  </button>
-                  <button type="button" class="table-action-btn secondary-solid" id="markAllAbsentBtn">
-                    <i class="fa-solid fa-user-xmark text-danger"></i> Mark All Absent
-                  </button>
-                  <button type="button" class="table-action-btn primary-solid" id="saveAttendanceBtn">
-                    <i class="fa-solid fa-floppy-disk"></i> Submit Attendance
-                  </button>
-                </div>
+              <div>
+                <label
+                  style="font-size: 0.82rem; font-weight: 700; color: var(--text-secondary); display: block; margin-bottom: 6px;">Notice
+                  Description / Message</label>
+                <textarea id="noticeContentInput" class="custom-select-box"
+                  style="width: 100%; height: 80px; resize: vertical;" placeholder="Write notice details here..."
+                  required></textarea>
               </div>
 
-              <div class="responsive-table-container">
-                <table class="dashboard-table">
-                  <thead>
-                    <tr>
-                      <th>Roll Number</th>
-                      <th>PRN</th>
-                      <th>Student Name</th>
-                      <th>Current Attendance %</th>
-                      <th class="cell-center" style="color: #10B981;">Present</th>
-                      <th class="cell-center" style="color: #EF4444;">Absent</th>
-                      <th class="cell-center" style="color: #F59E0B;">Medical Leave</th>
-                      <th class="cell-center" style="color: #6366F1;">Duty Leave</th>
-                      <th>Remarks</th>
-                    </tr>
-                  </thead>
-                  <tbody id="attendanceEntryTableBody">
-                    <!-- Populated dynamically -->
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </section>
-
-          <!-- ==========================================================================
-               TAB 4: DEFAULTERS LIST
-               ========================================================================== -->
-          <section id="view-defaulters" class="tab-view hidden-view">
-            <div class="section-title-wrapper" style="margin-bottom: 24px;">
-              <h1>Attendance Defaulters List</h1>
-              <p>Identify students with attendance below 75% warning and 60% critical levels, and dispatch alerts.</p>
-            </div>
-
-            <!-- SUMMARY BANNER -->
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 24px;">
-              <div class="chart-box" style="border-left: 4px solid var(--warning);">
-                <span style="font-size: 0.8rem; font-weight: 700; color: var(--warning); text-transform: uppercase;">Warning Level (60% - 75%)</span>
-                <h2 style="font-size: 1.8rem; font-weight: 800; margin: 4px 0;" id="warningCountText">8 Students</h2>
-                <p style="font-size: 0.8rem; color: var(--text-secondary);">Requires counseling and monitoring.</p>
-              </div>
-
-              <div class="chart-box" style="border-left: 4px solid var(--danger);">
-                <span style="font-size: 0.8rem; font-weight: 700; color: var(--danger); text-transform: uppercase;">Critical Defaulters (&lt;60%)</span>
-                <h2 style="font-size: 1.8rem; font-weight: 800; margin: 4px 0;" id="criticalCountText">4 Students</h2>
-                <p style="font-size: 0.8rem; color: var(--text-secondary);">Requires immediate parent escalation & official warning notice.</p>
-              </div>
-            </div>
-
-            <div class="data-table-card">
-              <div class="table-card-header">
-                <div class="table-controls">
-                  <div class="search-box-pill">
-                    <input type="text" id="defaulterSearchInput" placeholder="Search defaulter student..." />
-                  </div>
-                  <select class="custom-select-box" id="defaulterDivisionFilter">
-                    <option value="ALL">All Divisions</option>
-                    <option value="A">Division A</option>
-                    <option value="B">Division B</option>
-                    <option value="C">Division C</option>
-                  </select>
-                  <div class="search-box-pill" style="display: flex; align-items: center; gap: 8px; padding: 0 12px;">
-                    <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); white-space: nowrap;">Threshold %:</span>
-                    <input type="number" id="defaulterThresholdInput" value="75" min="1" max="100" style="width: 50px; border: none; outline: none; font-weight: 700; color: var(--danger); text-align: center; background: transparent;" />
-                  </div>
-                  <select class="custom-select-box" id="defaulterCategoryFilter">
-                    <option value="ALL">All Categories</option>
-                    <option value="CRITICAL">Critical</option>
-                    <option value="WARNING">Warning</option>
-                  </select>
-                </div>
-
-                <button class="table-action-btn primary-outline" id="exportDefaultersBtn">
-                  <i class="fa-solid fa-file-csv"></i> Export Defaulter CSV
+              <div style="align-self: flex-end;">
+                <button type="submit" class="table-action-btn primary-solid">
+                  <i class="fa-solid fa-paper-plane"></i> Publish Notice
                 </button>
               </div>
+            </form>
+          </div>
 
-              <div class="responsive-table-container">
-                <table class="dashboard-table">
-                  <thead>
-                    <tr>
-                      <th>Roll No</th>
-                      <th>Student Name</th>
-                      <th>Division</th>
-                      <th>Attended / Total</th>
-                      <th>Attendance %</th>
-                      <th>Category</th>
-                      <th>Parent Contact</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody id="defaulterTableBody">
-                    <!-- Populated dynamically -->
-                  </tbody>
-                </table>
-              </div>
+          <!-- PUBLISHED NOTICES LIST -->
+          <div class="data-table-card" style="padding: 24px;">
+            <h2 style="margin-bottom: 16px;">Published Notices</h2>
+            <div id="publishedNoticesList" style="display: flex; flex-direction: column; gap: 16px;">
+              <!-- Populated dynamically -->
             </div>
-          </section>
+          </div>
+        </section>
 
-          <!-- ==========================================================================
-               TAB 5: REPORTS & ANALYTICS
-               ========================================================================== -->
-          <section id="view-reports" class="tab-view hidden-view">
-            <div class="section-title-wrapper" style="margin-bottom: 24px;">
-              <h1>Attendance Reports & Analytics</h1>
-              <p>Generate comprehensive performance reports and view subject-wise attendance analytics.</p>
-            </div>
-
-            <div class="charts-card-panel" style="margin-bottom: 24px;">
-              <div class="chart-box">
-                <div class="chart-header">
-                  <h3>Subject-Wise Average Attendance</h3>
-                </div>
-                <div style="height: 260px; position: relative;">
-                  <canvas id="reportsSubjectChart"></canvas>
-                </div>
-              </div>
-
-              <div class="chart-box">
-                <div class="chart-header">
-                  <h3>Monthly Comparison (SE Div A vs B)</h3>
-                </div>
-                <div style="height: 260px; position: relative;">
-                  <canvas id="reportsDivisionChart"></canvas>
-                </div>
-              </div>
-            </div>
-
-            <div class="data-table-card" style="padding: 24px;">
-              <h2 style="margin-bottom: 12px;">Download Official Reports</h2>
-              <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 20px;">Export monthly attendance sheets, defaulter lists, and GFM semester summary reports.</p>
-              
-              <div style="display: flex; gap: 14px; flex-wrap: wrap;">
-                <button class="table-action-btn primary-solid" onclick="alert('Exporting Monthly Attendance Report PDF...');">
-                  <i class="fa-solid fa-file-pdf"></i> Monthly Attendance Summary (PDF)
-                </button>
-                <button class="table-action-btn primary-outline" onclick="alert('Exporting GFM Defaulter List Excel...');">
-                  <i class="fa-solid fa-file-excel"></i> Defaulter List Report (XLSX)
-                </button>
-              </div>
-            </div>
-          </section>
-
-          <!-- ==========================================================================
-               TAB 6: NOTICE BOARD
-               ========================================================================== -->
-          <section id="view-notices" class="tab-view hidden-view">
-            <div class="section-title-wrapper" style="margin-bottom: 24px;">
-              <h1>GFM Notice Board</h1>
-              <p>Issue academic notices, attendance warnings, and announcements to your assigned GFM batch.</p>
-            </div>
-
-            <!-- POST NEW NOTICE FORM -->
-            <div class="data-table-card" style="padding: 24px; margin-bottom: 24px;">
-              <h2 style="margin-bottom: 16px;"><i class="fa-solid fa-plus-circle primary-text"></i> Create New Notice</h2>
-              
-              <form id="newNoticeForm" style="display: flex; flex-direction: column; gap: 14px;">
-                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 14px;">
-                  <div>
-                    <label style="font-size: 0.82rem; font-weight: 700; color: var(--text-secondary); display: block; margin-bottom: 6px;">Notice Title</label>
-                    <input type="text" id="noticeTitleInput" class="custom-select-box" style="width: 100%;" placeholder="e.g. Mandatory Attendance Warning Notice" required />
-                  </div>
-                  <div>
-                    <label style="font-size: 0.82rem; font-weight: 700; color: var(--text-secondary); display: block; margin-bottom: 6px;">Target Division</label>
-                    <select class="custom-select-box" id="noticeTargetSelect" style="width: 100%;">
-                      <option value="FY A">FY A</option>
-                      <option value="FY B">FY B</option>
-                      <option value="FY C">FY C</option>
-                      <option value="All Classes">All Classes</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div>
-                  <label style="font-size: 0.82rem; font-weight: 700; color: var(--text-secondary); display: block; margin-bottom: 6px;">Notice Description / Message</label>
-                  <textarea id="noticeContentInput" class="custom-select-box" style="width: 100%; height: 80px; resize: vertical;" placeholder="Write notice details here..." required></textarea>
-                </div>
-
-                <div style="align-self: flex-end;">
-                  <button type="submit" class="table-action-btn primary-solid">
-                    <i class="fa-solid fa-paper-plane"></i> Publish Notice
-                  </button>
-                </div>
-              </form>
-            </div>
-
-            <!-- PUBLISHED NOTICES LIST -->
-            <div class="data-table-card" style="padding: 24px;">
-              <h2 style="margin-bottom: 16px;">Published Notices</h2>
-              <div id="publishedNoticesList" style="display: flex; flex-direction: column; gap: 16px;">
-                <!-- Populated dynamically -->
-              </div>
-            </div>
-          </section>
-
-          <!-- ==========================================================================
+        <!-- ==========================================================================
                TAB 7: PROFILE & SETTINGS
                ========================================================================== -->
-          <section id="view-profile" class="tab-view hidden-view">
-            <div class="section-title-wrapper" style="margin-bottom: 24px;">
-              <h1>GFM Profile & Settings</h1>
-              <p>View your official faculty profile details and configure portal preferences.</p>
-            </div>
+        <section id="view-profile" class="tab-view hidden-view">
+          <div class="section-title-wrapper" style="margin-bottom: 24px;">
+            <h1>GFM Profile & Settings</h1>
+            <p>View your official faculty profile details and configure portal preferences.</p>
+          </div>
 
-            <div class="dashboard-grid-layout">
-              <div class="grid-column-left">
-                <div class="data-table-card" style="padding: 32px;">
-                  <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--border);">
-                    <div style="width: 70px; height: 70px; border-radius: 50%; background: linear-gradient(135deg, #3B82F6, #1D4ED8); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; font-weight: 800;" id="profileAvatarLarge">AV</div>
-                    <div>
-                      <h2 id="profFullNameText" style="font-size: 1.4rem;">Prof. Aniket Verma</h2>
-                      <p style="color: var(--text-secondary);" id="profRoleText">Guardian Faculty Member • Artificial Intelligence & Machine Learning</p>
-                      <span class="badge-status bg-success-light" style="margin-top: 6px;"><i class="fa-solid fa-shield-halved"></i> Active Faculty Portal</span>
-                    </div>
-                  </div>
-
-                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                    <div>
-                      <span style="font-size: 0.78rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase;">Employee ID</span>
-                      <p style="font-weight: 700; font-size: 1rem;" id="profEmpIdText">GFM-204</p>
-                    </div>
-                    <div>
-                      <span style="font-size: 0.78rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase;">Department</span>
-                      <p style="font-weight: 700; font-size: 1rem;" id="profDeptText">Artificial Intelligence & Machine Learning</p>
-                    </div>
-                    <div>
-                      <span style="font-size: 0.78rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase;">Email Address</span>
-                      <p style="font-weight: 700; font-size: 1rem;" id="profEmailText">gfm@college.edu</p>
-                    </div>
-                    <div>
-                      <span style="font-size: 0.78rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase;">Assigned Batch</span>
-                      <p style="font-weight: 700; font-size: 1rem;">SE AIML - Division A</p>
-                    </div>
+          <div class="dashboard-grid-layout">
+            <div class="grid-column-left">
+              <div class="data-table-card" style="padding: 32px;">
+                <div
+                  style="display: flex; align-items: center; gap: 20px; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--border);">
+                  <div
+                    style="width: 70px; height: 70px; border-radius: 50%; background: linear-gradient(135deg, #3B82F6, #1D4ED8); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; font-weight: 800;"
+                    id="profileAvatarLarge">AV</div>
+                  <div>
+                    <h2 id="profFullNameText" style="font-size: 1.4rem;">Prof. Aniket Verma</h2>
+                    <p style="color: var(--text-secondary);" id="profRoleText">Guardian Faculty Member • Artificial
+                      Intelligence & Machine Learning</p>
+                    <span class="badge-status bg-success-light" style="margin-top: 6px;"><i
+                        class="fa-solid fa-shield-halved"></i> Active Faculty Portal</span>
                   </div>
                 </div>
-              </div>
 
-              <div class="grid-column-right">
-                <div class="data-table-card" style="padding: 24px;">
-                  <h3 style="margin-bottom: 16px;"><i class="fa-solid fa-sliders primary-text"></i> System Preferences</h3>
-                  
-                  <div style="display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--border);">
-                    <div>
-                      <strong style="font-size: 0.9rem; display: block;">Dark Mode Theme</strong>
-                      <span style="font-size: 0.78rem; color: var(--text-secondary);">Switch theme appearance</span>
-                    </div>
-                    <button class="table-action-btn secondary-solid" id="profileThemeToggleBtn">
-                      <i class="fa-solid fa-moon"></i> Toggle
-                    </button>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                  <div>
+                    <span
+                      style="font-size: 0.78rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase;">Employee
+                      ID</span>
+                    <p style="font-weight: 700; font-size: 1rem;" id="profEmpIdText">GFM-204</p>
                   </div>
-
-                  <div style="display: flex; justify-content: space-between; align-items: center; padding: 14px 0;">
-                    <div>
-                      <strong style="font-size: 0.9rem; display: block;">SMS Defaulter Alerts</strong>
-                      <span style="font-size: 0.78rem; color: var(--text-secondary);">Auto-send alerts to parents</span>
-                    </div>
-                    <span class="badge-status bg-success-light">Enabled</span>
+                  <div>
+                    <span
+                      style="font-size: 0.78rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase;">Department</span>
+                    <p style="font-weight: 700; font-size: 1rem;" id="profDeptText">Artificial Intelligence & Machine
+                      Learning</p>
+                  </div>
+                  <div>
+                    <span
+                      style="font-size: 0.78rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase;">Email
+                      Address</span>
+                    <p style="font-weight: 700; font-size: 1rem;" id="profEmailText">gfm@college.edu</p>
+                  </div>
+                  <div>
+                    <span
+                      style="font-size: 0.78rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase;">Assigned
+                      Batch</span>
+                    <p style="font-weight: 700; font-size: 1rem;">SE AIML - Division A</p>
                   </div>
                 </div>
               </div>
             </div>
-          </section>
 
-        </main>
-      </div>
+            <div class="grid-column-right">
+              <div class="data-table-card" style="padding: 24px;">
+                <h3 style="margin-bottom: 16px;"><i class="fa-solid fa-sliders primary-text"></i> System Preferences
+                </h3>
 
+                <div
+                  style="display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--border);">
+                  <div>
+                    <strong style="font-size: 0.9rem; display: block;">Dark Mode Theme</strong>
+                    <span style="font-size: 0.78rem; color: var(--text-secondary);">Switch theme appearance</span>
+                  </div>
+                  <button class="table-action-btn secondary-solid" id="profileThemeToggleBtn">
+                    <i class="fa-solid fa-moon"></i> Toggle
+                  </button>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 14px 0;">
+                  <div>
+                    <strong style="font-size: 0.9rem; display: block;">SMS Defaulter Alerts</strong>
+                    <span style="font-size: 0.78rem; color: var(--text-secondary);">Auto-send alerts to parents</span>
+                  </div>
+                  <span class="badge-status bg-success-light">Enabled</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </main>
     </div>
 
-    <!-- Custom Dashboard Logic -->
-    <script src="../js/dashboard.js"></script>
-  </body>
+  </div>
+
+  <!-- Custom Dashboard Logic -->
+  <script src="../js/dashboard.js"></script>
+</body>
+
 </html>
