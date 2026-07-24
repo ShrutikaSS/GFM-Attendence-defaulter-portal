@@ -44,7 +44,7 @@ try {
     $statsStmt = $pdo->prepare("
         SELECT 
             COUNT(*) AS total,
-            SUM(CASE WHEN status = 'Present' THEN 1 ELSE 0 END) AS attended,
+            SUM(CASE WHEN status IN ('Present', 'Medical Leave', 'Duty Leave') THEN 1 ELSE 0 END) AS attended,
             SUM(CASE WHEN status = 'Absent' THEN 1 ELSE 0 END) AS missed
         FROM attendance 
         WHERE student_id = :student_id
@@ -71,7 +71,7 @@ try {
         SELECT 
             subject, 
             COUNT(*) AS total, 
-            SUM(CASE WHEN status = 'Present' THEN 1 ELSE 0 END) AS present, 
+            SUM(CASE WHEN status IN ('Present', 'Medical Leave', 'Duty Leave') THEN 1 ELSE 0 END) AS present, 
             SUM(CASE WHEN status = 'Absent' THEN 1 ELSE 0 END) AS absent 
         FROM attendance 
         WHERE student_id = :student_id 
@@ -124,7 +124,7 @@ try {
         SELECT 
             DATE_FORMAT(date, '%b') as month_name, 
             COUNT(*) as total, 
-            SUM(CASE WHEN status = 'Present' THEN 1 ELSE 0 END) as present 
+            SUM(CASE WHEN status IN ('Present', 'Medical Leave', 'Duty Leave') THEN 1 ELSE 0 END) as present 
         FROM attendance 
         WHERE student_id = :student_id 
         GROUP BY DATE_FORMAT(date, '%Y-%m'), DATE_FORMAT(date, '%b') 

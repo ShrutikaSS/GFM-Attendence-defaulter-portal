@@ -248,16 +248,20 @@ function recalculateStudentSummary($pdo, $studentId) {
 function generateNotifications($pdo, $studentIds, $editor) {
     foreach ($studentIds as $sid) {
         $stmt = $pdo->prepare("
-            SELECT attendance_percentage, status FROM attendance_summary 
-            WHERE student_id = :sid LIMIT 1
+            SELECT SUM(present_count) AS total_present, SUM(total_lectures) AS total_lectures,
+                   SUM(medical_leave_count) AS medical, SUM(duty_leave_count) AS duty
+            FROM attendance_summary 
+            WHERE student_id = :sid
         ");
         $stmt->execute(['sid' => $sid]);
         $row = $stmt->fetch();
 
-        if (!$row) continue;
+        if (!$row || (int)$row['total_lectures'] === 0) continue;
 
-        $pct = (float)$row['attendance_percentage'];
-        $status = $row['status'];
+        $totalLectures = (int)$row['total_lectures'];
+        // Treat medical and duty leave as present for the overall percentage
+        $totalPresent = (int)$row['total_present'] + (int)$row['medical'] + (int)$row['duty'];
+        $pct = round(($totalPresent / $totalLectures) * 100, 2);
 
         if ($pct < 60) {
             createNotification($pdo, $sid, 'critical_defaulter', 

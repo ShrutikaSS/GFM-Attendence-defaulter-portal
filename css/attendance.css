@@ -19,7 +19,7 @@
 }
 
 .attendance-fast-table tbody tr:hover {
-  background-color: rgba(59, 130, 246, 0.03);
+  background-color: rgba(99, 102, 241, 0.03);
 }
 
 .attendance-fast-table tbody tr.attendance-row {
