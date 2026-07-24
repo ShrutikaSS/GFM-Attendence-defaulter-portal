@@ -259,30 +259,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
   });
 
-  // Global Search Redirect Handler
-  const globalSearch = document.getElementById('globalSearch');
-  if (globalSearch) {
-    globalSearch.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        const query = e.target.value.trim();
-        if (query && !window.location.pathname.includes('attendance.html')) {
-          window.location.href = `attendance.html?search=${encodeURIComponent(query)}`;
-        }
-      }
-    });
-  }
-
-  // Notice Board Searching / Filtering
-  const noticeSearch = document.getElementById('noticeSearchInput');
-  if (noticeSearch) {
-    noticeSearch.addEventListener('input', (e) => {
-      const query = e.target.value.toLowerCase().trim();
-      document.querySelectorAll('#hodNoticeList .dashboard-notice-card').forEach(card => {
-        const text = card.textContent.toLowerCase();
-        card.style.display = text.includes(query) ? '' : 'none';
-      });
-    });
-  }
 
   // Profile Management Logic
   const btnEditProfile = document.getElementById('btnEditProfile');

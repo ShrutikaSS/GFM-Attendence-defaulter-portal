@@ -343,7 +343,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Render Student Roster Table
   function renderStudentTable() {
     const tbody = document.getElementById('studentTableBody');
-    const searchVal = (document.getElementById('studentSearchInput')?.value || '').toLowerCase().trim();
     const divVal = document.getElementById('studentDivFilter')?.value || 'ALL';
     const statusVal = document.getElementById('studentStatusFilter')?.value || 'ALL';
 
@@ -351,7 +350,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     tbody.innerHTML = '';
 
     const filtered = studentsData.filter(s => {
-      const matchSearch = s.name.toLowerCase().includes(searchVal) || s.roll.toLowerCase().includes(searchVal);
       const matchDiv = divVal === 'ALL' || s.div === divVal;
       const statusInfo = getAttendanceStatus(s.attended, s.conducted);
 
@@ -360,7 +358,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       else if (statusVal === 'Warning') matchStatus = statusInfo.pct >= 60 && statusInfo.pct < 75;
       else if (statusVal === 'Defaulter') matchStatus = statusInfo.pct < 60;
 
-      return matchSearch && matchDiv && matchStatus;
+      return matchDiv && matchStatus;
     });
 
     const countElem = document.getElementById('studentRosterCount');
@@ -391,7 +389,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // Filter Listeners
-  document.getElementById('studentSearchInput')?.addEventListener('input', renderStudentTable);
   document.getElementById('studentDivFilter')?.addEventListener('change', renderStudentTable);
   document.getElementById('studentStatusFilter')?.addEventListener('change', renderStudentTable);
 
@@ -645,7 +642,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   // ==========================================
   function renderDefaulterTable() {
     const tbody = document.getElementById('defaulterTableBody');
-    const searchVal = (document.getElementById('defaulterSearchInput')?.value || '').toLowerCase().trim();
     const catVal = document.getElementById('defaulterCategoryFilter')?.value || 'ALL';
     const divVal = document.getElementById('defaulterDivisionFilter')?.value || 'ALL';
     const thresholdVal = parseInt(document.getElementById('defaulterThresholdInput')?.value || '75');
@@ -657,7 +653,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (s.conducted == 0) return false;
       const pct = (s.attended / s.conducted) * 100;
       const isDefaulter = pct < thresholdVal;
-      const matchSearch = s.name.toLowerCase().includes(searchVal) || s.roll.toLowerCase().includes(searchVal);
 
       let matchCat = true;
       if (catVal === 'CRITICAL') matchCat = pct < (thresholdVal - 15);
@@ -666,7 +661,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       let matchDiv = true;
       if (divVal !== 'ALL') matchDiv = s.div === divVal;
 
-      return isDefaulter && matchSearch && matchCat && matchDiv;
+      return isDefaulter && matchCat && matchDiv;
     });
 
     if (defaulters.length === 0) {
@@ -695,34 +690,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  document.getElementById('defaulterSearchInput')?.addEventListener('input', renderDefaulterTable);
   document.getElementById('defaulterCategoryFilter')?.addEventListener('change', renderDefaulterTable);
   document.getElementById('defaulterDivisionFilter')?.addEventListener('change', renderDefaulterTable);
   document.getElementById('defaulterThresholdInput')?.addEventListener('input', renderDefaulterTable);
 
   renderDefaulterTable();
-
-  // Global Search Input Synchronization
-  const globalSearch = document.getElementById('globalSearchInput');
-  if (globalSearch) {
-    globalSearch.addEventListener('input', (e) => {
-      const val = e.target.value;
-
-      // Update student roster search
-      const studentSearch = document.getElementById('studentSearchInput');
-      if (studentSearch) {
-        studentSearch.value = val;
-        renderStudentTable();
-      }
-
-      // Update defaulter search
-      const defaulterSearch = document.getElementById('defaulterSearchInput');
-      if (defaulterSearch) {
-        defaulterSearch.value = val;
-        renderDefaulterTable();
-      }
-    });
-  }
 
   // Quick Send Defaulter Warnings Button
   document.getElementById('quickSendDefaulterAlertsBtn')?.addEventListener('click', async () => {

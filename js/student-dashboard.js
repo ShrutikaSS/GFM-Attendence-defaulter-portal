@@ -465,20 +465,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Filter History Table Function
     function applyHistoryFilters() {
-        const searchVal = (document.getElementById('historySearchInput')?.value || '').toLowerCase();
         const subjectVal = document.getElementById('historySubjectFilter')?.value || 'ALL';
         const statusVal = document.getElementById('historyStatusFilter')?.value || 'ALL';
         const dateVal = document.getElementById('historyDateFilter')?.value || '';
 
         filteredHistory = state.history.filter(item => {
-            const matchesSearch = item.subject.toLowerCase().includes(searchVal) ||
-                                  item.faculty.toLowerCase().includes(searchVal) ||
-                                  item.remarks.toLowerCase().includes(searchVal);
             const matchesSubject = subjectVal === 'ALL' || item.subject === subjectVal;
             const matchesStatus = statusVal === 'ALL' || item.status === statusVal;
             const matchesDate = !dateVal || item.date === dateVal;
 
-            return matchesSearch && matchesSubject && matchesStatus && matchesDate;
+            return matchesSubject && matchesStatus && matchesDate;
         });
 
         currentHistoryPage = 1;
@@ -717,19 +713,17 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        // History Table Search & Filters
-        document.getElementById('historySearchInput')?.addEventListener('input', applyHistoryFilters);
+        // History Table Filters
         document.getElementById('historySubjectFilter')?.addEventListener('change', applyHistoryFilters);
         document.getElementById('historyStatusFilter')?.addEventListener('change', applyHistoryFilters);
         document.getElementById('historyDateFilter')?.addEventListener('change', applyHistoryFilters);
 
         document.getElementById('historyResetBtn')?.addEventListener('click', () => {
-            if (document.getElementById('historySearchInput')) document.getElementById('historySearchInput').value = '';
             if (document.getElementById('historySubjectFilter')) document.getElementById('historySubjectFilter').value = 'ALL';
             if (document.getElementById('historyStatusFilter')) document.getElementById('historyStatusFilter').value = 'ALL';
             if (document.getElementById('historyDateFilter')) document.getElementById('historyDateFilter').value = '';
             applyHistoryFilters();
-            showToast("Search filters reset", "info");
+            showToast("Filters reset", "info");
         });
 
         // History Pagination Controls

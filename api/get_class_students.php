@@ -22,7 +22,6 @@ $division = trim($input['division'] ?? ($user['division_assigned'] ?? ''));
 $semester = trim($input['semester'] ?? 'Semester VI');
 $department = trim($input['department'] ?? 'Artificial Intelligence & Machine Learning');
 $status = trim($input['status'] ?? '');
-$search = trim($input['search'] ?? '');
 
 if ($user['role'] === 'gfm' && empty($division)) {
     echo json_encode(['success' => false, 'message' => 'Division is required.']);
@@ -72,10 +71,7 @@ try {
         $where[] = "u.department = :department";
         $params['department'] = $department;
     }
-    if ($search) {
-        $where[] = "(u.full_name LIKE :search OR sd.prn LIKE :search OR sd.roll_no LIKE :search)";
-        $params['search'] = "%$search%";
-    }
+
 
     if (!empty($where)) {
         $query .= " WHERE " . implode(' AND ', $where);

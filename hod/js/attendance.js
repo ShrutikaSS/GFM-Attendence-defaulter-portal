@@ -1,13 +1,11 @@
 document.addEventListener('DOMContentLoaded', async () => {
   const body = document.getElementById('attendanceTableBody');
-  const search = document.getElementById('studentSearch');
 
   let rows = [];
 
   const renderRows = () => {
     if (!body) return;
-    const query = (search?.value || '').trim().toLowerCase();
-    const filtered = rows.filter((row) => row.name.toLowerCase().includes(query) || row.roll.toLowerCase().includes(query) || row.prn.toLowerCase().includes(query));
+    const filtered = rows;
     
     body.innerHTML = filtered.map((row) => {
       const pct = parseInt(row.attendance_pct);
@@ -54,6 +52,4 @@ document.addEventListener('DOMContentLoaded', async () => {
   } catch (err) {
     console.error("Error loading HOD attendance logs:", err);
   }
-
-  search?.addEventListener('input', renderRows);
 });

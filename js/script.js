@@ -7,7 +7,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     header.innerHTML = `
       <nav class="navbar">
         <a class="brand" href="index.html">
-          <span class="brand-mark">A</span>
+          <span class="brand-mark" id="brandMarkBtn" style="cursor: pointer; transition: transform 0.2s ease; background: transparent; box-shadow: none; display: block; overflow: hidden;" title="Click to view Zeal College Logo">
+            <img src="images/college-logo.jpg" alt="Zeal Logo" style="width: 100%; height: 100%; object-fit: contain;" />
+          </span>
           <span>Student Attendance Management System</span>
         </a>
         <button class="menu-toggle" aria-label="Toggle navigation">☰</button>
@@ -21,6 +23,56 @@ document.addEventListener('DOMContentLoaded', async () => {
         </div>
       </nav>
     `;
+
+    // Append College Logo Modal
+    const modalHTML = `
+      <div id="collegeLogoModal" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 10000; opacity: 0; pointer-events: none; transition: opacity 0.3s ease;">
+        <div style="background: white; border-radius: 20px; padding: 30px; max-width: 420px; width: 90%; box-shadow: 0 20px 50px rgba(15, 23, 42, 0.3); text-align: center; position: relative; transform: scale(0.9); transition: transform 0.3s ease;" id="logoModalContent">
+          <button id="closeLogoModalBtn" style="position: absolute; top: 14px; right: 18px; border: none; background: transparent; font-size: 1.8rem; cursor: pointer; color: #94a3b8; transition: color 0.2s;" onmouseover="this.style.color='#475569'" onmouseout="this.style.color='#94a3b8'">&times;</button>
+          <img src="images/college-logo.jpg" alt="Zeal College Logo" style="width: 200px; height: auto; margin-bottom: 20px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);" />
+          <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.4rem; font-weight: 700; color: #0f172a; margin: 0 0 8px 0;">Zeal Education Society</h3>
+          <p style="font-family: 'Inter', sans-serif; font-size: 0.95rem; color: #475569; margin: 0 0 4px 0; font-weight: 600;">Zeal College of Engineering and Research</p>
+          <p style="font-family: 'Inter', sans-serif; font-size: 0.85rem; color: #94a3b8; margin: 0;">Narhe, Pune • Estd. 1996</p>
+        </div>
+      </div>
+    `;
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+    const brandMarkBtn = document.getElementById('brandMarkBtn');
+    const logoModal = document.getElementById('collegeLogoModal');
+    const logoContent = document.getElementById('logoModalContent');
+    const closeBtn = document.getElementById('closeLogoModalBtn');
+
+    if (brandMarkBtn && logoModal) {
+      brandMarkBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        logoModal.style.opacity = '1';
+        logoModal.style.pointerEvents = 'auto';
+        logoContent.style.transform = 'scale(1)';
+      });
+
+      const closeModal = () => {
+        logoModal.style.opacity = '0';
+        logoModal.style.pointerEvents = 'none';
+        logoContent.style.transform = 'scale(0.9)';
+      };
+
+      closeBtn.addEventListener('click', closeModal);
+      logoModal.addEventListener('click', (e) => {
+        if (e.target === logoModal) closeModal();
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && logoModal.style.opacity === '1') closeModal();
+      });
+
+      brandMarkBtn.addEventListener('mouseenter', () => {
+        brandMarkBtn.style.transform = 'scale(1.08)';
+      });
+      brandMarkBtn.addEventListener('mouseleave', () => {
+        brandMarkBtn.style.transform = 'scale(1)';
+      });
+    }
   }
 
   if (footer) {
