@@ -31,7 +31,7 @@ try {
     $overallAtt = $pdo->query("
         SELECT 
             CASE 
-                WHEN COUNT(*) > 0 THEN ROUND(SUM(CASE WHEN status='Present' THEN 1 ELSE 0 END) / COUNT(*) * 100, 1) 
+                WHEN COUNT(*) > 0 THEN ROUND(SUM(CASE WHEN status IN ('Present', 'Medical Leave', 'Duty Leave') THEN 1 ELSE 0 END) / COUNT(*) * 100, 1) 
                 ELSE 0 
             END 
         FROM attendance
@@ -40,7 +40,7 @@ try {
     // 5. Defaulters Count (students with overall attendance < 75%)
     $defaultersCount = $pdo->query("
         SELECT COUNT(*) FROM (
-            SELECT student_id, SUM(CASE WHEN status='Present' THEN 1 ELSE 0 END) / COUNT(*) * 100 AS pct 
+            SELECT student_id, SUM(CASE WHEN status IN ('Present', 'Medical Leave', 'Duty Leave') THEN 1 ELSE 0 END) / COUNT(*) * 100 AS pct 
             FROM attendance 
             GROUP BY student_id
         ) s_pcts WHERE pct < 75
@@ -54,7 +54,7 @@ try {
             'totalClasses' => (int)$classesCount,
             'overallAttendance' => $overallAtt . '%',
             'defaulters' => (int)$defaultersCount,
-            'pendingReports' => 8 // Mockup constant
+            'pendingReports' => 0
         ]
     ]);
 

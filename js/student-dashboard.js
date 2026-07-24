@@ -204,9 +204,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // Render Summary Cards & Warning Status
     function renderSummaryCards() {
         const s = state.stats;
-        setElemText('overallAttendance', `${s.overallAttendance}%`);
-        setElemText('classesAttended', s.classesAttended);
-        setElemText('classesMissed', s.classesMissed);
+        const oaElem = document.getElementById('overallAttendance');
+        if (oaElem) { oaElem.setAttribute('data-target', s.overallAttendance); oaElem.textContent = `${s.overallAttendance}%`; }
+        
+        const pbElem = document.getElementById('overallProgressBar');
+        if (pbElem) { pbElem.style.width = `${s.overallAttendance}%`; }
+        
+        const caElem = document.getElementById('classesAttended');
+        if (caElem) { caElem.setAttribute('data-target', s.classesAttended); caElem.textContent = s.classesAttended; }
+        
+        const tcElem = document.getElementById('totalClassesText');
+        if (tcElem) { tcElem.textContent = `Out of ${s.totalClasses} total sessions`; }
+        
+        const cmElem = document.getElementById('classesMissed');
+        if (cmElem) { cmElem.setAttribute('data-target', s.classesMissed); cmElem.textContent = s.classesMissed; }
 
         const badge = document.getElementById('overallAttendanceBadge');
         const warningStatusElem = document.getElementById('warningStatus');

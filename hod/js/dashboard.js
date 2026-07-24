@@ -283,4 +283,85 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
     });
   }
+
+  // Profile Management Logic
+  const btnEditProfile = document.getElementById('btnEditProfile');
+  const btnChangePassword = document.getElementById('btnChangePassword');
+  
+  if (btnEditProfile) {
+    btnEditProfile.addEventListener('click', () => {
+      document.getElementById('editFullName').value = user.full_name || '';
+      document.getElementById('editEmail').value = user.email || '';
+      document.getElementById('editDepartment').value = user.department || '';
+      document.getElementById('editProfileModal').classList.add('show');
+    });
+  }
+
+  if (btnChangePassword) {
+    btnChangePassword.addEventListener('click', () => {
+      document.getElementById('changePasswordForm').reset();
+      document.getElementById('changePasswordModal').classList.add('show');
+    });
+  }
+
+  const editProfileForm = document.getElementById('editProfileForm');
+  if (editProfileForm) {
+    editProfileForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const payload = {
+        full_name: document.getElementById('editFullName').value,
+        email: document.getElementById('editEmail').value,
+        department: document.getElementById('editDepartment').value
+      };
+      
+      try {
+        const res = await fetch('../api/update_profile.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert('Profile updated successfully! Refreshing...');
+          window.location.reload();
+        } else {
+          alert(data.message || 'Update failed');
+        }
+      } catch (err) {
+        alert('Error updating profile');
+      }
+    });
+  }
+
+  const changePasswordForm = document.getElementById('changePasswordForm');
+  if (changePasswordForm) {
+    changePasswordForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const currentPassword = document.getElementById('currentPassword').value;
+      const newPassword = document.getElementById('newPassword').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      
+      if (newPassword !== confirmPassword) {
+        alert('New passwords do not match!');
+        return;
+      }
+      
+      try {
+        const res = await fetch('../api/change_password.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ current_password: currentPassword, new_password: newPassword })
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert('Password changed successfully!');
+          document.getElementById('changePasswordModal').classList.remove('show');
+        } else {
+          alert(data.message || 'Change failed');
+        }
+      } catch (err) {
+        alert('Error changing password');
+      }
+    });
+  }
 });

@@ -6,12 +6,14 @@
 /* --------------------------------------------------------------------------
    1. CSS CUSTOM PROPERTIES / DESIGN SYSTEM TOKENS
    -------------------------------------------------------------------------- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
 :root {
     /* Color Palette */
-    --primary: #2563eb;
-    --primary-hover: #1d4ed8;
-    --primary-light: rgba(37, 99, 235, 0.1);
-    --primary-glow: rgba(37, 99, 235, 0.25);
+    --primary: #6366f1;
+    --primary-hover: #4f46e5;
+    --primary-light: rgba(99, 102, 241, 0.1);
+    --primary-glow: rgba(99, 102, 241, 0.25);
 
     --success: #10b981;
     --success-dark: #059669;
@@ -26,7 +28,7 @@
     --danger-light: rgba(239, 68, 68, 0.12);
 
     /* Neutral & Backgrounds (Light Theme) */
-    --bg-app: #f4f6fb;
+    --bg-app: #f8fafc;
     --bg-navbar: rgba(255, 255, 255, 0.85);
     --bg-sidebar: rgba(255, 255, 255, 0.9);
     --bg-card: rgba(255, 255, 255, 0.75);
@@ -48,7 +50,7 @@
     /* Shadows */
     --shadow-sm: 0 2px 4px rgba(15, 23, 42, 0.04);
     --shadow-md: 0 10px 25px -5px rgba(15, 23, 42, 0.06), 0 4px 6px -2px rgba(15, 23, 42, 0.03);
-    --shadow-lg: 0 20px 35px -10px rgba(37, 99, 235, 0.12);
+    --shadow-lg: 0 20px 35px -10px rgba(99, 102, 241, 0.12);
     --shadow-glass: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
 
     /* Layout & Sizing */
