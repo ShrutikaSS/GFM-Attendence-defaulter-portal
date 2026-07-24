@@ -294,7 +294,7 @@
 
           <!-- 4 METRICS CARDS -->
           <div class="metrics-grid">
-            <div class="metric-card">
+            <div class="metric-card" data-target-tab="attendance" style="cursor: pointer;">
               <div class="metric-info">
                 <span class="metric-title">Assigned Classes</span>
                 <span class="metric-value">3</span>
@@ -306,7 +306,7 @@
               <div class="card-glow-bg" style="background: #3B82F6;"></div>
             </div>
 
-            <div class="metric-card">
+            <div class="metric-card" data-target-tab="reports" style="cursor: pointer;">
               <div class="metric-info">
                 <span class="metric-title">Today's Attendance</span>
                 <span class="metric-value" id="gfmTodayAttendance">88%</span>
@@ -318,7 +318,7 @@
               <div class="card-glow-bg" style="background: #10B981;"></div>
             </div>
 
-            <div class="metric-card">
+            <div class="metric-card" data-target-tab="attendance" style="cursor: pointer;">
               <div class="metric-info">
                 <span class="metric-title">Total GFM Students</span>
                 <span class="metric-value" id="gfmTotalStudents">180</span>
@@ -330,7 +330,7 @@
               <div class="card-glow-bg" style="background: #8B5CF6;"></div>
             </div>
 
-            <div class="metric-card">
+            <div class="metric-card" data-target-tab="defaulters" style="cursor: pointer;">
               <div class="metric-info">
                 <span class="metric-title">Defaulters Flagged</span>
                 <span class="metric-value danger-text" id="gfmDefaultersCount">12</span>
@@ -904,7 +904,7 @@
   </div>
 
   <!-- Custom Dashboard Logic -->
-  <script src="../js/dashboard.js"></script>
+  <script src="../js/dashboard.js?v=2"></script>
 </body>
 
 </html>

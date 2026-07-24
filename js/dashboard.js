@@ -199,6 +199,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   });
 
+  const metricCards = document.querySelectorAll('.metric-card[data-target-tab]');
+  metricCards.forEach(card => {
+    card.addEventListener('click', () => {
+      const tabId = card.getAttribute('data-target-tab');
+      switchTab(tabId);
+      window.location.hash = tabId;
+    });
+  });
+
   // Handle internal navigation buttons
   document.querySelectorAll('.nav-to-attendance-btn').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -971,7 +980,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   async function loadGFMDashboardData() {
     try {
-      const res = await fetch('../api/get_gfm_dashboard.php');
+      const res = await fetch('../api/get_gfm_dashboard.php?t=' + Date.now());
       if (res.ok) {
         const result = await res.json();
         if (result.success && result.data) {
@@ -1038,5 +1047,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
   
   await loadGFMDashboardData();
+  setInterval(loadGFMDashboardData, 5000);
 
 });

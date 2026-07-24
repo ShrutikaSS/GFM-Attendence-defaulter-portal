@@ -794,6 +794,8 @@ a, button {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 24px;
   position: relative;
   overflow: hidden;
   box-shadow: var(--shadow-md), 0 15px 30px -10px rgba(30, 58, 138, 0.2);
@@ -892,8 +894,8 @@ a, button {
    ========================================================================== */
 .metrics-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-  gap: 24px; /* Increased whitespace */
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 24px;
 }
 
 .metric-card {
@@ -1327,9 +1329,10 @@ a, button {
 }
 
 .dashboard-table th, .dashboard-table td {
-  padding: 18px 24px; /* Increased padding */
+  padding: 16px 24px;
   font-size: 0.88rem;
   border-bottom: 1px solid var(--border);
+  vertical-align: middle;
 }
 
 .dashboard-table th {
@@ -2711,6 +2714,9 @@ a, button {
 @media (max-width: 1200px) {
   .dashboard-grid-layout {
     grid-template-columns: 1fr;
+  }
+  .metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 

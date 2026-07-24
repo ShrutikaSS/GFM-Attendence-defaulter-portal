@@ -20,8 +20,25 @@
     setupEventListeners();
     loadHodStats();
     setDefaultDate();
+    setupStatsCardsClickHandlers();
+  }
 
-
+  function setupStatsCardsClickHandlers() {
+    const statsCards = document.querySelectorAll('.summary-grid .summary-card');
+    statsCards.forEach((card, idx) => {
+      card.style.cursor = 'pointer';
+      card.addEventListener('click', () => {
+        if (idx === 0) {
+          document.getElementById('tabRecordsBtn')?.click();
+        } else if (idx === 1) {
+          document.getElementById('tabMarkBtn')?.click();
+        } else if (idx === 2) {
+          window.location.href = 'reports.html';
+        } else if (idx === 3) {
+          window.location.href = 'defaulters.html';
+        }
+      });
+    });
   }
 
   function setDefaultDate() {
@@ -108,13 +125,17 @@
   }
 
   function loadHodStats() {
-    fetch('../api/get_hod_dashboard.php')
+    fetch('../api/get_hod_dashboard.php?t=' + Date.now())
       .then(r => r.json())
       .then(data => {
         if (data.success && data.data) {
           document.getElementById('hodTotalStat').textContent = data.data.totalStudents || '0';
           document.getElementById('hodAvgStat').textContent = (data.data.overallAttendance || '0');
           document.getElementById('hodDefaulterStat').textContent = (data.data.defaulters || '0');
+          const todayStat = document.getElementById('hodTodayStat');
+          if (todayStat) {
+            todayStat.textContent = (data.data.todayAttendance || '0') + ' records';
+          }
         }
       })
       .catch(() => {});
@@ -351,6 +372,7 @@
       if (data.success) {
         showToast(`Attendance for ${classVal} - ${subject} saved successfully!`, 'success');
         await loadClassStudentsForEntry();
+        loadHodStats();
       } else {
         showToast(data.message || 'Failed to save attendance.', 'danger');
       }
@@ -517,8 +539,8 @@
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken },
         body: JSON.stringify({
-          record_id: editingId,
-          new_status: newStatus,
+          attendance_id: editingId,
+          status: newStatus,
           remarks: newRemarks,
           reason: reason
         })
@@ -529,6 +551,7 @@
         showToast('Record updated successfully', 'success');
         closeEditModal();
         loadAttendanceRecords();
+        loadHodStats();
       } else {
         showToast(data.message || 'Failed to update', 'danger');
       }

@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="css/dashboard.css" />
   </head>
   <body data-page="dashboard">
+    <!-- Toast Container -->
+    <div id="toastContainer" style="position:fixed;top:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:10px;"></div>
     <div class="app-shell">
       <aside class="sidebar">
         <div class="sidebar-profile">
@@ -68,48 +70,60 @@
           </section>
 
           <section class="summary-grid">
-            <article class="summary-card reveal">
-              <div class="summary-icon blue"><i class="fa-solid fa-users"></i></div>
-              <div>
-                <h3>Total Students</h3>
-                <p class="metric" id="hodTotalStudents">1,248</p>
-              </div>
-            </article>
-            <article class="summary-card reveal">
-              <div class="summary-icon cyan"><i class="fa-solid fa-chalkboard-teacher"></i></div>
-              <div>
-                <h3>Total Faculty</h3>
-                <p class="metric" id="hodTotalFaculty">62</p>
-              </div>
-            </article>
-            <article class="summary-card reveal">
-              <div class="summary-icon purple"><i class="fa-solid fa-calendar-days"></i></div>
-              <div>
-                <h3>Total Classes</h3>
-                <p class="metric" id="hodTotalClasses">186</p>
-              </div>
-            </article>
-            <article class="summary-card reveal">
-              <div class="summary-icon green"><i class="fa-solid fa-chart-pie"></i></div>
-              <div>
-                <h3>Attendance %</h3>
-                <p class="metric" id="hodAttendancePct">92.4%</p>
-              </div>
-            </article>
-            <article class="summary-card reveal">
-              <div class="summary-icon orange"><i class="fa-solid fa-user-slash"></i></div>
-              <div>
-                <h3>Defaulters</h3>
-                <p class="metric" id="hodDefaulters">19</p>
-              </div>
-            </article>
-            <article class="summary-card reveal">
-              <div class="summary-icon pink"><i class="fa-solid fa-file-lines"></i></div>
-              <div>
-                <h3>Pending Reports</h3>
-                <p class="metric" id="hodPendingReports">8</p>
-              </div>
-            </article>
+            <a href="attendance.html" class="summary-card-link">
+              <article class="summary-card reveal">
+                <div class="summary-icon blue"><i class="fa-solid fa-users"></i></div>
+                <div>
+                  <h3>Total Students</h3>
+                  <p class="metric" id="hodTotalStudents">1,248</p>
+                </div>
+              </article>
+            </a>
+            <a href="faculty.html" class="summary-card-link">
+              <article class="summary-card reveal">
+                <div class="summary-icon cyan"><i class="fa-solid fa-chalkboard-teacher"></i></div>
+                <div>
+                  <h3>Total Faculty</h3>
+                  <p class="metric" id="hodTotalFaculty">62</p>
+                </div>
+              </article>
+            </a>
+            <a href="attendance.html" class="summary-card-link">
+              <article class="summary-card reveal">
+                <div class="summary-icon purple"><i class="fa-solid fa-calendar-days"></i></div>
+                <div>
+                  <h3>Total Classes</h3>
+                  <p class="metric" id="hodTotalClasses">186</p>
+                </div>
+              </article>
+            </a>
+            <a href="reports.html" class="summary-card-link">
+              <article class="summary-card reveal">
+                <div class="summary-icon green"><i class="fa-solid fa-chart-pie"></i></div>
+                <div>
+                  <h3>Attendance %</h3>
+                  <p class="metric" id="hodAttendancePct">92.4%</p>
+                </div>
+              </article>
+            </a>
+            <a href="defaulters.html" class="summary-card-link">
+              <article class="summary-card reveal">
+                <div class="summary-icon orange"><i class="fa-solid fa-user-slash"></i></div>
+                <div>
+                  <h3>Defaulters</h3>
+                  <p class="metric" id="hodDefaulters">19</p>
+                </div>
+              </article>
+            </a>
+            <a href="reports.html" class="summary-card-link">
+              <article class="summary-card reveal">
+                <div class="summary-icon pink"><i class="fa-solid fa-file-lines"></i></div>
+                <div>
+                  <h3>Pending Reports</h3>
+                  <p class="metric" id="hodPendingReports">8</p>
+                </div>
+              </article>
+            </a>
           </section>
 
           <section class="content-grid">
@@ -158,6 +172,6 @@
       </div>
     </div>
 
-    <script src="js/dashboard.js?v=2"></script>
+    <script src="js/dashboard.js?v=3"></script>
   </body>
 </html>

@@ -31,12 +31,12 @@ try {
             SUM(CASE WHEN status = 'Medical Leave' THEN 1 ELSE 0 END) as medical,
             SUM(CASE WHEN status = 'Duty Leave' THEN 1 ELSE 0 END) as duty,
             CASE 
-                WHEN COUNT(*) > 0 THEN ROUND(SUM(CASE WHEN status = 'Present' THEN 1 ELSE 0 END) / COUNT(*) * 100, 2)
+                WHEN COUNT(*) > 0 THEN ROUND(SUM(CASE WHEN status IN ('Present', 'Medical Leave', 'Duty Leave') THEN 1 ELSE 0 END) / COUNT(*) * 100, 2)
                 ELSE 0
             END as pct,
             CASE 
-                WHEN COUNT(*) > 0 AND ROUND(SUM(CASE WHEN status = 'Present' THEN 1 ELSE 0 END) / COUNT(*) * 100, 2) >= 75 THEN 'Regular'
-                WHEN COUNT(*) > 0 AND ROUND(SUM(CASE WHEN status = 'Present' THEN 1 ELSE 0 END) / COUNT(*) * 100, 2) >= 60 THEN 'Warning'
+                WHEN COUNT(*) > 0 AND ROUND(SUM(CASE WHEN status IN ('Present', 'Medical Leave', 'Duty Leave') THEN 1 ELSE 0 END) / COUNT(*) * 100, 2) >= 75 THEN 'Regular'
+                WHEN COUNT(*) > 0 AND ROUND(SUM(CASE WHEN status IN ('Present', 'Medical Leave', 'Duty Leave') THEN 1 ELSE 0 END) / COUNT(*) * 100, 2) >= 60 THEN 'Warning'
                 ELSE 'Defaulter'
             END as status
         FROM attendance

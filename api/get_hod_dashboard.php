@@ -3,6 +3,9 @@ session_start();
 require_once __DIR__ . '/db.php';
 
 header('Content-Type: application/json; charset=utf-8');
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
 
 // Ensure user is logged in as HOD
 $user = $_SESSION['user'] ?? null;
@@ -46,6 +49,12 @@ try {
         ) s_pcts WHERE pct < 75
     ")->fetchColumn();
 
+    // 6. Today's Attendance Count
+    $today = date('Y-m-d');
+    $todayStmt = $pdo->prepare("SELECT COUNT(*) FROM attendance WHERE date = :today");
+    $todayStmt->execute(['today' => $today]);
+    $todayAttendanceCount = $todayStmt->fetchColumn();
+
     echo json_encode([
         'success' => true,
         'data' => [
@@ -54,7 +63,8 @@ try {
             'totalClasses' => (int)$classesCount,
             'overallAttendance' => $overallAtt . '%',
             'defaulters' => (int)$defaultersCount,
-            'pendingReports' => 0
+            'pendingReports' => 0,
+            'todayAttendance' => (int)$todayAttendanceCount
         ]
     ]);
 

@@ -18,8 +18,8 @@ if (!isset($pdo) || $pdo === null) {
 $rawInput = file_get_contents('php://input');
 $input = json_decode($rawInput, true);
 
-$attendanceId = (int)($input['attendance_id'] ?? 0);
-$newStatus = trim($input['status'] ?? '');
+$attendanceId = (int)($input['attendance_id'] ?? $input['record_id'] ?? 0);
+$newStatus = trim($input['status'] ?? $input['new_status'] ?? '');
 $newRemarks = trim($input['remarks'] ?? 'Regular');
 $reason = trim($input['reason'] ?? '');
 
@@ -150,8 +150,9 @@ function recalculateStudentSummary($pdo, $studentId) {
 
     foreach ($summaries as $sum) {
         $total = (int)$sum['total'];
-        $present = (int)$sum['present'];
-        $pct = $total > 0 ? round(($present / $total) * 100, 2) : 0.00;
+        $actualPresent = (int)$sum['present'];
+        $attendedTotal = $actualPresent + (int)$sum['medical'] + (int)$sum['duty'];
+        $pct = $total > 0 ? round(($attendedTotal / $total) * 100, 2) : 0.00;
         $status = $pct >= 75 ? 'Regular' : ($pct >= 60 ? 'Warning' : 'Defaulter');
 
         $upsertStmt->execute([
@@ -160,7 +161,7 @@ function recalculateStudentSummary($pdo, $studentId) {
             'semester' => $sum['semester'],
             'division' => $sum['division'],
             'total' => $total,
-            'present' => $present,
+            'present' => $actualPresent,
             'absent' => (int)$sum['absent'],
             'medical' => (int)$sum['medical'],
             'duty' => (int)$sum['duty'],

@@ -93,24 +93,43 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // Fetch Dashboard Stats if on main dashboard page
-  if (document.getElementById('hodTotalStudents')) {
+  function showToast(msg, type) {
+    // Lightweight toast for dashboard page
+    const container = document.getElementById('toastContainer');
+    if (!container) return;
+    const t = document.createElement('div');
+    const bg = type === 'danger' ? '#EF4444' : type === 'warning' ? '#F59E0B' : '#10B981';
+    t.style.cssText = `background:${bg};color:#fff;padding:12px 20px;border-radius:10px;font-weight:600;box-shadow:0 8px 20px rgba(0,0,0,.15);`;
+    t.textContent = msg;
+    container.appendChild(t);
+    setTimeout(() => t.remove(), 4000);
+  }
+
+  async function loadHODStats() {
     try {
-      const res = await fetch('../api/get_hod_dashboard.php');
-      if (res.ok) {
-        const result = await res.json();
-        if (result.success && result.data) {
-          const stats = result.data;
-          document.getElementById('hodTotalStudents').textContent = stats.totalStudents;
-          document.getElementById('hodTotalFaculty').textContent = stats.totalFaculty;
-          document.getElementById('hodTotalClasses').textContent = stats.totalClasses;
-          document.getElementById('hodAttendancePct').textContent = stats.overallAttendance;
-          document.getElementById('hodDefaulters').textContent = stats.defaulters;
-          document.getElementById('hodPendingReports').textContent = stats.pendingReports;
-        }
+      const res = await fetch('../api/get_hod_dashboard.php?t=' + Date.now());
+      if (!res.ok) { console.warn('HOD stats fetch HTTP error', res.status); return; }
+      const result = await res.json();
+      if (result.success && result.data) {
+        const stats = result.data;
+        const el = (id) => document.getElementById(id);
+        if (el('hodTotalStudents'))  el('hodTotalStudents').textContent  = stats.totalStudents;
+        if (el('hodTotalFaculty'))   el('hodTotalFaculty').textContent   = stats.totalFaculty;
+        if (el('hodTotalClasses'))   el('hodTotalClasses').textContent   = stats.totalClasses;
+        if (el('hodAttendancePct'))  el('hodAttendancePct').textContent  = stats.overallAttendance;
+        if (el('hodDefaulters'))     el('hodDefaulters').textContent     = stats.defaulters;
+        if (el('hodPendingReports')) el('hodPendingReports').textContent = stats.pendingReports;
+      } else {
+        console.warn('HOD stats API returned:', result);
       }
     } catch(err) {
-      console.error("Error loading HOD stats from backend:", err);
+      console.error('Error loading HOD stats:', err);
     }
+  }
+
+  if (document.getElementById('hodTotalStudents')) {
+    loadHODStats();
+    setInterval(loadHODStats, 5000);
   }
 
   function buildNoticeCard(notice) {
@@ -257,6 +276,8 @@ document.addEventListener('DOMContentLoaded', async () => {
           } catch(err) {}
           window.location.href = '../login.html';
         }
+      });
+    }
   });
 
 

@@ -225,8 +225,9 @@ function recalculateStudentSummary($pdo, $studentId) {
 
     foreach ($summaries as $sum) {
         $total = (int)$sum['total'];
-        $present = (int)$sum['present'];
-        $pct = $total > 0 ? round(($present / $total) * 100, 2) : 0.00;
+        $actualPresent = (int)$sum['present'];
+        $attendedTotal = $actualPresent + (int)$sum['medical'] + (int)$sum['duty'];
+        $pct = $total > 0 ? round(($attendedTotal / $total) * 100, 2) : 0.00;
         $status = $pct >= 75 ? 'Regular' : ($pct >= 60 ? 'Warning' : 'Defaulter');
 
         $upsertStmt->execute([
@@ -235,7 +236,7 @@ function recalculateStudentSummary($pdo, $studentId) {
             'semester' => $sum['semester'],
             'division' => $sum['division'],
             'total' => $total,
-            'present' => $present,
+            'present' => $actualPresent,
             'absent' => (int)$sum['absent'],
             'medical' => (int)$sum['medical'],
             'duty' => (int)$sum['duty'],

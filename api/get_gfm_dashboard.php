@@ -3,6 +3,9 @@ session_start();
 require_once __DIR__ . '/db.php';
 
 header('Content-Type: application/json; charset=utf-8');
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
 
 // Ensure user is logged in as GFM
 $user = $_SESSION['user'] ?? null;
@@ -13,7 +16,8 @@ if (!$user || $user['role'] !== 'gfm') {
 
 $gfm_id = $user['id'];
 $division = $user['division_assigned'] ?? 'A';
-$division = str_replace('Div ', '', $division);
+$division_short = str_replace('Div ', '', $division);
+$division_full = 'Div ' . $division_short;
 
 if (!isset($pdo) || $pdo === null) {
     echo json_encode(['success' => false, 'message' => 'Database connection failed.']);
@@ -35,13 +39,17 @@ try {
         FROM users u 
         JOIN student_details sd ON u.id = sd.user_id 
         LEFT JOIN (
-            SELECT student_id, COUNT(*) AS conducted, SUM(CASE WHEN status = 'Present' THEN 1 ELSE 0 END) AS attended 
+            SELECT student_id, COUNT(*) AS conducted, SUM(CASE WHEN status IN ('Present', 'Medical Leave', 'Duty Leave') THEN 1 ELSE 0 END) AS attended 
             FROM attendance 
             GROUP BY student_id
         ) att ON u.id = att.student_id
+        WHERE sd.division IN (:div_short, :div_full)
         ORDER BY sd.division ASC, CAST(sd.roll_no AS UNSIGNED) ASC, sd.roll_no ASC
     ");
-    $studentsStmt->execute();
+    $studentsStmt->execute([
+        'div_short' => $division_short,
+        'div_full' => $division_full
+    ]);
     $studentsList = $studentsStmt->fetchAll();
 
     // Calculate aggregated metrics
@@ -76,11 +84,15 @@ try {
     $noticesStmt = $pdo->prepare("
         SELECT id, title, target, message, DATE_FORMAT(created_at, '%b %d, %Y') AS date 
         FROM notices 
-        WHERE target = :division OR target = 'ALL' OR target = 'All Batches' OR created_by = :gfm_id 
+        WHERE target IN (:div_short, :div_full) OR target = 'ALL' OR target = 'All Batches' OR created_by = :gfm_id 
         ORDER BY created_at DESC 
         LIMIT 10
     ");
-    $noticesStmt->execute(['division' => $division, 'gfm_id' => $gfm_id]);
+    $noticesStmt->execute([
+        'div_short' => $division_short,
+        'div_full' => $division_full,
+        'gfm_id' => $gfm_id
+    ]);
     $noticesList = $noticesStmt->fetchAll();
 
     echo json_encode([
