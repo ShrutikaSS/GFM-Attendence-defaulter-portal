@@ -64,20 +64,7 @@
     document.getElementById('markAllAbsentBtn').addEventListener('click', () => bulkMark('Absent'));
     document.getElementById('resetAttendanceBtn').addEventListener('click', resetAttendance);
     document.getElementById('saveAttendanceBtn').addEventListener('click', saveAttendance);
-    document.getElementById('attendanceSearchInput').addEventListener('input', filterAttendanceTable);
 
-    // Global Search synchronization
-    const globalSearch = document.getElementById('globalSearchInput');
-    if (globalSearch) {
-      globalSearch.addEventListener('input', (e) => {
-        const val = e.target.value;
-        const localSearch = document.getElementById('attendanceSearchInput');
-        if (localSearch) {
-          localSearch.value = val;
-          filterAttendanceTable();
-        }
-      });
-    }
     document.getElementById('duplicateCancelBtn').addEventListener('click', closeDuplicateModal);
     document.getElementById('duplicateOverwriteBtn').addEventListener('click', () => saveAttendance(true));
 
@@ -290,17 +277,7 @@
     resetAttendance();
   }
 
-  function filterAttendanceTable() {
-    const search = document.getElementById('attendanceSearchInput').value.toLowerCase().trim();
-    const rows = document.querySelectorAll('.attendance-row');
-    rows.forEach(row => {
-      const name = row.getAttribute('data-name') || '';
-      const roll = row.querySelector('td:nth-child(2) strong')?.textContent.toLowerCase() || '';
-      const prn = row.getAttribute('data-prn')?.toLowerCase() || '';
-      const match = !search || name.includes(search) || roll.includes(search) || prn.includes(search);
-      row.style.display = match ? '' : 'none';
-    });
-  }
+
 
   function updateCounts() {
     const rows = document.querySelectorAll('.attendance-row');

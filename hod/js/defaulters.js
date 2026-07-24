@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', async () => {
   const body = document.getElementById('defaulterTableBody');
-  const search = document.getElementById('defaulterSearchInput');
   const divSelect = document.getElementById('defaulterDivSelect');
   const thresholdInput = document.getElementById('defaulterThresholdInput');
 
@@ -8,7 +7,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   const renderRows = () => {
     if (!body) return;
-    const query = (search?.value || '').trim().toLowerCase();
     const selectedDiv = divSelect?.value || 'All';
     const thresholdVal = parseInt(thresholdInput?.value || '75');
 
@@ -17,14 +15,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       const pct = parseFloat(row.attendance_pct);
       const isDefaulter = pct < thresholdVal;
       
-      const name = (row.name || '').toLowerCase();
-      const roll = (row.roll || '').toLowerCase();
-      const prn = (row.prn || '').toLowerCase();
-      
-      const matchesSearch = name.includes(query) || roll.includes(query) || prn.includes(query);
       const matchesDiv = selectedDiv === 'All' || row.division === selectedDiv;
 
-      return isDefaulter && matchesSearch && matchesDiv;
+      return isDefaulter && matchesDiv;
     });
 
     if (filtered.length === 0) {
@@ -89,7 +82,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (body) body.innerHTML = `<tr><td colspan="9" style="text-align: center; padding: 2rem; color: red;">Network Error.</td></tr>`;
   }
 
-  search?.addEventListener('input', renderRows);
   divSelect?.addEventListener('change', renderRows);
   thresholdInput?.addEventListener('input', renderRows);
 });

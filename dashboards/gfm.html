@@ -137,15 +137,7 @@
             </div>
           </div>
 
-          <div class="navbar-center">
-            <div class="search-bar-wrapper">
-              <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-              </svg>
-              <input type="text" id="globalSearchInput" placeholder="Search student by name, roll no, or subject..." />
-            </div>
-          </div>
+
 
           <div class="navbar-right">
             <!-- Dark / Light Mode Toggle -->
@@ -438,15 +430,13 @@
           <section id="view-students" class="tab-view hidden-view">
             <div class="section-title-wrapper" style="margin-bottom: 24px;">
               <h1>Assigned Student Roster</h1>
-              <p>View, search, and monitor attendance records for students under your GFM mentorship.</p>
+              <p>View and monitor attendance records for students under your GFM mentorship.</p>
             </div>
 
             <div class="data-table-card">
               <div class="table-card-header">
                 <div class="table-controls">
-                  <div class="search-box-pill">
-                    <input type="text" id="studentSearchInput" placeholder="Search by student name or roll..." />
-                  </div>
+
                   <select class="custom-select-box" id="studentDivFilter">
                     <option value="ALL">All Divisions</option>
                     <option value="Div A" selected>Division A</option>
@@ -608,9 +598,7 @@
             <div class="data-table-card">
               <div class="table-card-header">
                 <div class="table-controls">
-                  <div class="search-box-pill">
-                    <input type="text" id="defaulterSearchInput" placeholder="Search defaulter student..." />
-                  </div>
+
                   <select class="custom-select-box" id="defaulterDivisionFilter">
                     <option value="ALL">All Divisions</option>
                     <option value="A">Division A</option>

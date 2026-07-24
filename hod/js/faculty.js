@@ -55,23 +55,5 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.error("Error loading faculty registry:", err);
   }
 
-  // Faculty Search / Filtering
-  const facultySearch = document.getElementById('facultySearchInput');
-  if (facultySearch) {
-    facultySearch.addEventListener('input', (e) => {
-      const query = e.target.value.toLowerCase().trim();
-      
-      // Filter faculty card items
-      document.querySelectorAll('#facultyCards .panel-card').forEach(card => {
-        const text = card.textContent.toLowerCase();
-        card.style.display = text.includes(query) ? '' : 'none';
-      });
 
-      // Filter faculty table rows
-      document.querySelectorAll('#facultyTableBody tr').forEach(row => {
-        const text = row.textContent.toLowerCase();
-        row.style.display = text.includes(query) ? '' : 'none';
-      });
-    });
-  }
 });
